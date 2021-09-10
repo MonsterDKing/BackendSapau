@@ -1,5 +1,6 @@
 import { BeforeInsert, Column, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import * as bcrypt from "bcrypt";
+import { ClienteEntity } from "src/clientes/entities/cliente.entity";
 @Entity('usuario')
 export class UsuarioEntity {
 
@@ -19,6 +20,9 @@ export class UsuarioEntity {
 
     @Column({ type: 'bool' })
      activo: boolean;
+
+    @OneToMany(() => ClienteEntity, cli => cli.contratante)
+    clientes: ClienteEntity[];
 
 
 
