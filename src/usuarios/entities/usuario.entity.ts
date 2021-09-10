@@ -32,10 +32,11 @@ export class UsuarioEntity {
         return await bcrypt.compareSync(password, this.password);
     }
 
-    constructor(id: number, nombre: string, email: string,activo:boolean) {
+    constructor( nombre: string, email: string,password:string,activo:boolean,id?: number,) {
         this.id = id;
         this.nombre = nombre;
         this.email = email;
+        this.password = password;
         this.activo = activo;
     }
 

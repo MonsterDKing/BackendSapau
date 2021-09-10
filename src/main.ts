@@ -9,13 +9,12 @@ async function bootstrap() {
   const PORT = process.env.PORT || 3000;
 
   const options = new DocumentBuilder()
-    .setTitle('Deudas Api Rest')
-    .setDescription('Deudas Api Rest')
+    .setTitle(' Api Rest')
+    .setDescription(' Api Rest')
     .setVersion('1.0')
     .build();
   const document = SwaggerModule.createDocument(app, options);
   SwaggerModule.setup('api', app, document);
-  
   await app.listen(PORT);
 }
 bootstrap();
