@@ -1,3 +1,4 @@
+import { TarifaEntity } from "src/tarifa/entities/tarifa.entity";
 import { UsuarioEntity } from "src/usuarios/entities/usuario.entity";
 import { BeforeInsert, Column, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 
@@ -22,8 +23,8 @@ export class ClienteEntity {
         nullable: false
     })
 
-    apellidoMaterno: string; 
-    
+    apellidoMaterno: string;
+
     @Column({
         nullable: false
     })
@@ -31,6 +32,9 @@ export class ClienteEntity {
 
     @ManyToOne(() => UsuarioEntity, us => us.clientes)
     contratante: UsuarioEntity;
+
+    @ManyToOne(() => TarifaEntity, tarifa => tarifa.clientes)
+    tarifa: TarifaEntity;
 
     @Column({
         nullable: false
@@ -54,6 +58,19 @@ export class ClienteEntity {
     localidad: string;
 
 
+    constructor(contrato: string, nombre: string, apellidoMaterno: string, apellidoPaterno: string, contratante: UsuarioEntity, calle: string, colonia: string, codigoPostal: string, localidad: string,tarifa:TarifaEntity ,id?: number) {
+        this.contrato = contrato;
+        this.nombre = nombre;
+        this.apellidoPaterno = apellidoPaterno;
+        this.apellidoMaterno = apellidoMaterno;
+        this.contratante = contratante;
+        this.calle = calle;
+        this.colonia = colonia;
+        this.codigoPostal = codigoPostal;
+        this.localidad = localidad;
+        this.tarifa = tarifa;
+        this.id = id;
+    }
 
 
 }

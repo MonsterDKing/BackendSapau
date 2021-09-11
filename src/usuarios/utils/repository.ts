@@ -41,5 +41,13 @@ export class UsuarioRepository {
     }
 
 
+    getByEmail(email: string): Promise<UsuarioEntity> {
+        return this.repository.findOne({
+            where: {
+                email
+            }, 
+        });
+    }
+
 
 }
