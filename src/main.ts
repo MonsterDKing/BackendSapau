@@ -2,10 +2,11 @@ import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { join } from 'path';
 import { AppModule } from './app.module';
+import { TypeORMExceptionFilter } from './filters/typeorm-exceptions.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule,{ cors: true });
-  // app.useGlobalFilters(new TypeORMExceptionFilter());
+  app.useGlobalFilters(new TypeORMExceptionFilter());
   const PORT = process.env.PORT || 3000;
 
   const options = new DocumentBuilder()
