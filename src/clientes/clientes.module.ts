@@ -8,11 +8,23 @@ import { ClientesRepository } from './utils/repository';
 import { UsuariosModule } from 'src/usuarios/usuarios.module';
 import { TarifaModule } from 'src/tarifa/tarifa.module';
 import { TarifaMapper } from 'src/tarifa/utils/mapper';
+import { PDFModule } from '@t00nday/nestjs-pdf';
+import { join } from 'path';
+import { MomentModule } from '@ccmos/nestjs-moment';
 
+const root = join(__dirname, '../../assets/pdf');
+console.log(root);
 @Module({
-  imports: [TypeOrmModule.forFeature([ClienteEntity]),UsuariosModule,TarifaModule],
+  imports: [TypeOrmModule.forFeature([ClienteEntity]), UsuariosModule, TarifaModule, PDFModule.register({
+    view: {
+      root,
+      engine: 'pug',
+    },
+  }), MomentModule.forRoot({
+    tz: 'America/Mexico_City',
+  }),],
   controllers: [ClientesController],
-  providers: [ClientesService,ClienteMapper,ClientesRepository],
-  exports:[ClientesService]
+  providers: [ClientesService, ClienteMapper, ClientesRepository,],
+  exports: [ClientesService]
 })
 export class ClientesModule { }

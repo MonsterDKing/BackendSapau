@@ -7,7 +7,7 @@ import { TypeORMExceptionFilter } from './filters/typeorm-exceptions.filter';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule,{ cors: true });
   app.useGlobalFilters(new TypeORMExceptionFilter());
-  const PORT = process.env.PORT || 3000;
+  const PORT = process.env.PORT || 80;
 
   const options = new DocumentBuilder()
     .setTitle(' Api Rest')
