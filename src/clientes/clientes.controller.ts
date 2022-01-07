@@ -3,6 +3,7 @@ import { join } from 'path';
 import { ClientesService } from './clientes.service';
 import { CreateClienteDto } from './dto/create-cliente.dto';
 import { UpdateClienteDto } from './dto/update-cliente.dto';
+import * as PDFDocument from 'pdfkit'
 
 @Controller('clientes')
 export class ClientesController {
@@ -35,11 +36,16 @@ export class ClientesController {
 
   @Get('/adeudos/:id')
   generatePdf(@Param('id') id: number, @Res() res) {
-    this.clientesService.generatePDFToStream(id,"").then((data) => {
-      data.subscribe((datados)=>{
-        datados.pipe(res);
-      })
-    })
+    return false;
+  } 
 
+  @Get('/generateContracts')
+  generateContractPdf(@Res() res) {
+    return false;
+    // this.clientesService.generateContractStream("contrato.pug").then((data) => {
+    //   data.subscribe((datados)=>{
+    //     datados.pipe(res);
+    //   })
+    // })
   }
 }
