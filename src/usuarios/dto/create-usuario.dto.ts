@@ -10,12 +10,15 @@ export class CreateUsuarioDto {
      password: string;
      @ApiProperty()
      activo: boolean;
+     @ApiProperty()
+     rol:number
 
-     constructor( nombre: string, email: string,password:string,activo:boolean) {
+     constructor( nombre: string, email: string,password:string,activo:boolean,rol:number) {
         this.nombre = nombre;
         this.password = password;
         this.email = email;
         this.activo = activo;
+        this.rol = rol;
     }
 
 }

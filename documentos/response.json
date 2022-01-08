@@ -1,0 +1,412 @@
+{
+  "success": true,
+  "data": {
+    "citaspordesarrollo": [
+      { "id": 2, "name": "FKW_EVAMAR", "activo": "1", "appointment_count": "4" }
+    ],
+    "dates": [
+      {
+        "appointment_date": "2022-01-06",
+        "citas": [
+          {
+            "customer_id": "1994",
+            "development_id": "2",
+            "unidad_id": "5",
+            "appointment_date": "2022-01-06",
+            "appointment_time": "09:30:00",
+            "commentary": null,
+            "status": "1",
+            "customer": {
+              "id": 1994,
+              "name": "Dulce",
+              "father_last_name": "Hern\u00e1ndez",
+              "mother_last_name": "Rodr\u00edguez",
+              "email": "dulceHer@fkw.com",
+              "phone": "4434456452",
+              "age": "0"
+            },
+            "unidad": { "id": 5, "name": "FKW_Amor" },
+            "development": {
+              "id": 2,
+              "name": "FKW_EVAMAR",
+              "street": "Blvd. Luis Donaldo Colosio Murrieta"
+            }
+          }
+        ]
+      },
+      {
+        "appointment_date": "2022-01-07",
+        "citas": [
+          {
+            "customer_id": "2191",
+            "development_id": "2",
+            "unidad_id": "5",
+            "appointment_date": "2022-01-07",
+            "appointment_time": "16:00:00",
+            "commentary": "test de comentario",
+            "status": "1",
+            "customer": {
+              "id": 2191,
+              "name": "Alejandra",
+              "father_last_name": "Rosales",
+              "mother_last_name": "Escobar",
+              "email": "alejandrarosales@fraktalweb.com",
+              "phone": "4425586523",
+              "age": "0"
+            },
+            "unidad": { "id": 5, "name": "FKW_Amor" },
+            "development": {
+              "id": 2,
+              "name": "FKW_EVAMAR",
+              "street": "Blvd. Luis Donaldo Colosio Murrieta"
+            }
+          }
+        ]
+      },
+      {
+        "appointment_date": "2022-01-09",
+        "citas": [
+          {
+            "customer_id": "2399",
+            "development_id": "2",
+            "unidad_id": "5",
+            "appointment_date": "2022-01-09",
+            "appointment_time": "20:00:00",
+            "commentary": ":)",
+            "status": "1",
+            "customer": {
+              "id": 2399,
+              "name": "Alejandro",
+              "father_last_name": "Zavala",
+              "mother_last_name": "Farias",
+              "email": "alezavalafarias@zohomail.com",
+              "phone": "4433067690",
+              "age": "0"
+            },
+            "unidad": { "id": 5, "name": "FKW_Amor" },
+            "development": {
+              "id": 2,
+              "name": "FKW_EVAMAR",
+              "street": "Blvd. Luis Donaldo Colosio Murrieta"
+            }
+          }
+        ]
+      },
+      {
+        "appointment_date": "2022-01-12",
+        "citas": [
+          {
+            "customer_id": "1993",
+            "development_id": "2",
+            "unidad_id": "5",
+            "appointment_date": "2022-01-12",
+            "appointment_time": "10:00:00",
+            "commentary": null,
+            "status": "1",
+            "customer": {
+              "id": 1993,
+              "name": "Abdiel",
+              "father_last_name": "Garcia",
+              "mother_last_name": "Madrigal",
+              "email": "abdielGarcia@fkw.com",
+              "phone": "6624483213",
+              "age": "0"
+            },
+            "unidad": { "id": 5, "name": "FKW_Amor" },
+            "development": {
+              "id": 2,
+              "name": "FKW_EVAMAR",
+              "street": "Blvd. Luis Donaldo Colosio Murrieta"
+            }
+          }
+        ]
+      }
+    ],
+    "recordatorios": [
+      {
+        "reminder_date": "2021-09-14",
+        "reminders": [
+          {
+            "customer_id": "208",
+            "reminder_date": "2021-09-14",
+            "reminder_time": "10:00",
+            "commentary": "Test de comentario",
+            "customer": {
+              "id": 208,
+              "name": "Pablo",
+              "father_last_name": "Cordoba",
+              "mother_last_name": "Martin",
+              "email": "aron@gmail.com",
+              "phone": "4435619832",
+              "age": "0"
+            }
+          },
+          {
+            "customer_id": "208",
+            "reminder_date": "2021-09-14",
+            "reminder_time": "11:45",
+            "commentary": "Notificaci\u00f3n de prueba",
+            "customer": {
+              "id": 208,
+              "name": "Pablo",
+              "father_last_name": "Cordoba",
+              "mother_last_name": "Martin",
+              "email": "aron@gmail.com",
+              "phone": "4435619832",
+              "age": "0"
+            }
+          },
+          {
+            "customer_id": "207",
+            "reminder_date": "2021-09-14",
+            "reminder_time": "12:00",
+            "commentary": "Recordatorio",
+            "customer": null
+          },
+          {
+            "customer_id": "239",
+            "reminder_date": "2021-09-14",
+            "reminder_time": "12:05",
+            "commentary": "Contacta",
+            "customer": {
+              "id": 239,
+              "name": "Fernando",
+              "father_last_name": "Herrera",
+              "mother_last_name": null,
+              "email": "nandoherrera@fraktalweb.com",
+              "phone": "443112458",
+              "age": "45"
+            }
+          }
+        ]
+      },
+      {
+        "reminder_date": "2021-09-16",
+        "reminders": [
+          {
+            "customer_id": "272",
+            "reminder_date": "2021-09-16",
+            "reminder_time": "12:00",
+            "commentary": "Comentario",
+            "customer": {
+              "id": 272,
+              "name": "Jos\u00e9",
+              "father_last_name": "Calder\u00f3n",
+              "mother_last_name": null,
+              "email": "josecalderon@fraktalweb.com",
+              "phone": "4661081064",
+              "age": "30"
+            }
+          },
+          {
+            "customer_id": "272",
+            "reminder_date": "2021-09-16",
+            "reminder_time": "11:00",
+            "commentary": "Comentario",
+            "customer": {
+              "id": 272,
+              "name": "Jos\u00e9",
+              "father_last_name": "Calder\u00f3n",
+              "mother_last_name": null,
+              "email": "josecalderon@fraktalweb.com",
+              "phone": "4661081064",
+              "age": "30"
+            }
+          },
+          {
+            "customer_id": "272",
+            "reminder_date": "2021-09-16",
+            "reminder_time": "10:30",
+            "commentary": "Comentario",
+            "customer": {
+              "id": 272,
+              "name": "Jos\u00e9",
+              "father_last_name": "Calder\u00f3n",
+              "mother_last_name": null,
+              "email": "josecalderon@fraktalweb.com",
+              "phone": "4661081064",
+              "age": "30"
+            }
+          }
+        ]
+      },
+      {
+        "reminder_date": "2021-09-21",
+        "reminders": [
+          {
+            "customer_id": "219",
+            "reminder_date": "2021-09-21",
+            "reminder_time": "10:00",
+            "commentary": "comentario",
+            "customer": {
+              "id": 219,
+              "name": "Luis",
+              "father_last_name": "Montero",
+              "mother_last_name": "Cruz",
+              "email": "asdsa@sad.com",
+              "phone": "1234567890",
+              "age": "0"
+            }
+          }
+        ]
+      },
+      {
+        "reminder_date": "2021-09-22",
+        "reminders": [
+          {
+            "customer_id": "206",
+            "reminder_date": "2021-09-22",
+            "reminder_time": "10:00",
+            "commentary": "Recordatorio",
+            "customer": {
+              "id": 206,
+              "name": "Esteban",
+              "father_last_name": "Manriquez",
+              "mother_last_name": "Lara",
+              "email": "estebanmanriquez@gmail.com",
+              "phone": "4434679123",
+              "age": "37"
+            }
+          }
+        ]
+      },
+      {
+        "reminder_date": "2021-09-23",
+        "reminders": [
+          {
+            "customer_id": "209",
+            "reminder_date": "2021-09-23",
+            "reminder_time": "12:30",
+            "commentary": "Comentario",
+            "customer": {
+              "id": 209,
+              "name": "Oscar",
+              "father_last_name": "Ya\u00f1ez",
+              "mother_last_name": "Ya\u00f1ez",
+              "email": "oscarya\u00f1ez@fraktalweb.com",
+              "phone": "4438876592",
+              "age": "0"
+            }
+          },
+          {
+            "customer_id": "246",
+            "reminder_date": "2021-09-23",
+            "reminder_time": "12:00",
+            "commentary": "Recordatorio",
+            "customer": {
+              "id": 246,
+              "name": "Marifer",
+              "father_last_name": "Bedolla",
+              "mother_last_name": "Fern\u00e1ndez",
+              "email": "mariferbedolla@fraktalweb.com",
+              "phone": "4436685123",
+              "age": "0"
+            }
+          },
+          {
+            "customer_id": "209",
+            "reminder_date": "2021-09-23",
+            "reminder_time": "10:00",
+            "commentary": "Recordatorio",
+            "customer": {
+              "id": 209,
+              "name": "Oscar",
+              "father_last_name": "Ya\u00f1ez",
+              "mother_last_name": "Ya\u00f1ez",
+              "email": "oscarya\u00f1ez@fraktalweb.com",
+              "phone": "4438876592",
+              "age": "0"
+            }
+          }
+        ]
+      },
+      {
+        "reminder_date": "2021-09-24",
+        "reminders": [
+          {
+            "customer_id": "208",
+            "reminder_date": "2021-09-24",
+            "reminder_time": "10:30",
+            "commentary": "Recordatorio",
+            "customer": {
+              "id": 208,
+              "name": "Pablo",
+              "father_last_name": "Cordoba",
+              "mother_last_name": "Martin",
+              "email": "aron@gmail.com",
+              "phone": "4435619832",
+              "age": "0"
+            }
+          }
+        ]
+      },
+      {
+        "reminder_date": "2021-09-29",
+        "reminders": [
+          {
+            "customer_id": "219",
+            "reminder_date": "2021-09-29",
+            "reminder_time": "11:00",
+            "commentary": "Recordatorio",
+            "customer": {
+              "id": 219,
+              "name": "Luis",
+              "father_last_name": "Montero",
+              "mother_last_name": "Cruz",
+              "email": "asdsa@sad.com",
+              "phone": "1234567890",
+              "age": "0"
+            }
+          },
+          {
+            "customer_id": "235",
+            "reminder_date": "2021-09-29",
+            "reminder_time": "10:30",
+            "commentary": "Comentario",
+            "customer": {
+              "id": 235,
+              "name": "Rafael",
+              "father_last_name": "Esparza",
+              "mother_last_name": "Esparza",
+              "email": "rafaesparza@fraktalweb.com",
+              "phone": "4431602867",
+              "age": "0"
+            }
+          }
+        ]
+      },
+      {
+        "reminder_date": "2021-10-22",
+        "reminders": [
+          {
+            "customer_id": "761",
+            "reminder_date": "2021-10-22",
+            "reminder_time": "14:30",
+            "commentary": "Notificaci\u00f3n de prueba",
+            "customer": null
+          }
+        ]
+      },
+      {
+        "reminder_date": "2021-11-01",
+        "reminders": [
+          {
+            "customer_id": "1731",
+            "reminder_date": "2021-11-01",
+            "reminder_time": "16:30",
+            "commentary": "Enviar correo a Fabi Fern\u00e1ndez",
+            "customer": {
+              "id": 1731,
+              "name": "Fabi",
+              "father_last_name": "Fernandez",
+              "mother_last_name": "Vences",
+              "email": "ferfabi@test1.com",
+              "phone": "4434318982",
+              "age": "0"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}
