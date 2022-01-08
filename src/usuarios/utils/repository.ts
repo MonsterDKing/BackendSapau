@@ -20,7 +20,11 @@ export class UsuarioRepository {
     }
 
     getById(id: number): Promise<UsuarioEntity> {
-        return this.repository.findOne(id);
+        return this.repository.findOne({
+            where:{
+                id
+            }
+        });
     }
 
     create(data: CreateUsuarioDto): Promise<UsuarioEntity> {

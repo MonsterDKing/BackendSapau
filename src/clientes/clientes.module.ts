@@ -15,17 +15,7 @@ import { MomentModule } from '@ccmos/nestjs-moment';
 const root = join(__dirname, '../../assets/pdf');
 @Module({
   imports: [TypeOrmModule.forFeature([ClienteEntity]), UsuariosModule, TarifaModule, 
-<<<<<<< HEAD
-  PDFModule.register({
-    view: {
-      root,
-      engine: 'pug',
-    },
-  }),
- MomentModule.forRoot({
-=======
   MomentModule.forRoot({
->>>>>>> ecbd7687056ded8eff09adaa0ee86985988ecf20
     tz: 'America/Mexico_City',
   }),],
   controllers: [ClientesController],

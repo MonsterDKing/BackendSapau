@@ -17,9 +17,9 @@ export class UsuariosController {
     return this.usuariosService.create(createUsuarioDto);
   }
 
-  @UseGuards(AuthGuard("jwt"), RolesGuard)
-  @ApiBearerAuth()
-  @Roles("SUPER_ADMIN")
+  // @UseGuards(AuthGuard("jwt"), RolesGuard)
+  // @ApiBearerAuth()
+  // @Roles("SUPER_ADMIN")
   @Get()
   findAll() {
     return this.usuariosService.findAll();

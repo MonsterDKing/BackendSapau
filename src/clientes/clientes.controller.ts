@@ -3,7 +3,6 @@ import { join } from 'path';
 import { ClientesService } from './clientes.service';
 import { CreateClienteDto } from './dto/create-cliente.dto';
 import { UpdateClienteDto } from './dto/update-cliente.dto';
-import * as PDFDocument from 'pdfkit'
 
 @Controller('clientes')
 export class ClientesController {
