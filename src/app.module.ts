@@ -6,6 +6,7 @@ import { ClientesModule } from './clientes/clientes.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
 import { TarifaModule } from './tarifa/tarifa.module';
+import { TransaccionesModule } from './transacciones/transacciones.module';
 
 
 @Module({
@@ -22,7 +23,7 @@ import { TarifaModule } from './tarifa/tarifa.module';
     database: "heroku_57847ecadbd45d9",
     autoLoadEntities: true,
     synchronize: true
-  }),UsuariosModule, ClientesModule, AuthModule, TarifaModule],
+  }),UsuariosModule, ClientesModule, AuthModule, TarifaModule, TransaccionesModule],
   controllers: [AppController],
   providers: [AppService],
 })

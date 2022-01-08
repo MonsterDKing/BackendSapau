@@ -1,0 +1,29 @@
+doctype html
+head
+  meta(charset='UTF-8')
+  meta(name='viewport' content='width=device-width, initial-scale=1.0')
+  title Document
+style.
+  p {
+  }
+div(style='margin: 10%;')
+  p(style='text-align: center; font-weight: bold;') NOTIFICACION
+  p(style='text-align: right;  font-size: 11px;') HUETAMO, MICH.. A  #{fecha || 'empty'}
+  p(style='font-size: 11px;') POR MEDIO DE LA PRESENTE LE INFORMAMOS QUE EL SERVICIO A 
+  p(style='font-weight: bold; font-size: 11px;') NOMBRE  #{nombre || 'empty'}
+  p(style='font-weight: bold; font-size: 11px;') CALLE  #{calle || 'empty'}
+  p(style='font-weight: bold; font-size: 11px;') COLONIA  #{colonia || 'empty'}
+  br
+  br
+  p(style='text-align: justify; text-justify: inter-word ;font-size: 11px;')
+    | A LA FECHA CUENTA CON ADEUDO DEL MES DE #{fechauno || 'empty'} - #{fechados || 'empty'}POR LA CANTIDAD DE $ #{ cantidad || 'empty'}
+    | EN BASE AL CONTRATO CELEBRADO CON EL ORGANISMO OPERADOR DE AGUA POTABLE SAPAHU. DERIVADO DE LO ANTERIOR
+    | LE INFORMAMOS QUE EN BASE DEL ART. 121 DE LA LEY DEL AGUA Y GESTION DE CUENCAS PARA EL ESTADO DE MICHOACAN.
+    | LA FALTA DE PAGO EN TRES OCACSIONES CONSECUTIVAS POR PARTE DEL USUARIO FACULTA
+    | AL ORGANISMO PARA SUSPENDER LOS SERVICIOS HASTA QUE SE REGULARICE SU PAGO.
+  br
+  p(style='text-align: center;  font-size: 11px;')
+    | CUENTA CON 3 DIAS HABILES PARA ACLARAR SU SITUACION APARTIR DE RECIBIR ESTA
+    | NOTIFICACION EN LA SOFICINAS DE ESTE ORGANISMO
+  p(style='text-align: center;  font-size: 11px;') ATENTAMENTE SISTEMA DE AGUA POTABLE Y ALCANTARILLADO DE HUETAMO
+  p(style='text-align: center;  font-size: 11px;')  (SAPAHU)

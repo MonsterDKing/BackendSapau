@@ -1,4 +1,5 @@
 import { TarifaEntity } from "src/tarifa/entities/tarifa.entity";
+import { TransaccionEntity } from "src/transacciones/entities/transaccion.entity";
 import { UsuarioEntity } from "src/usuarios/entities/usuario.entity";
 import { BeforeInsert, Column, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 
@@ -56,6 +57,9 @@ export class ClienteEntity {
         nullable: false
     })
     localidad: string;
+
+    @ManyToOne(() => TransaccionEntity, trans => trans.cliente)
+    transacciones:TransaccionEntity;
 
 
     constructor(contrato: string, nombre: string, apellidoMaterno: string, apellidoPaterno: string, contratante: UsuarioEntity, calle: string, colonia: string, codigoPostal: string, localidad: string,tarifa:TarifaEntity ,id?: number) {

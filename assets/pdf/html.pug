@@ -1,29 +1,77 @@
-doctype html
-head
-  meta(charset='UTF-8')
-  meta(name='viewport' content='width=device-width, initial-scale=1.0')
-  title Document
-style.
-  p {
-  }
-div(style='margin: 10%;')
-  p(style='text-align: center; font-weight: bold;') NOTIFICACION
-  p(style='text-align: right;  font-size: 11px;') HUETAMO, MICH.. A  #{fecha || 'empty'}
-  p(style='font-size: 11px;') POR MEDIO DE LA PRESENTE LE INFORMAMOS QUE EL SERVICIO A 
-  p(style='font-weight: bold; font-size: 11px;') NOMBRE  #{nombre || 'empty'}
-  p(style='font-weight: bold; font-size: 11px;') CALLE  #{calle || 'empty'}
-  p(style='font-weight: bold; font-size: 11px;') COLONIA  #{colonia || 'empty'}
-  br
-  br
-  p(style='text-align: justify; text-justify: inter-word ;font-size: 11px;')
-    | A LA FECHA CUENTA CON ADEUDO DEL MES DE #{fechauno || 'empty'} - #{fechados || 'empty'}POR LA CANTIDAD DE $ #{ cantidad || 'empty'}
-    | EN BASE AL CONTRATO CELEBRADO CON EL ORGANISMO OPERADOR DE AGUA POTABLE SAPAHU. DERIVADO DE LO ANTERIOR
-    | LE INFORMAMOS QUE EN BASE DEL ART. 121 DE LA LEY DEL AGUA Y GESTION DE CUENCAS PARA EL ESTADO DE MICHOACAN.
-    | LA FALTA DE PAGO EN TRES OCACSIONES CONSECUTIVAS POR PARTE DEL USUARIO FACULTA
-    | AL ORGANISMO PARA SUSPENDER LOS SERVICIOS HASTA QUE SE REGULARICE SU PAGO.
-  br
-  p(style='text-align: center;  font-size: 11px;')
-    | CUENTA CON 3 DIAS HABILES PARA ACLARAR SU SITUACION APARTIR DE RECIBIR ESTA
-    | NOTIFICACION EN LA SOFICINAS DE ESTE ORGANISMO
-  p(style='text-align: center;  font-size: 11px;') ATENTAMENTE SISTEMA DE AGUA POTABLE Y ALCANTARILLADO DE HUETAMO
-  p(style='text-align: center;  font-size: 11px;')  (SAPAHU)
+div(style='margin:0 auto;max-width:700px;font-family:Helvetica,Arial,sans-serif;')
+  table(style='font-family: Helvetica Neue, Helvetica,sans-serif; font-size: 13px;margin:30px 0;' width='100%' cellspacing='0' cellpadding='0')
+    tbody
+      tr
+        td(align='left' width='50%')
+          p(style='margin:30px 0;')
+            img(src='logo.png' alt='Acompany' width='200' height='34')
+          |                     SISTEMA DE AGUA POTABLE Y ALCANTARILLADO DE HUETAMO
+          br
+          |                     RFC: SAP920725KT8
+          br
+          |                     Av madero norte #12A COL. centro.
+          br
+          |                     Huetamo Michoac&aacute;n.
+  h2 CONTRATO POR SERVICIO DE AGUA POTABLE
+  |     Contrato No. {{numerocontrato}} por servicio de agua potable que celebran de una parte el director del Sistema de agua potable y alcantarillado de Huetamo Sapahu. 
+  |     ING: JULIAN SOTO MARTINEZ y de la otra parte  {{nombreusuario}} Que en lo sucesivo se denominara el usuario (a) con domicilio En Calle: {{calle}} 
+  |     colonia: {{colonia}}.   
+  h2 Cl&aacute;usulas:
+  p
+    | PRIMERA. -  El sistema se obliga a proporcionar los servicios consistentes en el suministro de agua potable al usuario mediante personal de esta
+    | instituci&oacute;n no permita la intervenci&oacute;n de personas ajenas al sistema, la tuber&iacute;a para la alimentaci&oacute;n de agua potable domiciliaria ser&aacute; de &half;&rdquo; de di&aacute;metro,
+    | la toma se har&aacute; de la red p&uacute;blica.
+  p
+    | SEGUNDA. &ndash; El costo de reconexi&oacute;n es de: $ 4,250.00 CUATRO MIL DOSCIENTOS CINCUENTA PESOS 00/100 M N.)
+  p
+    | (.) Una vez cubierta los costos de conexi&oacute;n con su comprobante oficial se har&aacute; la conexi&oacute;n correspondiente.
+  p
+    | TERCERA.-  EL USUARIO contratante se obliga a pagar los materiales en las dimensiones  y caracter&iacute;sticas que la hidrotoma contratada requiera conforme a las normas espec&iacute;ficas que el SISTEMA determine por la conexi&oacute;n de los servicios en la cantidad cierta y en dinero descrito en el  presente contrato acordes a las cuotas y tarifas que hayan sido aprobadas por la autoridad competente, y como se  desglosa en el recibo adjunto conforme a la tarifa y REGLAMENTO le corresponda; oblig&aacute;ndose a pagar en tiempo y forma los costos por la prestaci&oacute;n  de los servicios contratados, a partir de la fecha de instalaci&oacute;n de la toma, aun y cuando no utilice el servicio.
+  p
+    | CUARTA. - Al quedar instalada la toma el SISTEMA proporcionar&aacute; el servicio de agua potable, en la calidad y capacidad de sus fuentes de abastecimiento, as&iacute; como de acuerdo a sus redes de servicio existentes.
+  p
+    | QUINTA. -  El servicio de agua potable ser&aacute; pagada por el usuario en la forma y condiciones que para el efecto este establecido en las tarifas y normatividad vigente.
+  p
+    | SEXTA. - Los pagos de servicio, deber&aacute;n efectuarse mensual o bimestralmente como lo establezca el SISTEMA, en sus oficinas, o en los lugares autorizados por este.
+  p
+    | SEPTIMA. - Los importes por los servicios relativos y correspondientes prestados se constituyen como cr&eacute;dito fiscal seg&uacute;n la ley de Hacienda Municipal, la ley de ingresos del Municipio y el c&oacute;digo Fiscal Municipal como el REGLAMENTO respectivo, por lo que el usuario a la firma de este contrato, acepta y reconoce expresamente ser sujeto a la
+  p
+    | Aplicaci&oacute;n del procedimiento administrativo de ejecuci&oacute;n en caso de incumplimiento en el pago de los servicios suministrados por el sistema.
+  p
+    | OCTAVA. - En caso de traspaso o venta de las fincas donde se encuentran conectados los servicios a que este contrato se refiere el usuario o propietario tiene la obligaci&oacute;n de cubrir el adeudo que exista en su cuenta con el SISTEMA. As&iacute; mismo el usuario deber&aacute; dar el aviso de baja correspondiente.
+  p
+    | NOVENA. -  EL USUARIO contratante deber&aacute; en todo momento cuidar el buen uso y aprovechamiento del vital l&iacute;quido.
+  p
+    | DECIMA. - En ning&uacute;n caso el usuario podr&aacute; abastecer a otros en cuanto al servicio se refiere.
+  p
+    | DECIMA PRIMERA. - Queda prohibido que el usuario emplee mecanismos o acople bombas para succionar el agua de las tuber&iacute;as de distribuci&oacute;n en caso contrario, se har&aacute; acreedor a las sanciones establecidas por las leyes normativas de la materia.
+  p
+    | VIGESIMA. EL USUARIO se compromete a cumplir con las pol&iacute;ticas, tarifarias que establezcan el SISTEMA necesarias para la prestaci&oacute;n del servicio.
+  p
+    | VIGESIMA PRIMERA. - La duraci&oacute;n del presente contrato ser&aacute; por tiempo indefinido y podr&aacute; darse por terminado o rescindido por el SISTEMA mediante aviso por escrito en 15 d&iacute;as de anticipaci&oacute;n.
+  p
+    | En este contrato no existe dolo, mala fe o cualquier otro vicio de la voluntad que pudiera afectarlo de nulidad o validez.
+  p
+    | VIGESIMA SEGUNDA .- El organismo tiene la facultad de suspender el suministro de agua potable y/o la cancelaci&oacute;n de las descargas de agua residuales por incumplimiento del pago de las tarifas correspondientes por un plazo determinado.
+  p
+    | Le&iacute;do y enterado de su contenido, firman las partes el presente contrato por duplicado, en la Ciudad de Huetamo, Michoac&aacute;n a {{fecha_usuario}}.
+  table(style='font-family: Helvetica Neue, Helvetica,sans-serif; font-size: 13px;margin:30px 0;' width='100%' cellspacing='0' cellpadding='0')
+    tbody
+      tr
+        td(align='center' width='50%')
+          h1(style='margin:30px 0;font-family: Helvetica Neue, Helvetica,sans-serif; font-size: 17px;') POR EL &ldquo;SISTEMA&rdquo;
+          |                     ______________________________
+          br
+          br
+          br
+          |                     ING. JULI&Aacute;N SOTO MART&Iacute;NEZ 
+          br
+          |                     Director General del SAPAHU
+          br
+        td(align='center' width='50%')
+          h1(style='margin:30px 0;font-family: Helvetica Neue, Helvetica,sans-serif; font-size: 17px;') POR EL &ldquo;USUARIO&rdquo;
+          |                     ______________________________
+          br
+          br
+          br
+          |                     {{nombre usuario}}

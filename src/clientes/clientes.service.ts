@@ -13,8 +13,7 @@ export class ClientesService {
 
   constructor(
     private repository: ClientesRepository,
-    private mapper: ClienteMapper,
-    private readonly pdfService: PDFService,
+    private mapper: ClienteMapper
   ) { }
 
   async create(data: CreateClienteDto) {
@@ -55,7 +54,25 @@ export class ClientesService {
         cantidad:200
       }
     };
-    const d = await this.pdfService.toStream(template,opt);
-    return d;
+    // const d = await this.pdfService.toStream("",opt);
+    return false;
+  }
+
+  async generateContractStream(template: string) {
+    var localLocale = moment().locale("es");
+    var fechaActual = localLocale.format('LL').toUpperCase();
+    let opt:PDFOptions={
+      locals:{
+        fecha:fechaActual,
+        nombre:"Pedro manuel salas galindo",
+        calle:"Manuel muñiz 431",
+        colonia:"Juarez",
+        fechauno:moment().format('YYYY/MM/D '),
+        fechados:moment().format('YYYY/MM/D '),
+        cantidad:200
+      }
+    };
+    // const d = await this.pdfService.toStream(template,opt);
+    return false
   }
 }

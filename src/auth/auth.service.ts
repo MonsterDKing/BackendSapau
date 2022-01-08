@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { RolesEnum } from 'src/global/enum/roles.enum';
 import { UsuarioService } from 'src/usuarios/usuarios.service';
 import { UsuarioMapper } from 'src/usuarios/utils/mapper';
 import { JWTPayload } from './jwt.payload';
@@ -29,8 +30,8 @@ export class AuthService {
   async generateAccessToken(email: string) {
     const user = await this.usService.getByEmail(email);    
     let d = await this.mapper.entityToTransfer(user);
-
-    const payload: JWTPayload = { id: user.id,email:user.email,nombre:user.nombre };
+    let rol = RolesEnum[user.rol];
+    const payload: JWTPayload = { id: user.id,email:user.email,nombre:user.nombre,rol:rol };
     return {
       user:d,
       authToken: this.jwtService.sign(payload),

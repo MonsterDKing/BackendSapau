@@ -43,7 +43,8 @@ export class UsuarioMapper {
             data.nombre,
             data.email,
             data.password,
-            data.activo
+            data.activo,
+            data.rol
         );
     }
 
