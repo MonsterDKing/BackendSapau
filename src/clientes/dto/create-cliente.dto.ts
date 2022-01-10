@@ -12,7 +12,7 @@ export class CreateClienteDto {
     apellidoMaterno: string;
     @ApiProperty()
     apellidoPaterno: string;
-    @ApiProperty()
+    // @ApiProperty()
     contratante: number;
     @ApiProperty()
     calle: string;

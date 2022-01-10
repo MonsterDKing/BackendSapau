@@ -1,15 +1,22 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Res } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Res, UseGuards } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
+import { ApiBearerAuth } from '@nestjs/swagger';
 import { join } from 'path';
+import { Auth } from 'src/auth/decorators/decorators-auth';
+import { UsuarioEntity } from 'src/usuarios/entities/usuario.entity';
 import { ClientesService } from './clientes.service';
 import { CreateClienteDto } from './dto/create-cliente.dto';
 import { UpdateClienteDto } from './dto/update-cliente.dto';
 
+@ApiBearerAuth()
+@UseGuards(AuthGuard('jwt'))
 @Controller('clientes')
 export class ClientesController {
   constructor(private readonly clientesService: ClientesService) { }
 
   @Post()
-  create(@Body() createClienteDto: CreateClienteDto) {
+  create(@Auth() data:UsuarioEntity,@Body() createClienteDto: CreateClienteDto) {
+    createClienteDto.contratante = data.id;
     return this.clientesService.create(createClienteDto);
   }
 
