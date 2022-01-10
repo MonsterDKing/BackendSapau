@@ -4,7 +4,7 @@ div(style='margin:0 auto;max-width:700px;font-family:Helvetica,Arial,sans-serif;
       tr
         td(align='left' width='50%')
           p(style='margin:30px 0;')
-            img(src='logo.png' alt='Acompany' width='200' height='34')
+            img(src='https://i.ibb.co/KVqkRFh/logo.png' alt='Acompany' width='200' height='34')
           |                     SISTEMA DE AGUA POTABLE Y ALCANTARILLADO DE HUETAMO
           br
           |                     RFC: SAP920725KT8
@@ -13,9 +13,9 @@ div(style='margin:0 auto;max-width:700px;font-family:Helvetica,Arial,sans-serif;
           br
           |                     Huetamo Michoac&aacute;n.
   h2 CONTRATO POR SERVICIO DE AGUA POTABLE
-  |     Contrato No. {{numerocontrato}} por servicio de agua potable que celebran de una parte el director del Sistema de agua potable y alcantarillado de Huetamo Sapahu. 
-  |     ING: JULIAN SOTO MARTINEZ y de la otra parte  {{nombreusuario}} Que en lo sucesivo se denominara el usuario (a) con domicilio En Calle: {{calle}} 
-  |     colonia: {{colonia}}.   
+  |     Contrato No. #{contrato} por servicio de agua potable que celebran de una parte el director del Sistema de agua potable y alcantarillado de Huetamo Sapahu. 
+  |     ING: JULIAN SOTO MARTINEZ y de la otra parte  #{cliente} Que en lo sucesivo se denominara el usuario (a) con domicilio En Calle: #{calle} 
+  |     colonia: #{colonia}.   
   h2 Cl&aacute;usulas:
   p
     | PRIMERA. -  El sistema se obliga a proporcionar los servicios consistentes en el suministro de agua potable al usuario mediante personal de esta
@@ -54,7 +54,7 @@ div(style='margin:0 auto;max-width:700px;font-family:Helvetica,Arial,sans-serif;
   p
     | VIGESIMA SEGUNDA .- El organismo tiene la facultad de suspender el suministro de agua potable y/o la cancelaci&oacute;n de las descargas de agua residuales por incumplimiento del pago de las tarifas correspondientes por un plazo determinado.
   p
-    | Le&iacute;do y enterado de su contenido, firman las partes el presente contrato por duplicado, en la Ciudad de Huetamo, Michoac&aacute;n a {{fecha_usuario}}.
+    | Le&iacute;do y enterado de su contenido, firman las partes el presente contrato por duplicado, en la Ciudad de Huetamo, Michoac&aacute;n a #{fecha}.
   table(style='font-family: Helvetica Neue, Helvetica,sans-serif; font-size: 13px;margin:30px 0;' width='100%' cellspacing='0' cellpadding='0')
     tbody
       tr
@@ -74,4 +74,4 @@ div(style='margin:0 auto;max-width:700px;font-family:Helvetica,Arial,sans-serif;
           br
           br
           br
-          |                     {{nombre usuario}}
+          |                     #{cliente}

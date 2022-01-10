@@ -6,6 +6,10 @@ import { UpdateClienteDto } from './dto/update-cliente.dto';
 import { ClienteEntity } from './entities/cliente.entity';
 import { ClienteMapper } from './utils/mapper';
 import { ClientesRepository } from './utils/repository';
+import * as pug from 'pug';
+import * as pdf from 'html-pdf'
+import { join } from 'path';
+const fs = require('fs');
 
 @Injectable()
 export class ClientesService {
@@ -40,39 +44,38 @@ export class ClientesService {
     await this.repository.delete(id);
   }
 
-  async generatePDFToStream(id:number,template: string) {
-    var localLocale = moment().locale("es");
-    var fechaActual = localLocale.format('LL').toUpperCase();
-    let opt:PDFOptions={
-      locals:{
-        fecha:fechaActual,
-        nombre:"Pedro manuel salas galindo",
-        calle:"Manuel muñiz 431",
-        colonia:"Juarez",
-        fechauno:moment().format('YYYY/MM/D '),
-        fechados:moment().format('YYYY/MM/D '),
-        cantidad:200
-      }
-    };
-    // const d = await this.pdfService.toStream("",opt);
-    return false;
+  // async generatePDFToStream(id:number,template: string) {
+  //   var localLocale = moment().locale("es");
+  //   var fechaActual = localLocale.format('LL').toUpperCase();
+  //   let opt:PDFOptions={
+  //     locals:{
+  //       fecha:fechaActual,
+  //       nombre:"Pedro manuel salas galindo",
+  //       calle:"Manuel muñiz 431",
+  //       colonia:"Juarez",
+  //       fechauno:moment().format('YYYY/MM/D '),
+  //       fechados:moment().format('YYYY/MM/D '),
+  //       cantidad:200
+  //     }
+  //   };
+  //   // const d = await this.pdfService.toStream("",opt);
+  //   return false;
+  // }
+
+  async generateContractStream(id:number) {
+    const root = join(__dirname, '../../assets/pdf/contrato.pug');
+    let us = await this.repository.getById(id);
+    var d = new Date(us.fechaDeCreacion);
+    const compiledFunction = pug.compileFile(root);
+    const compiledContent = compiledFunction({
+      contrato: us.contrato,
+      cliente: `${us.nombre} ${us.apellidoPaterno} ${us.apellidoMaterno}`,
+      calle:`${us.calle}`,
+      colonia:`${us.colonia}`,
+      fecha:`${d.getDate() + '/' + (d.getMonth()+1) + '/' + d.getFullYear()}`
+    });
+    return pdf.create(compiledContent)
   }
 
-  async generateContractStream(template: string) {
-    var localLocale = moment().locale("es");
-    var fechaActual = localLocale.format('LL').toUpperCase();
-    let opt:PDFOptions={
-      locals:{
-        fecha:fechaActual,
-        nombre:"Pedro manuel salas galindo",
-        calle:"Manuel muñiz 431",
-        colonia:"Juarez",
-        fechauno:moment().format('YYYY/MM/D '),
-        fechados:moment().format('YYYY/MM/D '),
-        cantidad:200
-      }
-    };
-    // const d = await this.pdfService.toStream(template,opt);
-    return false
-  }
+
 }
