@@ -71,7 +71,8 @@ export class ClienteMapper {
             data.colonia,
             data.codigoPostal,
             data.localidad,
-            data.tarifa.id
+            data.tarifa.id,
+            data.id
         );
     }
 

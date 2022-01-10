@@ -2,6 +2,8 @@ import { ApiProperty } from "@nestjs/swagger";
 
 export class CreateClienteDto {
 
+    id:number;
+
     @ApiProperty()
     contrato: string;
     @ApiProperty()
@@ -24,7 +26,7 @@ export class CreateClienteDto {
     tarifa: number;
 
 
-    constructor(contrato: string, nombre: string, apellidoMaterno: string, apellidoPaterno: string, contratante: number, calle: string, colonia: string, codigoPostal: string, localidad: string,tarifa:number) {
+    constructor(contrato: string, nombre: string, apellidoMaterno: string, apellidoPaterno: string, contratante: number, calle: string, colonia: string, codigoPostal: string, localidad: string,tarifa:number,id?:number) {
         this.contrato = contrato;
         this.nombre = nombre;
         this.apellidoPaterno = apellidoPaterno;
@@ -35,6 +37,7 @@ export class CreateClienteDto {
         this.codigoPostal = codigoPostal;
         this.localidad = localidad;
         this.tarifa = tarifa
+        this.id = id;
     }
 
 
