@@ -3,6 +3,7 @@ import { join } from 'path';
 import { ClientesService } from './clientes.service';
 import { CreateClienteDto } from './dto/create-cliente.dto';
 import { UpdateClienteDto } from './dto/update-cliente.dto';
+const fs = require('fs');
 
 @Controller('clientes')
 export class ClientesController {
@@ -38,13 +39,14 @@ export class ClientesController {
     return false;
   } 
 
-  @Get('/generateContracts')
-  generateContractPdf(@Res() res) {
-    return false;
-    // this.clientesService.generateContractStream("contrato.pug").then((data) => {
-    //   data.subscribe((datados)=>{
-    //     datados.pipe(res);
-    //   })
-    // })
+@Get('/contrato/:id')
+ async generateContractPdf(@Param('id') id: number,@Res() res) {
+    this.clientesService.generateContractStream(id).then((valor)=>{
+      const filepath = join(__dirname, '../../assets/generated/prueba2.pdf');
+      valor.toStream(function(err, stream){
+        stream.pipe(fs.createWriteStream(filepath));
+        stream.pipe(res);
+      });
+    })
   }
 }

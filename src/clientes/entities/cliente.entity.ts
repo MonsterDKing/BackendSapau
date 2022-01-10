@@ -1,7 +1,7 @@
 import { TarifaEntity } from "src/tarifa/entities/tarifa.entity";
 import { TransaccionEntity } from "src/transacciones/entities/transaccion.entity";
 import { UsuarioEntity } from "src/usuarios/entities/usuario.entity";
-import { BeforeInsert, Column, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { BeforeInsert, Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 
 
 @Entity('cliente')
@@ -60,6 +60,10 @@ export class ClienteEntity {
 
     @ManyToOne(() => TransaccionEntity, trans => trans.cliente)
     transacciones:TransaccionEntity;
+
+    @CreateDateColumn({ type: "timestamp", default: () => "CURRENT_TIMESTAMP(6)" })
+    public fechaDeCreacion: Date;
+
 
 
     constructor(contrato: string, nombre: string, apellidoMaterno: string, apellidoPaterno: string, contratante: UsuarioEntity, calle: string, colonia: string, codigoPostal: string, localidad: string,tarifa:TarifaEntity ,id?: number) {

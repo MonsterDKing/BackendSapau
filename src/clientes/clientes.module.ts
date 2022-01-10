@@ -12,7 +12,6 @@ import { PDFModule } from '@t00nday/nestjs-pdf';
 import { join } from 'path';
 import { MomentModule } from '@ccmos/nestjs-moment';
 
-const root = join(__dirname, '../../assets/pdf');
 @Module({
   imports: [TypeOrmModule.forFeature([ClienteEntity]), UsuariosModule, TarifaModule, 
   MomentModule.forRoot({
