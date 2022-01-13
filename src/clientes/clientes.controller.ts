@@ -15,36 +15,36 @@ export class ClientesController {
   constructor(private readonly clientesService: ClientesService) { }
 
   @ApiBearerAuth()
-@UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'))
   @Post()
-  create(@Auth() data:UsuarioEntity,@Body() createClienteDto: CreateClienteDto) {
+  create(@Auth() data: UsuarioEntity, @Body() createClienteDto: CreateClienteDto) {
     createClienteDto.contratante = data.id;
     return this.clientesService.create(createClienteDto);
   }
 
-@ApiBearerAuth()
-@UseGuards(AuthGuard('jwt'))
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard('jwt'))
   @Get()
   findAll() {
     return this.clientesService.findAll();
   }
 
   @ApiBearerAuth()
-@UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'))
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.clientesService.findOne(+id);
   }
 
   @ApiBearerAuth()
-@UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'))
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateClienteDto: UpdateClienteDto) {
     return this.clientesService.update(+id, updateClienteDto);
   }
 
   @ApiBearerAuth()
-@UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'))
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.clientesService.remove(+id);
@@ -53,14 +53,14 @@ export class ClientesController {
   @Get('/adeudos/:id')
   generatePdf(@Param('id') id: number, @Res() res) {
     return false;
-  } 
+  }
 
 
-@Get('/contrato/:id')
- async generateContractPdf(@Param('id') id: number,@Res() res) {
-    this.clientesService.generateContractStream(id).then((valor)=>{
+  @Get('/contrato/:id')
+  async generateContractPdf(@Param('id') id: number, @Res() res) {
+    this.clientesService.generateContractStream(id).then((valor) => {
       const filepath = join(__dirname, '../../assets/generated/prueba2.pdf');
-      valor.toStream(function(err, stream){
+      valor.toStream(function (err, stream) {
         stream.pipe(fs.createWriteStream(filepath));
         stream.pipe(res);
       });
