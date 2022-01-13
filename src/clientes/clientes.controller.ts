@@ -9,33 +9,42 @@ import { CreateClienteDto } from './dto/create-cliente.dto';
 import { UpdateClienteDto } from './dto/update-cliente.dto';
 const fs = require('fs');
 
-@ApiBearerAuth()
-@UseGuards(AuthGuard('jwt'))
+
 @Controller('clientes')
 export class ClientesController {
   constructor(private readonly clientesService: ClientesService) { }
 
+  @ApiBearerAuth()
+@UseGuards(AuthGuard('jwt'))
   @Post()
   create(@Auth() data:UsuarioEntity,@Body() createClienteDto: CreateClienteDto) {
     createClienteDto.contratante = data.id;
     return this.clientesService.create(createClienteDto);
   }
 
+@ApiBearerAuth()
+@UseGuards(AuthGuard('jwt'))
   @Get()
   findAll() {
     return this.clientesService.findAll();
   }
 
+  @ApiBearerAuth()
+@UseGuards(AuthGuard('jwt'))
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.clientesService.findOne(+id);
   }
 
+  @ApiBearerAuth()
+@UseGuards(AuthGuard('jwt'))
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateClienteDto: UpdateClienteDto) {
     return this.clientesService.update(+id, updateClienteDto);
   }
 
+  @ApiBearerAuth()
+@UseGuards(AuthGuard('jwt'))
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.clientesService.remove(+id);
@@ -45,6 +54,7 @@ export class ClientesController {
   generatePdf(@Param('id') id: number, @Res() res) {
     return false;
   } 
+
 
 @Get('/contrato/:id')
  async generateContractPdf(@Param('id') id: number,@Res() res) {
