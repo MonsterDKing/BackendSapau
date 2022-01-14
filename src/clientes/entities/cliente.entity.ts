@@ -1,3 +1,4 @@
+import { CobroEntity } from "src/cobros/entities/cobro.entity";
 import { TarifaEntity } from "src/tarifa/entities/tarifa.entity";
 import { TransaccionEntity } from "src/transacciones/entities/transaccion.entity";
 import { UsuarioEntity } from "src/usuarios/entities/usuario.entity";
@@ -58,8 +59,11 @@ export class ClienteEntity {
     })
     localidad: string;
 
-    @ManyToOne(() => TransaccionEntity, trans => trans.cliente)
-    transacciones:TransaccionEntity;
+    @OneToMany(() => TransaccionEntity, trans => trans.cliente)
+    transacciones:TransaccionEntity[];
+
+    @OneToMany(() => CobroEntity, cobro => cobro.cliente)
+    cobros:CobroEntity[];
 
     @CreateDateColumn({ type: "timestamp", default: () => "CURRENT_TIMESTAMP(6)" })
     public fechaDeCreacion: Date;

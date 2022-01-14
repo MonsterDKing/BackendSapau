@@ -8,6 +8,7 @@ import { TransaccionRepository } from './utils/repository';
 @Module({
   imports:[TypeOrmModule.forFeature([TransaccionEntity]),], 
   controllers: [TransaccionesController],
-  providers: [TransaccionesService,TransaccionRepository]
+  providers: [TransaccionesService,TransaccionRepository],
+  exports:[TransaccionRepository,TransaccionesService]
 })
 export class TransaccionesModule {}

@@ -1,6 +1,7 @@
 import { BeforeInsert, Column, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import * as bcrypt from "bcrypt";
 import { ClienteEntity } from "src/clientes/entities/cliente.entity";
+import { CobroEntity } from "src/cobros/entities/cobro.entity";
 
 
 @Entity('usuario')
@@ -31,6 +32,9 @@ export class UsuarioEntity {
         default:2
       })
       rol: number;
+
+      @OneToMany(() => CobroEntity, cobro => cobro.cobrador)
+      cobros:CobroEntity[];
 
 
 

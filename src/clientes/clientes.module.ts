@@ -7,18 +7,23 @@ import { ClienteMapper } from './utils/mapper';
 import { ClientesRepository } from './utils/repository';
 import { UsuariosModule } from 'src/usuarios/usuarios.module';
 import { TarifaModule } from 'src/tarifa/tarifa.module';
-import { TarifaMapper } from 'src/tarifa/utils/mapper';
-import { PDFModule } from '@t00nday/nestjs-pdf';
-import { join } from 'path';
 import { MomentModule } from '@ccmos/nestjs-moment';
+import { TransaccionesModule } from 'src/transacciones/transacciones.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([ClienteEntity]), UsuariosModule, TarifaModule, 
+  imports: [TypeOrmModule.forFeature([ClienteEntity]),
+   UsuariosModule, 
+   TarifaModule, 
+   TransaccionesModule,
   MomentModule.forRoot({
     tz: 'America/Mexico_City',
   }),],
   controllers: [ClientesController],
-  providers: [ClientesService, ClienteMapper, ClientesRepository,],
+  providers: [
+    ClientesService, 
+    ClienteMapper, 
+    ClientesRepository,
+  ],
   exports: [ClientesService]
 })
 export class ClientesModule { }

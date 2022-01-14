@@ -7,10 +7,14 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
 import { TarifaModule } from './tarifa/tarifa.module';
 import { TransaccionesModule } from './transacciones/transacciones.module';
+import { CobrosModule } from './cobros/cobros.module';
+import { ScheduleModule } from '@nestjs/schedule';
+import { CronService } from './cron/cron.service';
 
 
 @Module({
-  imports: [TypeOrmModule.forRoot({
+  imports: [
+    TypeOrmModule.forRoot({
     type: 'mysql',
     port: parseInt("3306"),
     // host: "localhost",
@@ -23,8 +27,15 @@ import { TransaccionesModule } from './transacciones/transacciones.module';
     database: "heroku_57847ecadbd45d9",
     autoLoadEntities: true,
     synchronize: true
-  }),UsuariosModule, ClientesModule, AuthModule, TarifaModule, TransaccionesModule],
+  }),UsuariosModule, 
+  ClientesModule, 
+  AuthModule, 
+  TarifaModule, 
+  TransaccionesModule, 
+  CobrosModule,
+  ScheduleModule.forRoot()
+],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, CronService],
 })
 export class AppModule {}

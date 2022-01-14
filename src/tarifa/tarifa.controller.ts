@@ -1,8 +1,13 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
 import { TarifaService } from './tarifa.service';
 import { CreateTarifaDto } from './dto/create-tarifa.dto';
 import { UpdateTarifaDto } from './dto/update-tarifa.dto';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { AuthGuard } from '@nestjs/passport';
 
+// @ApiBearerAuth()
+// @UseGuards(AuthGuard('jwt'))
+@ApiTags('tarifa')
 @Controller('tarifa')
 export class TarifaController {
   constructor(private readonly tarifaService: TarifaService) {}

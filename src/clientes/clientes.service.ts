@@ -9,6 +9,8 @@ import { ClientesRepository } from './utils/repository';
 import * as pug from 'pug';
 import * as pdf from 'html-pdf'
 import { join } from 'path';
+import { TransaccionesService } from 'src/transacciones/transacciones.service';
+import { TransaccionesEnum } from 'src/transacciones/enums/Transacciones.enum';
 const fs = require('fs');
 
 @Injectable()
@@ -17,11 +19,15 @@ export class ClientesService {
 
   constructor(
     private repository: ClientesRepository,
-    private mapper: ClienteMapper
+    private mapper: ClienteMapper,
+    private _transaccionesService:TransaccionesService
   ) { }
 
   async create(data: CreateClienteDto) {
     const newElement: ClienteEntity = await this.repository.create(data);
+    if(newElement){
+      await this._transaccionesService.create(TransaccionesEnum.CREACION_DE_CONTRATO,newElement);
+    }
     return this.mapper.entityToDto(newElement);
   }
 

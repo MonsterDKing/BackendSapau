@@ -14,11 +14,12 @@ export class TransaccionEntity {
     })
     tipo_transaccion:number;
 
-    @OneToMany(() => ClienteEntity, cliente => cliente.transacciones)
+    @ManyToOne(() => ClienteEntity, cliente => cliente.transacciones)
     cliente:ClienteEntity;
 
     @CreateDateColumn()
     fecha_creacion: Date;
+
 
 
 }

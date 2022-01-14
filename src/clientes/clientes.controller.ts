@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, Res, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { join } from 'path';
 import { Auth } from 'src/auth/decorators/decorators-auth';
 import { UsuarioEntity } from 'src/usuarios/entities/usuario.entity';
@@ -9,7 +9,7 @@ import { CreateClienteDto } from './dto/create-cliente.dto';
 import { UpdateClienteDto } from './dto/update-cliente.dto';
 const fs = require('fs');
 
-
+@ApiTags('clientes')
 @Controller('clientes')
 export class ClientesController {
   constructor(private readonly clientesService: ClientesService) { }
