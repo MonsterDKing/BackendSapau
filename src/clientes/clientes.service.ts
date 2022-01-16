@@ -11,6 +11,7 @@ import * as pdf from 'html-pdf'
 import { join } from 'path';
 import { TransaccionesService } from 'src/transacciones/transacciones.service';
 import { TransaccionesEnum } from 'src/transacciones/enums/Transacciones.enum';
+import { EstadoTransaccionEnum } from 'src/transacciones/enums/Estado.Transaccion.enum';
 const fs = require('fs');
 
 @Injectable()
@@ -26,7 +27,7 @@ export class ClientesService {
   async create(data: CreateClienteDto) {
     const newElement: ClienteEntity = await this.repository.create(data);
     if(newElement){
-      await this._transaccionesService.create(TransaccionesEnum.CREACION_DE_CONTRATO,newElement);
+      await this._transaccionesService.crearInstalacion(newElement,newElement.contratante);
     }
     return this.mapper.entityToDto(newElement);
   }

@@ -15,6 +15,15 @@ export class TransaccionRepository {
         return this.repository.find();
     }
 
+    getAllByStatus(estado:number){
+        return this.repository.find({
+            where:{
+                estado_transaccion:estado 
+            },
+            relations:["cliente","cobrador"]
+        })
+    }
+
     getById(id: number): Promise<TransaccionEntity> {
         return this.repository.findOne({
             where:{
@@ -33,6 +42,12 @@ export class TransaccionRepository {
 
     delete(id: number): Promise<DeleteResult> {
         return this.repository.delete(id);
+    }
+
+    getAlltranssactionsTypeMensualidadVencidas():Promise<TransaccionEntity[]>{
+        return this.repository.createQueryBuilder("trans")
+        .where("TIMESTAMPDIFF(MONTH, ts.fecha_creacion, now()) = 1 and ts.tipo_transaccion = 1")
+        .getMany()
     }
 
 

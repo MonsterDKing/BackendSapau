@@ -17,10 +17,6 @@ import { CronService } from './cron/cron.service';
     TypeOrmModule.forRoot({
     type: 'mysql',
     port: parseInt("3306"),
-    // host: "localhost",
-    // username: "root",
-    // password: "desarrollo",
-    // database: "sapau",
     host: "us-cdbr-east-04.cleardb.com",
     username: "bf9b789906016e",
     password: "8ae039f6",

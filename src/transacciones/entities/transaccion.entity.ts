@@ -1,4 +1,5 @@
 import { ClienteEntity } from "src/clientes/entities/cliente.entity";
+import { UsuarioEntity } from "src/usuarios/entities/usuario.entity";
 import { BeforeInsert, Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 
 
@@ -20,6 +21,17 @@ export class TransaccionEntity {
     @CreateDateColumn()
     fecha_creacion: Date;
 
+    @Column()
+    fecha_pago:Date;
+
+    @Column({
+        nullable:false,
+    })
+    estado_transaccion:number;
+
+    
+    @ManyToOne(() => UsuarioEntity, us => us.transacciones)
+    cobrador:UsuarioEntity;
 
 
 }

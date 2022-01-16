@@ -2,6 +2,7 @@ import { BeforeInsert, Column, Entity, JoinColumn, ManyToOne, OneToMany, OneToOn
 import * as bcrypt from "bcrypt";
 import { ClienteEntity } from "src/clientes/entities/cliente.entity";
 import { CobroEntity } from "src/cobros/entities/cobro.entity";
+import { TransaccionEntity } from "src/transacciones/entities/transaccion.entity";
 
 
 @Entity('usuario')
@@ -35,6 +36,9 @@ export class UsuarioEntity {
 
       @OneToMany(() => CobroEntity, cobro => cobro.cobrador)
       cobros:CobroEntity[];
+
+      @OneToMany(() => TransaccionEntity, ts => ts.cobrador)
+      transacciones:TransaccionEntity[];
 
 
 
