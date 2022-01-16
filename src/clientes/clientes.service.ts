@@ -48,26 +48,31 @@ export class ClientesService {
   }
 
   async remove(id: number) {
-    await this.repository.delete(id);
+    try{
+      await this.repository.delete(id);
+    }catch(ex){
+      console.log(ex);
+    }
   }
 
-  // async generatePDFToStream(id:number,template: string) {
-  //   var localLocale = moment().locale("es");
-  //   var fechaActual = localLocale.format('LL').toUpperCase();
-  //   let opt:PDFOptions={
-  //     locals:{
-  //       fecha:fechaActual,
-  //       nombre:"Pedro manuel salas galindo",
-  //       calle:"Manuel muñiz 431",
-  //       colonia:"Juarez",
-  //       fechauno:moment().format('YYYY/MM/D '),
-  //       fechados:moment().format('YYYY/MM/D '),
-  //       cantidad:200
-  //     }
-  //   };
-  //   // const d = await this.pdfService.toStream("",opt);
-  //   return false;
-  // }
+  async generateTicket(id:number) {
+    const root = join(__dirname, '../../assets/pdf/ticket.pug');
+    let trans = await this._transaccionesService.getTransaccionById(id);
+    let fecha = new Date();
+    let fechaParse = moment(fecha).locale('es-mx').format("L")
+    
+    const compiledFunction = pug.compileFile(root);
+    const compiledContent = compiledFunction({
+      fecha:fechaParse,
+      nombre:`${trans.cliente.nombre} ${trans.cliente.apellidoPaterno} ${trans.cliente.apellidoPaterno}`,
+      calle:trans.cliente.calle,
+      colonia:trans.cliente.colonia,
+      fechauno:moment(trans.fecha_creacion).locale('es-mx').format("L"),
+      fechados:fechaParse,
+      cantidad:trans.cliente.tarifa.costo
+    });
+    return pdf.create(compiledContent)
+  }
 
   async generateContractStream(id:number) {
     const root = join(__dirname, '../../assets/pdf/contrato.pug');

@@ -49,7 +49,11 @@ export class ClientesRepository {
     }
 
     delete(id: number): Promise<DeleteResult> {
-        return this.repository.delete(id);
+        try{
+            return this.repository.delete(id);
+        }catch(ex){
+            console.log(ex);
+        }
     }
 
 

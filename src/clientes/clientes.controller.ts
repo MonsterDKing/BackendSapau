@@ -43,27 +43,36 @@ export class ClientesController {
     return this.clientesService.update(+id, updateClienteDto);
   }
 
-  @ApiBearerAuth()
-  @UseGuards(AuthGuard('jwt'))
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.clientesService.remove(+id);
-  }
-
-  @Get('/adeudos/:id')
-  generatePdf(@Param('id') id: number, @Res() res) {
-    return false;
-  }
-
-
-  @Get('/contrato/:id')
-  async generateContractPdf(@Param('id') id: number, @Res() res) {
-    this.clientesService.generateContractStream(id).then((valor) => {
-      const filepath = join(__dirname, '../../assets/generated/prueba2.pdf');
+  @Get('/ticket/:id')
+  async generateTicketPdf(@Param('id') id: number, @Res() res) {
+    this.clientesService.generateTicket(id).then((valor) => {
+      const filepath = join(__dirname, '../../assets/generated/ticket.pdf');
       valor.toStream(function (err, stream) {
         stream.pipe(fs.createWriteStream(filepath));
         stream.pipe(res);
       });
     })
   }
+
+
+  @Get('/contrato/:id')
+  async generateContractPdf(@Param('id') id: number, @Res() res) {
+    this.clientesService.generateContractStream(id).then((valor) => {
+      const filepath = join(__dirname, '../../assets/generated/contrato.pdf');
+      valor.toStream(function (err, stream) {
+        stream.pipe(fs.createWriteStream(filepath));
+        stream.pipe(res);
+      });
+    })
+  }
+
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard('jwt'))
+  @Delete(':id')
+  remove(@Param('id') id: number) {
+    console.log("ssss")
+    console.log(id);
+    return this.clientesService.remove(+id);
+  }
+
 }

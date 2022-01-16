@@ -53,6 +53,11 @@ export class TransaccionesService {
         return data.map((e) => this.mapper.transaccionCobroMapper(e));
     }
 
+    async getTransaccionById(id:number):Promise<TransaccionEntity>{
+        let data = await this.repository.getById(id);
+        return data;
+        }
+    }
 
 
-}
+

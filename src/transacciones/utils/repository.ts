@@ -29,6 +29,7 @@ export class TransaccionRepository {
             where:{
                 id
             },
+            relations:["cliente","cobrador","cliente.tarifa","cliente.contratante",]
         });
     }
 
