@@ -1,0 +1,91 @@
+doctype html
+html(lang='es')
+  head
+    meta(charset='UTF-8')
+    title Comprobante pago
+    // <link rel="stylesheet" href="./style.css">
+  body
+    link(href='https://fonts.googleapis.com/css2?family=Poppins:wght@600&display=swap' rel='stylesheet')
+    meta(charset='UTF-8')
+    style.
+      *{
+      outline:none;
+      padding:0;
+      margin:0;
+      box-sizing: border-box;
+      }
+      body{
+      font-family:'poppins';
+      background:white;
+      }
+      #head{
+      display:flex;align-items:center;margin:8px auto;width:320px;
+      }
+      #heada{
+      align-items:center;margin:8px auto;width:320px;
+      }
+      #headaw{
+      align-items:center;margin:8px auto;width:320px;font-size:10px;letter-spacing:1px;
+      }
+      #fin-wasl{
+      background:#F4F4F4;
+      margin:22px auto;
+      width:320px;
+      height:auto;
+      border-radius:6px;
+      }
+      .fin-wh{
+      background:#0061FF;
+      width:320px;
+      height:40px;
+      line-height:40px;
+      font-size:21px;
+      letter-spacing:1.5px;
+      text-align:center;
+      color:white;
+      border-radius:6px 6px 0 0;
+      margin:0 0 20px 0;
+      }
+      .fin-wo{
+      width:320px;
+      height:26px;
+      font-size:12px;
+      letter-spacing:1.2px;
+      text-align:center;
+      color:#EC9700;
+      margin:8px 0 0 0;
+      }
+      .fin-wlbl{
+      display:block;
+      margin:16px 12px;
+      word-wrap: break-word;
+      font-size:14px;
+      }
+      #paypal-button-container{
+      background:rgba(0,0,0,0.1);
+      padding:8px;
+      border-radius:6px;
+      position:absolute;
+      top:20px;
+      left:20px;
+      width:60vw;
+      height:auto;
+      overflow:auto;
+      }
+    #fin-wasl
+      #head
+      img(src="data:image/jpg;base64," + logo, alt='logo' height='50px')
+      span.fin-wlbl(align='right') Folio:#{folio}
+      span.fin-wlbl(align='right') Fecha:#{fecha}
+      .fin-wh Recibo de Pago
+      span.fin-wlbl Contrato: #{contrato}
+      span.fin-wlbl Nombre: #{nombre}
+      span.fin-wlbl Calle: #{calle}
+      span.fin-wlbl Colonia: #{colonia}
+      span.fin-wlbl Tarifa: #{tarifa}
+      span.fin-wlbl(align='right') Adeuda: $ #{adeudo}
+      span.fin-wlbl(align='right') Su pago: $ #{pago}
+      span.fin-wlbl(align='right') ___________________
+      span.fin-wlbl(align='right') Pendiente: #{pendiente}
+      hr
+      .fin-wo Gracias por su pago

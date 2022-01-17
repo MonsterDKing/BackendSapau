@@ -21,8 +21,8 @@ export class ClienteMapper {
         return new ClienteEntity(
             data.contrato,
             data.nombre,
-            data.apellidoPaterno,
             data.apellidoMaterno,
+            data.apellidoPaterno,
             us,
             data.calle,
             data.colonia,
@@ -39,8 +39,8 @@ export class ClienteMapper {
         return new ClienteEntity(
             data.contrato,
             data.nombre,
-            data.apellidoPaterno,
             data.apellidoMaterno,
+            data.apellidoPaterno,
             us,
             data.calle,
             data.colonia,

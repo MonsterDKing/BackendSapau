@@ -15,8 +15,6 @@ export class TransaccionEntity {
     })
     tipo_transaccion:number;
 
-    @ManyToOne(() => ClienteEntity, cliente => cliente.transacciones)
-    cliente:ClienteEntity;
 
     @CreateDateColumn()
     fecha_creacion: Date;
@@ -28,6 +26,12 @@ export class TransaccionEntity {
         nullable:false,
     })
     estado_transaccion:number;
+
+    @Column({})
+    folio:string;
+
+    @ManyToOne(() => ClienteEntity, cliente => cliente.transacciones)
+    cliente:ClienteEntity;
 
     
     @ManyToOne(() => UsuarioEntity, us => us.transacciones)

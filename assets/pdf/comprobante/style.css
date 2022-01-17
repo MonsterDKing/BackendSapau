@@ -1,0 +1,64 @@
+*{
+outline:none;
+padding:0;
+margin:0;
+box-sizing: border-box;
+}
+body{
+  font-family:'poppins';
+  background:white;
+}
+#head{
+ display:flex;align-items:center;margin:8px auto;width:320px;
+}
+#heada{
+ align-items:center;margin:8px auto;width:320px; 
+}
+#headaw{
+ align-items:center;margin:8px auto;width:320px;font-size:10px;letter-spacing:1px;
+}
+#fin-wasl{
+    background:#F4F4F4;
+    margin:22px auto;
+    width:320px;
+    height:auto;
+    border-radius:6px;
+}
+.fin-wh{
+  background:#0061FF;
+  width:320px;
+  height:40px;
+  line-height:40px;
+  font-size:21px;
+  letter-spacing:1.5px;
+  text-align:center;
+  color:white;
+  border-radius:6px 6px 0 0;
+  margin:0 0 20px 0;
+}
+.fin-wo{
+  width:320px;
+  height:26px;
+  font-size:12px;
+  letter-spacing:1.2px;
+  text-align:center;
+  color:#EC9700;
+  margin:8px 0 0 0;
+}
+.fin-wlbl{
+  display:block;
+  margin:16px 12px;
+  word-wrap: break-word;
+  font-size:14px;
+}
+#paypal-button-container{
+  background:rgba(0,0,0,0.1);
+  padding:8px;
+  border-radius:6px;
+  position:absolute;
+  top:20px;
+  left:20px;
+  width:60vw;
+  height:auto;
+  overflow:auto;
+}

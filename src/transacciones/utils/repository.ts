@@ -20,7 +20,7 @@ export class TransaccionRepository {
             where:{
                 estado_transaccion:estado 
             },
-            relations:["cliente","cobrador"]
+            relations:["cliente","cobrador","cliente.tarifa","cliente.contratante",]
         })
     }
 

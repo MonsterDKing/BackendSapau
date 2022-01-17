@@ -1,19 +1,16 @@
 import { Injectable } from '@nestjs/common';
-import { PDFOptions, PDFService } from '@t00nday/nestjs-pdf';
-import * as moment from 'moment';
 import { CreateClienteDto } from './dto/create-cliente.dto';
 import { UpdateClienteDto } from './dto/update-cliente.dto';
 import { ClienteEntity } from './entities/cliente.entity';
 import { ClienteMapper } from './utils/mapper';
 import { ClientesRepository } from './utils/repository';
+import { TransaccionesService } from 'src/transacciones/transacciones.service';
+import { join } from 'path';
+
+import * as moment from 'moment';
 import * as pug from 'pug';
 import * as pdf from 'html-pdf'
-import { join } from 'path';
-import { TransaccionesService } from 'src/transacciones/transacciones.service';
-import { TransaccionesEnum } from 'src/transacciones/enums/Transacciones.enum';
-import { EstadoTransaccionEnum } from 'src/transacciones/enums/Estado.Transaccion.enum';
-const fs = require('fs');
-
+const fs = require('fs').promises;
 @Injectable()
 export class ClientesService {
 
@@ -60,11 +57,14 @@ export class ClientesService {
     let trans = await this._transaccionesService.getTransaccionById(id);
     let fecha = new Date();
     let fechaParse = moment(fecha).locale('es-mx').format("L")
-    
+    const logoBase64 = await fs.readFile(join(__dirname, '../../assets/pdf/logo.png'), {encoding: 'base64'});
+
     const compiledFunction = pug.compileFile(root);
     const compiledContent = compiledFunction({
+
+      logo:logoBase64,
       fecha:fechaParse,
-      nombre:`${trans.cliente.nombre} ${trans.cliente.apellidoPaterno} ${trans.cliente.apellidoPaterno}`,
+      nombre:`${trans.cliente.nombre} ${trans.cliente.apellidoPaterno} ${trans.cliente.apellidoMaterno}`,
       calle:trans.cliente.calle,
       colonia:trans.cliente.colonia,
       fechauno:moment(trans.fecha_creacion).locale('es-mx').format("L"),
