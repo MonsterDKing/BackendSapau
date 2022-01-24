@@ -10,6 +10,7 @@ import TransaccionesMapper from './utils/mapper';
 import { TransaccionRepository } from './utils/repository';
 import * as pug from 'pug';
 import * as pdf from 'html-pdf'
+import { ClientesRepository } from 'src/clientes/utils/repository';
 const fs = require('fs').promises;
 
 @Injectable()
@@ -25,7 +26,7 @@ export class TransaccionesService {
         instalacion.cliente = cliente;
         instalacion.tipo_transaccion = TransaccionesEnum.CREACION_DE_CONTRATO;
         instalacion.estado_transaccion = EstadoTransaccionEnum.PAGADO;
-        instalacion.folio =  Math.floor(100000 + Math.random() * 900000).toString();
+        instalacion.folio = Math.floor(100000 + Math.random() * 900000).toString();
         instalacion.fecha_pago = new Date();
         instalacion.cobrador = cobrador;
         await this.repository.create(instalacion);
@@ -34,7 +35,7 @@ export class TransaccionesService {
         mensualidad.cliente = cliente;
         mensualidad.tipo_transaccion = TransaccionesEnum.PAGO_DE_MENSUALIDAD;
         mensualidad.estado_transaccion = EstadoTransaccionEnum.PAGADO;
-        mensualidad.folio =  Math.floor(100000 + Math.random() * 900000).toString();
+        mensualidad.folio = Math.floor(100000 + Math.random() * 900000).toString();
         mensualidad.fecha_pago = new Date();
         mensualidad.cobrador = cobrador;
         await this.repository.create(mensualidad);
@@ -49,6 +50,12 @@ export class TransaccionesService {
         await this.repository.update(trans);
     }
 
+    async newPayment(numMeses: number, idCliente: number, cobrador: UsuarioEntity) {
+        // let us = await this.clienterepository.getById(idCliente);
+        // let trans = await this.repository.getAllMonthByIdClientLimit(us);
+
+    }
+
     async createtrans(cliente: ClienteEntity,) {
         let trans = new TransaccionEntity();
         trans.cliente = cliente,
@@ -59,6 +66,8 @@ export class TransaccionesService {
     }
 
     async getAllBystatus() {
+        let d = await this.repository.getallTransactionsWithMonthQueryRaw();
+        return d;
         let data = await this.repository.getAllByStatus(EstadoTransaccionEnum.NO_PAGADO);
         return data.map((e) => this.mapper.transaccionCobroMapper(e));
     }
@@ -71,14 +80,14 @@ export class TransaccionesService {
 
     async generateTicket(id: number) {
         const root = join(__dirname, '../../assets/pdf/comprobante/comprobante.pug');
-        const logoBase64 = await fs.readFile(join(__dirname, '../../assets/pdf/logo.png'), {encoding: 'base64'});
+        const logoBase64 = await fs.readFile(join(__dirname, '../../assets/pdf/logo.png'), { encoding: 'base64' });
 
         let trans = await this.getTransaccionById(id);
         let fecha = new Date();
         let fechaParse = moment(fecha).locale('es-mx').format("L")
         const compiledFunction = pug.compileFile(root);
         const compiledContent = compiledFunction({
-            logo:logoBase64,
+            logo: logoBase64,
             folio: trans.folio,
             fecha: fechaParse,
             contrato: trans.cliente.contrato,
@@ -87,7 +96,7 @@ export class TransaccionesService {
             colonia: trans.cliente.colonia,
             tarifa: trans.cliente.tarifa.costo,
             adeudo: "0",
-            pago:  trans.cliente.tarifa.costo,
+            pago: trans.cliente.tarifa.costo,
             pendiente: 0
         });
         return pdf.create(compiledContent)

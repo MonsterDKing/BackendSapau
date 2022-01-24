@@ -7,9 +7,9 @@ import { TransaccionRepository } from './utils/repository';
 import TransaccionesMapper from './utils/mapper';
 
 @Module({
-  imports:[TypeOrmModule.forFeature([TransaccionEntity]),], 
+  imports: [TypeOrmModule.forFeature([TransaccionEntity]),],
   controllers: [TransaccionesController],
-  providers: [TransaccionesService,TransaccionRepository,TransaccionesMapper],
-  exports:[TransaccionRepository,TransaccionesService]
+  providers: [TransaccionesService, TransaccionRepository, TransaccionesMapper],
+  exports: [TransaccionRepository, TransaccionesService]
 })
-export class TransaccionesModule {}
+export class TransaccionesModule { }

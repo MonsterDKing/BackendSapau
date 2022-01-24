@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { ClienteEntity } from 'src/clientes/entities/cliente.entity';
 import { DeleteResult, Repository, UpdateResult } from 'typeorm';
 import { TransaccionEntity } from '../entities/transaccion.entity';
 
@@ -15,21 +16,30 @@ export class TransaccionRepository {
         return this.repository.find();
     }
 
-    getAllByStatus(estado:number){
+    getAllByStatus(estado: number) {
         return this.repository.find({
-            where:{
-                estado_transaccion:estado 
+            where: {
+                estado_transaccion: estado
             },
-            relations:["cliente","cobrador","cliente.tarifa","cliente.contratante",]
+            relations: ["cliente", "cobrador", "cliente.tarifa", "cliente.contratante",]
         })
     }
 
     getById(id: number): Promise<TransaccionEntity> {
         return this.repository.findOne({
-            where:{
+            where: {
                 id
             },
-            relations:["cliente","cobrador","cliente.tarifa","cliente.contratante",]
+            relations: ["cliente", "cobrador", "cliente.tarifa", "cliente.contratante",]
+        });
+    }
+
+    getAllMonthByIdClientLimit(cliente: ClienteEntity): Promise<TransaccionEntity[]> {
+        return this.repository.find({
+            where: {
+                cliente
+            },
+            relations: ["cliente", "cobrador", "cliente.tarifa", "cliente.contratante",],
         });
     }
 
@@ -37,18 +47,40 @@ export class TransaccionRepository {
         return this.repository.save(data);
     }
 
-    async update(data:TransaccionEntity): Promise<UpdateResult> {
-       return await this.repository.update(data.id, data);
+    async update(data: TransaccionEntity): Promise<UpdateResult> {
+        return await this.repository.update(data.id, data);
     }
 
     delete(id: number): Promise<DeleteResult> {
         return this.repository.delete(id);
     }
 
-    getAlltranssactionsTypeMensualidadVencidas():Promise<TransaccionEntity[]>{
+    getAlltranssactionsTypeMensualidadVencidas(): Promise<TransaccionEntity[]> {
         return this.repository.createQueryBuilder("trans")
-        .where("TIMESTAMPDIFF(MONTH, ts.fecha_creacion, now()) = 1 and ts.tipo_transaccion = 1")
-        .getMany()
+            .where("TIMESTAMPDIFF(MONTH, ts.fecha_creacion, now()) = 1 and ts.tipo_transaccion = 1")
+            .getMany()
+    }
+
+    getallTransactionsWithMonthQueryRaw(): Promise<any> {
+        let d = this.repository.query(`SELECT 
+                    CONCAT(cl.nombre,
+                            ' ',
+                            cl.apellidoPaterno,
+                            ' ',
+                            cl.apellidoMaterno) AS nombre,
+                    ts.clienteId,
+                    COUNT(*) AS meses,
+                    SUM(t.costo) deuda
+                FROM
+                    transaccion ts
+                        INNER JOIN
+                    cliente cl ON cl.id = ts.clienteId
+                        INNER JOIN
+                    tarifa t ON t.id = cl.tarifaId
+                WHERE
+                    ts.estado_transaccion = 0
+                GROUP BY ts.clienteId;`)
+        return d;
     }
 
 

@@ -7,7 +7,7 @@ import PagarDto from './dto/Pagardtoo';
 import { TransaccionesService } from './transacciones.service';
 const fs = require('fs');
 
-@ApiTags('cobrar')
+@ApiTags('transacciones')
 @Controller('transacciones')
 export class TransaccionesController {
   constructor(private readonly transaccionesService: TransaccionesService) {}

@@ -12,18 +12,18 @@ import { TransaccionesModule } from 'src/transacciones/transacciones.module';
 
 @Module({
   imports: [TypeOrmModule.forFeature([ClienteEntity]),
-   UsuariosModule, 
-   TarifaModule, 
-   TransaccionesModule,
+    UsuariosModule,
+    TarifaModule,
+    TransaccionesModule,
   MomentModule.forRoot({
     tz: 'America/Mexico_City',
   }),],
   controllers: [ClientesController],
   providers: [
-    ClientesService, 
-    ClienteMapper, 
+    ClientesService,
+    ClienteMapper,
     ClientesRepository,
   ],
-  exports: [ClientesService]
+  exports: [ClientesService,]
 })
 export class ClientesModule { }
