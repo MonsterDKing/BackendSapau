@@ -1,4 +1,5 @@
 import { ClienteEntity } from "src/clientes/entities/cliente.entity";
+import { CobroEntity } from "src/cobros/entities/cobro.entity";
 import { UsuarioEntity } from "src/usuarios/entities/usuario.entity";
 import { BeforeInsert, Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 
@@ -11,31 +12,31 @@ export class TransaccionEntity {
     readonly id: number;
 
     @Column({
-        nullable:false,
+        nullable: false,
     })
-    tipo_transaccion:number;
+    tipo_transaccion: number;
 
 
     @CreateDateColumn()
     fecha_creacion: Date;
 
     @Column()
-    fecha_pago:Date;
+    fecha_pago: Date;
 
     @Column({
-        nullable:false,
+        nullable: false,
     })
-    estado_transaccion:number;
-
-    @Column({})
-    folio:string;
+    estado_transaccion: number;
 
     @ManyToOne(() => ClienteEntity, cliente => cliente.transacciones)
-    cliente:ClienteEntity;
+    cliente: ClienteEntity;
 
-    
+
     @ManyToOne(() => UsuarioEntity, us => us.transacciones)
-    cobrador:UsuarioEntity;
+    cobrador: UsuarioEntity;
+
+    @ManyToOne(() => CobroEntity, ce => ce.transacciones)
+    cobro: CobroEntity;
 
 
 }
