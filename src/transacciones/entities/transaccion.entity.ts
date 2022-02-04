@@ -31,6 +31,13 @@ export class TransaccionEntity {
     @ManyToOne(() => ClienteEntity, cliente => cliente.transacciones)
     cliente: ClienteEntity;
 
+    @Column({
+        type:"int",
+        default:0
+    })
+    monto: number;
+
+
 
     @ManyToOne(() => UsuarioEntity, us => us.transacciones)
     cobrador: UsuarioEntity;

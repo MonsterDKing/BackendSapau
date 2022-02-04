@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import * as moment from 'moment';
 import { join } from 'path';
 import { ClienteEntity } from 'src/clientes/entities/cliente.entity';
@@ -13,12 +13,21 @@ import * as pdf from 'html-pdf'
 import { ClientesRepository } from 'src/clientes/utils/repository';
 import { CobroEntity } from 'src/cobros/entities/cobro.entity';
 import { CobroRepository } from 'src/cobros/utils/repository';
-const fs = require('fs').promises;
+import { ReadStream, readFileSync, createReadStream } from 'fs';
+import * as xlsx from 'xlsx';
+import { WorkBook, WorkSheet } from 'xlsx';
+import { getConnection, Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class TransaccionesService {
 
+    private readonly logger = new Logger(TransaccionesService.name);
+
+
     constructor(
+        @InjectRepository(TransaccionEntity)
+        private repositoryDB: Repository<TransaccionEntity>,
         private clienteRepository: ClientesRepository,
         private cobroRepository: CobroRepository,
         private repository: TransaccionRepository,
@@ -32,6 +41,7 @@ export class TransaccionesService {
         instalacion.estado_transaccion = EstadoTransaccionEnum.PAGADO;
         instalacion.fecha_pago = new Date();
         instalacion.cobrador = cobrador;
+        instalacion.monto = 1200;
         await this.repository.create(instalacion);
 
         let mensualidad = new TransaccionEntity();
@@ -40,6 +50,7 @@ export class TransaccionesService {
         mensualidad.estado_transaccion = EstadoTransaccionEnum.PAGADO;
         mensualidad.fecha_pago = new Date();
         mensualidad.cobrador = cobrador;
+        mensualidad.monto = cliente.tarifa.costo;
         await this.repository.create(mensualidad);
     }
 
@@ -78,6 +89,7 @@ export class TransaccionesService {
     async createtrans(cliente: ClienteEntity,) {
         let trans = new TransaccionEntity();
         trans.cliente = cliente;
+        trans.monto = cliente.tarifa.costo;
         trans.cobrador = null;
         trans.estado_transaccion = EstadoTransaccionEnum.NO_PAGADO;
         trans.tipo_transaccion = TransaccionesEnum.PAGO_DE_MENSUALIDAD;
@@ -102,7 +114,7 @@ export class TransaccionesService {
         let pago = 0;
         let adeudo = 0;
         const root = join(__dirname, '../../assets/pdf/comprobante/comprobante.pug');
-        const logoBase64 = await fs.readFile(join(__dirname, '../../assets/pdf/logo.png'), { encoding: 'base64' });
+        const logoBase64 = await readFileSync(join(__dirname, '../../assets/pdf/logo.png'), { encoding: 'base64' });
 
         let cobro = await this.cobroRepository.getById(id);
         let transNoPagadas = await this.repository.getAllByClient(cobro.cliente, EstadoTransaccionEnum.NO_PAGADO);
@@ -139,6 +151,65 @@ export class TransaccionesService {
             pendiente: adeudo
         });
         return pdf.create(compiledContent)
+    }
+
+    async importToDatabase() {
+        const file = join(__dirname, '../../assets/xls/file.xlsx');
+        var readStream = createReadStream(join(__dirname, '../../assets/xls/file.xlsx'));
+
+        const connection = getConnection();
+        const queryRunner = connection.createQueryRunner();
+        await queryRunner.startTransaction();
+        try {
+
+
+            const wb: WorkBook = await new Promise((resolve, reject) => {
+                const stream: ReadStream = readStream;
+
+                const buffers = [];
+
+                stream.on('data', (data) => buffers.push(data));
+
+                stream.on('end', () => {
+                    const buffer = Buffer.concat(buffers);
+                    resolve(xlsx.read(buffer, { type: 'buffer' }));
+                });
+
+                stream.on('error', (error) => reject(error));
+            });
+
+            const sheet: WorkSheet = wb.Sheets[wb.SheetNames[0]];
+            const range = xlsx.utils.decode_range(sheet['!ref']);
+            for (let R = range.s.r; R <= range.e.r; ++R) {
+                if (R === 0 || !sheet[xlsx.utils.encode_cell({ c: 0, r: R })]) {
+                    continue;
+                }
+                let col = 0;
+                console.log(sheet[xlsx.utils.encode_cell({ c: col++, r: R })]?.v,)
+                let cliente = new ClienteEntity(
+                    sheet[xlsx.utils.encode_cell({ c: col++, r: R })]?.v,
+                    sheet[xlsx.utils.encode_cell({ c: col++, r: R })]?.v,
+                    sheet[xlsx.utils.encode_cell({ c: col++, r: R })]?.v,
+                    sheet[xlsx.utils.encode_cell({ c: col++, r: R })]?.v,
+                    sheet[xlsx.utils.encode_cell({ c: col++, r: R })]?.v,
+                    sheet[xlsx.utils.encode_cell({ c: col++, r: R })]?.v,
+                    sheet[xlsx.utils.encode_cell({ c: col++, r: R })]?.v,
+                    sheet[xlsx.utils.encode_cell({ c: col++, r: R })]?.v,
+                    sheet[xlsx.utils.encode_cell({ c: col++, r: R })]?.v,
+                    sheet[xlsx.utils.encode_cell({ c: col++, r: R })]?.v,
+                );
+
+            }
+
+        } catch (error) {
+            this.logger.error('Erro en Excel');
+            await queryRunner.rollbackTransaction();
+            throw error;
+        } finally {
+
+            // you need to release query runner which is manually created:
+            await queryRunner.release();
+        }
     }
 
 

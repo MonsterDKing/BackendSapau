@@ -27,6 +27,11 @@ export class TransaccionesController {
     return this.transaccionesService.newPayment(data.meses, data.cliente, us);
   }
 
+  @Get("/importar")
+  importDatabase() {
+    return this.transaccionesService.importToDatabase()
+  }
+
   @Get('/ticket-venta/:id')
   async generateTicketPdf(@Param('id') id: number, @Res() res) {
     this.transaccionesService.newGenerateTicket(id).then((valor) => {
