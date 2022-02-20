@@ -63,14 +63,16 @@ export class TransaccionRepository {
 
     getallTransactionsWithMonthQueryRaw(): Promise<any> {
         let d = this.repository.query(`SELECT 
-                    CONCAT(cl.nombre,
-                            ' ',
-                            cl.apellidoPaterno,
-                            ' ',
-                            cl.apellidoMaterno) AS nombre,
+        CONCAT(cl.nombre,
+                ' ',
+                cl.apellidoPaterno,
+                ' ',
+                cl.apellidoMaterno) AS nombre,
                     ts.clienteId,
                     COUNT(*) AS meses,
-                    SUM(t.costo) deuda
+                    SUM(t.costo) deuda,
+                    cl.calle as calle,
+                    cl.colonia as colonia
                 FROM
                     transaccion ts
                         INNER JOIN
