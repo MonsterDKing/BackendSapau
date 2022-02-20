@@ -20,6 +20,7 @@ export class TarifaEntity {
     @OneToMany(() => ClienteEntity, cli => cli.contratante)
     clientes: ClienteEntity[];
 
+
     constructor(descripcion: string, costo: number, id?: number) {
         this.descripcion = descripcion;
         this.costo = costo;

@@ -35,6 +35,10 @@ export class ClientesRepository {
         return this.repository.save(d);
     }
 
+    async createclean(data: ClienteEntity): Promise<ClienteEntity> {
+        return this.repository.save(data);
+    }
+
     async update(id: number, data: UpdateClienteDto): Promise<ClienteEntity> {
         data.id = id;
         const updateUser = await this.mapper.dtoToEntityUpdate(data);

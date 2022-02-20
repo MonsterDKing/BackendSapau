@@ -7,11 +7,15 @@ import { TransaccionRepository } from './utils/repository';
 import TransaccionesMapper from './utils/mapper';
 import { ClientesModule } from 'src/clientes/clientes.module';
 import { CobrosModule } from 'src/cobros/cobros.module';
+import { UsuariosModule } from '../usuarios/usuarios.module';
+import { TarifaModule } from '../tarifa/tarifa.module';
 
 @Module({
   imports: [
     forwardRef(() => ClientesModule),
     CobrosModule,
+    UsuariosModule,
+    TarifaModule,
     TypeOrmModule.forFeature([TransaccionEntity],),
   ],
   controllers: [TransaccionesController],

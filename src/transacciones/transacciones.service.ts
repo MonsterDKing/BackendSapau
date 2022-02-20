@@ -18,6 +18,8 @@ import * as xlsx from 'xlsx';
 import { WorkBook, WorkSheet } from 'xlsx';
 import { getConnection, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
+import { UsuarioRepository } from '../usuarios/utils/repository';
+import { TarifaRepository } from 'src/tarifa/utils/repository';
 
 @Injectable()
 export class TransaccionesService {
@@ -28,6 +30,8 @@ export class TransaccionesService {
     constructor(
         @InjectRepository(TransaccionEntity)
         private repositoryDB: Repository<TransaccionEntity>,
+        private tarifaRepository:TarifaRepository,
+        private usuarioRepository:UsuarioRepository,
         private clienteRepository: ClientesRepository,
         private cobroRepository: CobroRepository,
         private repository: TransaccionRepository,
@@ -157,9 +161,6 @@ export class TransaccionesService {
         const file = join(__dirname, '../../assets/xls/file.xlsx');
         var readStream = createReadStream(join(__dirname, '../../assets/xls/file.xlsx'));
 
-        const connection = getConnection();
-        const queryRunner = connection.createQueryRunner();
-        await queryRunner.startTransaction();
         try {
 
 
@@ -180,35 +181,83 @@ export class TransaccionesService {
 
             const sheet: WorkSheet = wb.Sheets[wb.SheetNames[0]];
             const range = xlsx.utils.decode_range(sheet['!ref']);
+
+            let usImportador = new UsuarioEntity(
+                "Pedro Manuel Salas Galindo",
+                "pedromanuelsalas@outlook.com",
+                "123456",
+                true,
+            )
+
+           try{
+            let us =  await this.usuarioRepository.create(usImportador);
+
             for (let R = range.s.r; R <= range.e.r; ++R) {
                 if (R === 0 || !sheet[xlsx.utils.encode_cell({ c: 0, r: R })]) {
                     continue;
                 }
                 let col = 0;
-                console.log(sheet[xlsx.utils.encode_cell({ c: col++, r: R })]?.v,)
+
+                let id = sheet[xlsx.utils.encode_cell({ c: col++, r: R })]?.v;
+                let contrato = sheet[xlsx.utils.encode_cell({ c: col++, r: R })]?.v;
+                let tarifa = sheet[xlsx.utils.encode_cell({ c: col++, r: R })]?.v;
+                let descripcion = sheet[xlsx.utils.encode_cell({ c: col++, r: R })]?.v;
+                let apellidoPaterno = sheet[xlsx.utils.encode_cell({ c: col++, r: R })]?.v;
+                let apellidoMaterno = sheet[xlsx.utils.encode_cell({ c: col++, r: R })]?.v;
+                let nombre = sheet[xlsx.utils.encode_cell({ c: col++, r: R })]?.v;
+                let calle = sheet[xlsx.utils.encode_cell({ c: col++, r: R })]?.v;
+                let colonia = sheet[xlsx.utils.encode_cell({ c: col++, r: R })]?.v;
+                let cp = sheet[xlsx.utils.encode_cell({ c: col++, r: R })]?.v;
+                let localidad = sheet[xlsx.utils.encode_cell({ c: col++, r: R })]?.v;
+                let deuda = Number(sheet[xlsx.utils.encode_cell({ c: col++, r: R })]?.v);
+
+                
+                let tarifaEntity = await this.tarifaRepository.getById(tarifa);
                 let cliente = new ClienteEntity(
-                    sheet[xlsx.utils.encode_cell({ c: col++, r: R })]?.v,
-                    sheet[xlsx.utils.encode_cell({ c: col++, r: R })]?.v,
-                    sheet[xlsx.utils.encode_cell({ c: col++, r: R })]?.v,
-                    sheet[xlsx.utils.encode_cell({ c: col++, r: R })]?.v,
-                    sheet[xlsx.utils.encode_cell({ c: col++, r: R })]?.v,
-                    sheet[xlsx.utils.encode_cell({ c: col++, r: R })]?.v,
-                    sheet[xlsx.utils.encode_cell({ c: col++, r: R })]?.v,
-                    sheet[xlsx.utils.encode_cell({ c: col++, r: R })]?.v,
-                    sheet[xlsx.utils.encode_cell({ c: col++, r: R })]?.v,
-                    sheet[xlsx.utils.encode_cell({ c: col++, r: R })]?.v,
+                    contrato,
+                    nombre,
+                    apellidoMaterno,
+                    apellidoPaterno,
+                    us,
+                    calle,
+                    colonia,
+                    cp,
+                    localidad,
+                    tarifaEntity
                 );
+                await this.clienteRepository.createclean(cliente);
 
+
+                if(deuda != 0){
+                    var date = new Date();
+                    let numTransacciones = deuda/tarifaEntity.costo;
+                    let numDeMeses = Math.ceil(numTransacciones);
+                    for(var i = 0;i<numDeMeses;i++){
+                        let monthsminus = i;
+                        date.setMonth(date.getMonth() - 1);
+                        let newTransaction = new TransaccionEntity();
+                        newTransaction.cliente = cliente;
+                        newTransaction.monto = cliente.tarifa.costo;
+                        newTransaction.cobrador = null;
+                        newTransaction.fecha_creacion = date;
+                        newTransaction.estado_transaccion = EstadoTransaccionEnum.NO_PAGADO;
+                        newTransaction.tipo_transaccion = TransaccionesEnum.PAGO_DE_MENSUALIDAD;
+                        await this.repositoryDB.save(newTransaction).catch((ex)=>{
+                            // console.log(ex);
+                            console.log(date);
+                            console.log(numDeMeses)
+                        });
+                    }
+                }
             }
-
+            console.log("terminooooo de actualizar")
+            }catch(ex){
+               console.log("Errrrooor")
+               console.log(ex);
+           }
         } catch (error) {
             this.logger.error('Erro en Excel');
-            await queryRunner.rollbackTransaction();
             throw error;
-        } finally {
-
-            // you need to release query runner which is manually created:
-            await queryRunner.release();
         }
     }
 

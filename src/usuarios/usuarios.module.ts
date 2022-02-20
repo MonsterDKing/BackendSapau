@@ -10,7 +10,7 @@ import { UsuarioRepository } from './utils/repository';
   imports:[TypeOrmModule.forFeature([UsuarioEntity]),], 
   controllers: [UsuariosController],
   providers: [UsuarioService,UsuarioMapper,UsuarioRepository],
-  exports:[UsuarioService,UsuarioMapper]
+  exports:[UsuarioService,UsuarioMapper,UsuarioRepository]
 
 })
 export class UsuariosModule {}
