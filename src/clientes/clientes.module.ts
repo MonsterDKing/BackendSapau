@@ -24,6 +24,6 @@ import { TransaccionesModule } from 'src/transacciones/transacciones.module';
     ClienteMapper,
     ClientesRepository,
   ],
-  exports: [ClientesService,]
+  exports: [ClientesService, ClientesRepository]
 })
 export class ClientesModule { }

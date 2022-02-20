@@ -39,12 +39,12 @@ export class ClienteEntity {
     tarifa: TarifaEntity;
 
     @Column({
-        nullable: false
+        nullable: true
     })
     calle: string;
 
     @Column({
-        nullable: false
+        nullable: true
     })
     colonia: string;
 

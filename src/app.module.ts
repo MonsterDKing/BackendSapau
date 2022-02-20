@@ -15,23 +15,27 @@ import { CronService } from './cron/cron.service';
 @Module({
   imports: [
     TypeOrmModule.forRoot({
-    type: 'mysql',
-    port: parseInt("3306"),
-    host: "us-cdbr-east-04.cleardb.com",
-    username: "bf9b789906016e",
-    password: "8ae039f6",
-    database: "heroku_57847ecadbd45d9",
-    autoLoadEntities: true,
-    synchronize: true
-  }),UsuariosModule, 
-  ClientesModule, 
-  AuthModule, 
-  TarifaModule, 
-  TransaccionesModule, 
-  CobrosModule,
-  ScheduleModule.forRoot()
-],
+      type: 'mysql',
+      port: parseInt("3306"),
+      // host: "127.0.0.1",
+      // username: "root",
+      // password: "desarrollo",
+      // database: "sapau",
+      host: "us-cdbr-east-04.cleardb.com",
+      username: "bf9b789906016e",
+      password: "8ae039f6",
+      database: "heroku_57847ecadbd45d9",
+      autoLoadEntities: true,
+      synchronize: true
+    }), UsuariosModule,
+    ClientesModule,
+    AuthModule,
+    TarifaModule,
+    TransaccionesModule,
+    CobrosModule,
+    ScheduleModule.forRoot()
+  ],
   controllers: [AppController],
   providers: [AppService, CronService],
 })
-export class AppModule {}
+export class AppModule { }

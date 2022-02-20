@@ -34,10 +34,23 @@ export class TransaccionRepository {
         });
     }
 
+    getAllByClient(cliente: ClienteEntity, estado: number): Promise<TransaccionEntity[]> {
+        return this.repository.find({
+            where: {
+                cliente,
+                estado_transaccion: estado
+            },
+            relations: ["cliente", "cobrador", "cliente.tarifa", "cliente.contratante",]
+        });
+    }
+
     getAllMonthByIdClientLimit(cliente: ClienteEntity): Promise<TransaccionEntity[]> {
         return this.repository.find({
             where: {
                 cliente
+            },
+            order: {
+                fecha_creacion: "DESC"
             },
             relations: ["cliente", "cobrador", "cliente.tarifa", "cliente.contratante",],
         });
