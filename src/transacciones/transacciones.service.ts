@@ -233,7 +233,6 @@ export class TransaccionesService {
                     let numTransacciones = deuda/tarifaEntity.costo;
                     let numDeMeses = Math.ceil(numTransacciones);
                     for(var i = 0;i<numDeMeses;i++){
-                        let monthsminus = i;
                         date.setMonth(date.getMonth() - 1);
                         let newTransaction = new TransaccionEntity();
                         newTransaction.cliente = cliente;

@@ -72,7 +72,7 @@ export class ClienteMapper {
             data.codigoPostal,
             data.localidad,
             data.tarifa.id,
-            data.id
+            data?.id != null ? data.id : undefined
         );
     }
 

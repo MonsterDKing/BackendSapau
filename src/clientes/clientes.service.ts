@@ -30,6 +30,7 @@ export class ClientesService {
   }
 
   async findAll() {
+    console.log("xxx");
     const data: ClienteEntity[] = await this.repository.getAll()
     return data.map(d => this.mapper.entityToDto(d));
   }
