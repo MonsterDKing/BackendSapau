@@ -1,10 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { IPaginationOptions, paginate, Pagination } from 'nestjs-typeorm-paginate';
 import { DeleteResult, Repository } from 'typeorm';
 import { CreateClienteDto } from '../dto/create-cliente.dto';
 import { UpdateClienteDto } from '../dto/update-cliente.dto';
 import { ClienteEntity } from '../entities/cliente.entity';
 import { ClienteMapper } from './mapper';
+import { Like } from 'typeorm';
 
 
 @Injectable()
@@ -17,16 +19,30 @@ export class ClientesRepository {
 
     getAll(): Promise<ClienteEntity[]> {
         return this.repository.find({
-            relations:["contratante","tarifa"]
+            relations: ["contratante", "tarifa"]
+        });
+    }
+
+    getAllPaginate(options: IPaginationOptions, nombre?: string): Promise<Pagination<ClienteEntity>> {
+        if (nombre != undefined) {
+            return paginate(this.repository, options, {
+                relations: ["contratante", "tarifa"],
+                where: {
+                    nombre: Like(`%${nombre}%`)
+                }
+            });
+        }
+        return paginate(this.repository, options, {
+            relations: ["contratante", "tarifa"]
         });
     }
 
     getById(id: number): Promise<ClienteEntity> {
         return this.repository.findOne({
-            where:{
+            where: {
                 id
             },
-            relations:["contratante","tarifa"]
+            relations: ["contratante", "tarifa"]
         });
     }
 
@@ -44,18 +60,18 @@ export class ClientesRepository {
         const updateUser = await this.mapper.dtoToEntityUpdate(data);
         await this.repository.update(id, updateUser);
         return this.repository.findOne({
-            where:{
+            where: {
                 id
             },
-            relations:["contratante","tarifa"]
+            relations: ["contratante", "tarifa"]
         });
 
     }
 
     delete(id: number): Promise<DeleteResult> {
-        try{
+        try {
             return this.repository.delete(id);
-        }catch(ex){
+        } catch (ex) {
             console.log(ex);
         }
     }

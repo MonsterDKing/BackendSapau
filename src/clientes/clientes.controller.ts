@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Res, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Res, UseGuards, Query, ParseIntPipe, DefaultValuePipe } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { join } from 'path';
@@ -22,11 +22,19 @@ export class ClientesController {
     return this.clientesService.create(createClienteDto);
   }
 
-  @ApiBearerAuth()
-  @UseGuards(AuthGuard('jwt'))
+  // @ApiBearerAuth()
+  // @UseGuards(AuthGuard('jwt'))
   @Get()
-  findAll() {
-    return this.clientesService.findAll();
+  findAll(
+    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number = 1,
+    @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number = 10,
+    @Query("nombre") nombre?: string
+  ) {
+    limit = limit > 100 ? 100 : limit;
+    return this.clientesService.findAll({
+      page,
+      limit,
+    }, nombre);
   }
 
   @ApiBearerAuth()
