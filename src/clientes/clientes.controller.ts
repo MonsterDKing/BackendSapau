@@ -22,8 +22,8 @@ export class ClientesController {
     return this.clientesService.create(createClienteDto);
   }
 
-  // @ApiBearerAuth()
-  // @UseGuards(AuthGuard('jwt'))
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard('jwt'))
   @Get()
   findAll(
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number = 1,
