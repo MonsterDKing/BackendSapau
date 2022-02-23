@@ -145,7 +145,7 @@ export class TransaccionesService {
             folio: cobro.folio,
             fecha: fechaParse,
             contrato: cobro.cliente.contrato,
-            nombre: `${cobro.cliente.nombre} ${cobro.cliente.apellidoPaterno} ${cobro.cliente.apellidoPaterno}`,
+            nombre: `${cobro.cliente.nombre} ${cobro.cliente.apellidoPaterno} ${cobro.cliente.apellidoMaterno}`,
             calle: cobro.cliente.calle,
             colonia: cobro.cliente.colonia,
             tarifa: cobro.cliente.tarifa.descripcion,
