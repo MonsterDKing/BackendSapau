@@ -11,7 +11,7 @@ import { ClienteEntity } from "../entities/cliente.entity";
 @Injectable()
 export class ClienteMapper {
 
-    constructor(private service: UsuarioService,private tarifaService:TarifaRepository) { }
+    constructor(private service: UsuarioService, private tarifaService: TarifaRepository) { }
 
     async dtoToEntity(data: CreateClienteDto): Promise<ClienteEntity> {
 

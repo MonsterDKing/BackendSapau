@@ -6,4 +6,7 @@ export class UpdateClienteDto extends PartialType(CreateClienteDto) {
     @ApiProperty()
     id: number;
 
+
+
+
 }

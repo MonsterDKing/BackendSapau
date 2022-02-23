@@ -68,6 +68,12 @@ export class TransaccionRepository {
         return this.repository.delete(id);
     }
 
+    deleteAllTransactionByClient(cliente: ClienteEntity): Promise<DeleteResult> {
+        return this.repository.delete({
+            cliente
+        });
+    }
+
     getAlltranssactionsTypeMensualidadVencidas(): Promise<TransaccionEntity[]> {
         return this.repository.createQueryBuilder("trans")
             .where("TIMESTAMPDIFF(MONTH, ts.fecha_creacion, now()) = 1 and ts.tipo_transaccion = 1")

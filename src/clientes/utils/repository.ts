@@ -65,7 +65,6 @@ export class ClientesRepository {
             },
             relations: ["contratante", "tarifa"]
         });
-
     }
 
     delete(id: number): Promise<DeleteResult> {
@@ -74,6 +73,16 @@ export class ClientesRepository {
         } catch (ex) {
             console.log(ex);
         }
+    }
+
+    async updateClean(id: number, data: ClienteEntity): Promise<ClienteEntity> {
+        await this.repository.update(id, data);
+        return this.repository.findOne({
+            where: {
+                id
+            },
+            relations: ["contratante", "tarifa"]
+        });
     }
 
 

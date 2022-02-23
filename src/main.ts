@@ -5,7 +5,7 @@ import { AppModule } from './app.module';
 import { TypeORMExceptionFilter } from './filters/typeorm-exceptions.filter';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule,{ cors: true });
+  const app = await NestFactory.create(AppModule, { cors: true });
   app.useGlobalFilters(new TypeORMExceptionFilter());
   const PORT = process.env.PORT || 80;
 
@@ -13,6 +13,7 @@ async function bootstrap() {
     .setTitle(' Api Rest')
     .setDescription(' Api Rest')
     .setVersion('1.0')
+    .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, options);
   SwaggerModule.setup('api', app, document);

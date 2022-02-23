@@ -4,6 +4,7 @@ import { ApiTags } from '@nestjs/swagger';
 import { join } from 'path';
 import { Auth } from 'src/auth/decorators/decorators-auth';
 import { UsuarioEntity } from 'src/usuarios/entities/usuario.entity';
+import { AjustarDeudaDto } from './dto/ajustarDeudaDto';
 import NewPagarDto from './dto/newPagarDto';
 import PagarDto from './dto/Pagardtoo';
 import { TransaccionesService } from './transacciones.service';
@@ -27,10 +28,16 @@ export class TransaccionesController {
     return this.transaccionesService.newPayment(data.meses, data.cliente, us);
   }
 
-  @Get("/importar")
-  importDatabase() {
-    return this.transaccionesService.importToDatabase()
+  @Post("/reajustar")
+  reajustar(@Body() data: AjustarDeudaDto, @Auth() us: UsuarioEntity) {
+    return this.transaccionesService.reajustar(data);
   }
+
+
+  // // @Get("/importar")
+  // // importDatabase() {
+  // //   return this.transaccionesService.importToDatabase()
+  // // }
 
   @Get('/ticket-venta/:id')
   async generateTicketPdf(@Param('id') id: number, @Res() res) {
