@@ -13,10 +13,19 @@ import * as pdf from 'html-pdf'
 import { ClientesRepository } from 'src/clientes/utils/repository';
 import { CobroEntity } from 'src/cobros/entities/cobro.entity';
 import { CobroRepository } from 'src/cobros/utils/repository';
-import { readFileSync } from 'fs';
+import { ReadStream, readFileSync, createReadStream } from 'fs';
 import { AjustarDeudaDto } from './dto/ajustarDeudaDto';
 import { ClienteMapper } from 'src/clientes/utils/mapper';
 import { TarifaRepository } from 'src/tarifa/utils/repository';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { UsuarioRepository } from 'src/usuarios/utils/repository';
+// IMPORTDATABASEK
+import * as xlsx from 'xlsx';
+import { WorkBook, WorkSheet } from 'xlsx';
+import { getConnection, } from 'typeorm';
+
+
 @Injectable()
 export class TransaccionesService {
 
@@ -24,6 +33,10 @@ export class TransaccionesService {
 
 
     constructor(
+        @InjectRepository(TransaccionEntity)
+        private repositoryDB: Repository<TransaccionEntity>,
+        private usuarioRepository: UsuarioRepository,
+        private mapper: TransaccionesMapper,
         private clienteRepository: ClientesRepository,
         private cobroRepository: CobroRepository,
         private clienteMapper: ClienteMapper,
@@ -155,6 +168,109 @@ export class TransaccionesService {
         });
         return pdf.create(compiledContent)
     }
+
+    async importToDatabase() {
+        const file = join(__dirname, '../../assets/xls/file.xlsx');
+        var readStream = createReadStream(join(__dirname, '../../assets/xls/file.xlsx'));
+
+        try {
+
+
+            const wb: WorkBook = await new Promise((resolve, reject) => {
+                const stream: ReadStream = readStream;
+
+                const buffers = [];
+
+                stream.on('data', (data) => buffers.push(data));
+
+                stream.on('end', () => {
+                    const buffer = Buffer.concat(buffers);
+                    resolve(xlsx.read(buffer, { type: 'buffer' }));
+                });
+
+                stream.on('error', (error) => reject(error));
+            });
+
+            const sheet: WorkSheet = wb.Sheets[wb.SheetNames[0]];
+            const range = xlsx.utils.decode_range(sheet['!ref']);
+
+            let usImportador = new UsuarioEntity(
+                "Pedro Manuel Salas Galindo",
+                "pedromanuelsalas@outlook.com",
+                "123456",
+                true,
+            )
+
+            try {
+                let us = await this.usuarioRepository.create(usImportador);
+
+                for (let R = range.s.r; R <= range.e.r; ++R) {
+                    if (R === 0 || !sheet[xlsx.utils.encode_cell({ c: 0, r: R })]) {
+                        continue;
+                    }
+                    let col = 0;
+
+                    let id = sheet[xlsx.utils.encode_cell({ c: col++, r: R })]?.v;
+                    let contrato = sheet[xlsx.utils.encode_cell({ c: col++, r: R })]?.v;
+                    let tarifa = sheet[xlsx.utils.encode_cell({ c: col++, r: R })]?.v;
+                    let nombre = sheet[xlsx.utils.encode_cell({ c: col++, r: R })]?.v;
+                    let apellidoPaterno = sheet[xlsx.utils.encode_cell({ c: col++, r: R })]?.v;
+                    let apellidoMaterno = sheet[xlsx.utils.encode_cell({ c: col++, r: R })]?.v;
+                    let calle = sheet[xlsx.utils.encode_cell({ c: col++, r: R })]?.v;
+                    let colonia = sheet[xlsx.utils.encode_cell({ c: col++, r: R })]?.v;
+                    let deuda = sheet[xlsx.utils.encode_cell({ c: col++, r: R })]?.v;
+                    const cp = "61940";
+                    const localidad = "HUETAMO DE NUÑEZ";
+
+                    let tarifaEntity = await this.tarifaRepository.getById(tarifa);
+                    let cliente = new ClienteEntity(
+                        contrato,
+                        nombre,
+                        apellidoMaterno,
+                        apellidoPaterno,
+                        us,
+                        calle,
+                        colonia,
+                        cp,
+                        localidad,
+                        tarifaEntity
+                    );
+                    await this.clienteRepository.createclean(cliente);
+
+
+                    if (deuda != 0) {
+                        var date = new Date();
+                        let numTransacciones = deuda / tarifaEntity.costo;
+                        let numDeMeses = Math.ceil(numTransacciones);
+                        for (var i = 0; i < numDeMeses; i++) {
+                            let monthsminus = i;
+                            date.setMonth(date.getMonth() - 1);
+                            let newTransaction = new TransaccionEntity();
+                            newTransaction.cliente = cliente;
+                            newTransaction.monto = cliente.tarifa.costo;
+                            newTransaction.cobrador = null;
+                            newTransaction.fecha_creacion = date;
+                            newTransaction.estado_transaccion = EstadoTransaccionEnum.NO_PAGADO;
+                            newTransaction.tipo_transaccion = TransaccionesEnum.PAGO_DE_MENSUALIDAD;
+                            await this.repositoryDB.save(newTransaction).catch((ex) => {
+                                // console.log(ex);
+                                console.log(date);
+                                console.log(numDeMeses)
+                            });
+                        }
+                    }
+                }
+                console.log("terminooooo de actualizar")
+            } catch (ex) {
+                console.log("Errrrooor")
+                console.log(ex);
+            }
+        } catch (error) {
+            this.logger.error('Erro en Excel');
+            throw error;
+        }
+    }
+
 
 }
 

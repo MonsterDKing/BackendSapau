@@ -34,10 +34,10 @@ export class TransaccionesController {
   }
 
 
-  // // @Get("/importar")
-  // // importDatabase() {
-  // //   return this.transaccionesService.importToDatabase()
-  // // }
+  @Get("/importar")
+  importDatabase() {
+    return this.transaccionesService.importToDatabase()
+  }
 
   @Get('/ticket-venta/:id')
   async generateTicketPdf(@Param('id') id: number, @Res() res) {
