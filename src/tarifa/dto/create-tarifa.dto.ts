@@ -7,10 +7,10 @@ export class CreateTarifaDto {
     descripcion: string;
     @ApiProperty()
     costo: number;
+    @ApiProperty()
+    costoAnual:number;
+    @ApiProperty()
+    costoPagoAnticipado:number;
 
-    constructor(descripcion:string,costo:number){
-        this.descripcion = descripcion;
-        this.costo = costo;
 
-    }
 }

@@ -20,7 +20,9 @@ export class TarifaMapper {
 
         return new TarifaEntity(
             data.descripcion,
-            data.costo
+            data.costo,
+            data.costoAnual,
+            data.costoPagoAnticipado
         );
     }
 
@@ -29,6 +31,8 @@ export class TarifaMapper {
         return new TarifaEntity(
             data.descripcion,
             data.costo,
+            data.costoAnual,
+            data.costoPagoAnticipado,
             data.id
         );
     }
@@ -38,6 +42,8 @@ export class TarifaMapper {
         let d = new UpdateTarifaDto();
         d.costo = data.costo;
         d.descripcion = data.descripcion;
+        d.costoAnual = data.costoAnual;
+        d.costoPagoAnticipado = data.costoPagoAnticipado;
         d.id = data.id;
         return d;
     }

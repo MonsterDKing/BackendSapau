@@ -9,6 +9,7 @@ import { UsuariosModule } from 'src/usuarios/usuarios.module';
 import { TarifaModule } from 'src/tarifa/tarifa.module';
 import { MomentModule } from '@ccmos/nestjs-moment';
 import { TransaccionesModule } from 'src/transacciones/transacciones.module';
+import { PagoAnticipadoController } from './pago-anticipado.controller';
 
 @Module({
   imports: [TypeOrmModule.forFeature([ClienteEntity]),
@@ -18,7 +19,7 @@ import { TransaccionesModule } from 'src/transacciones/transacciones.module';
   MomentModule.forRoot({
     tz: 'America/Mexico_City',
   }),],
-  controllers: [ClientesController],
+  controllers: [ClientesController,PagoAnticipadoController],
   providers: [
     ClientesService,
     ClienteMapper,

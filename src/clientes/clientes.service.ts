@@ -56,6 +56,8 @@ export class ClientesService {
     }
   }
 
+
+
   async generateTicket(id: number) {
     const root = join(__dirname, '../../assets/pdf/ticket.pug');
     let trans = await this._transaccionesService.getTransaccionById(id);
@@ -93,5 +95,24 @@ export class ClientesService {
     return pdf.create(compiledContent)
   }
 
+  //PagoAnticipado
+  async findAllClientsPagoAnticipado(options: IPaginationOptions, nombre?: string) {
+    const paginationObject = await this.repository.getAllPaginateAndDontHavePreviousDebit(options, nombre);
+    return new Pagination<CreateClienteDto>(
+      paginationObject.items.map((clientes) => this.mapper.entityToDto(clientes)),
+      paginationObject.meta
+    )
+  }
 
+
+
+  async clientesPreviousDebit(options: IPaginationOptions, nombre?: string){
+    const paginationObject = await this.repository.getAllPaginateAndHavePreviousDebit(options, nombre);
+    return new Pagination<CreateClienteDto>(
+      paginationObject.items.map((clientes) => this.mapper.entityToDto(clientes)),
+      paginationObject.meta
+    )
+  }
 }
+
+

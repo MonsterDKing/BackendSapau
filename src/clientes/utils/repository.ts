@@ -85,6 +85,33 @@ export class ClientesRepository {
         });
     }
 
+    async getAllPaginateAndDontHavePreviousDebit(options: IPaginationOptions, nombre?: string): Promise<any> {
+        const queryBuilder = await this.repository
+        .createQueryBuilder('clients')
+        .innerJoinAndSelect("clients.contratante","usuario")
+        .innerJoinAndSelect("clients.tarifa","tarifa")
+        .innerJoin('clients.transacciones', 'transaccion')
+        .where('transaccion.estado_transaccion = 1')
+        .groupBy("clients.id")
+        const result = await paginate<ClienteEntity>(queryBuilder, options)
+        return result;
+    }
+
+    async getAllPaginateAndHavePreviousDebit(options: IPaginationOptions, nombre?: string): Promise<any> {
+        const queryBuilder = await this.repository
+        .createQueryBuilder('clients')
+        .innerJoinAndSelect("clients.contratante","usuario")
+        .innerJoinAndSelect("clients.tarifa","tarifa")
+        .innerJoin('clients.transacciones', 'transaccion')
+        .where('transaccion.estado_transaccion = 0')
+        .groupBy("clients.id")
+        const result = await paginate<ClienteEntity>(queryBuilder, options)
+        return result;
+    }
+
+
+
+
 
 
 }

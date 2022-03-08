@@ -22,6 +22,23 @@ export class ClientesController {
     return this.clientesService.create(createClienteDto);
   }
 
+
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard('jwt'))
+  @Get("previous-debit")
+  findAllWithHavePreviousDebit(
+    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number = 1,
+    @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number = 10,
+    @Query("nombre") nombre?: string
+  ) {
+    limit = limit > 100 ? 100 : limit;
+    return this.clientesService.clientesPreviousDebit({
+      page,
+      limit,
+    }, nombre);
+  }
+
+
   @ApiBearerAuth()
   @UseGuards(AuthGuard('jwt'))
   @Get()
@@ -50,6 +67,8 @@ export class ClientesController {
   update(@Param('id') id: string, @Body() updateClienteDto: UpdateClienteDto) {
     return this.clientesService.update(+id, updateClienteDto);
   }
+
+
 
   @Get('/ticket/:id')
   async generateTicketPdf(@Param('id') id: number, @Res() res) {
