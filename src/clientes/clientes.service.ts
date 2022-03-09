@@ -56,6 +56,14 @@ export class ClientesService {
     }
   }
 
+  async removeClient(id: number) {
+    try {
+      this.repository.hideClient(id)
+    } catch (ex) {
+      console.log(ex);
+    }
+  }
+
 
 
   async generateTicket(id: number) {
@@ -106,7 +114,7 @@ export class ClientesService {
 
 
 
-  async clientesPreviousDebit(options: IPaginationOptions, nombre?: string){
+  async clientesPreviousDebit(options: IPaginationOptions, nombre?: string) {
     const paginationObject = await this.repository.getAllPaginateAndHavePreviousDebit(options, nombre);
     return new Pagination<CreateClienteDto>(
       paginationObject.items.map((clientes) => this.mapper.entityToDto(clientes)),

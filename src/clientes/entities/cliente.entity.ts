@@ -60,17 +60,22 @@ export class ClienteEntity {
     localidad: string;
 
     @OneToMany(() => TransaccionEntity, trans => trans.cliente)
-    transacciones:TransaccionEntity[];
+    transacciones: TransaccionEntity[];
 
     @OneToMany(() => CobroEntity, cobro => cobro.cliente)
-    cobros:CobroEntity[];
+    cobros: CobroEntity[];
+
+    @Column({
+        default: true
+    })
+    mostrar: boolean;
 
     @CreateDateColumn({ type: "timestamp", default: () => "CURRENT_TIMESTAMP(6)" })
     public fechaDeCreacion: Date;
 
 
 
-    constructor(contrato: string, nombre: string, apellidoMaterno: string, apellidoPaterno: string, contratante: UsuarioEntity, calle: string, colonia: string, codigoPostal: string, localidad: string,tarifa:TarifaEntity ,id?: number) {
+    constructor(contrato: string, nombre: string, apellidoMaterno: string, apellidoPaterno: string, contratante: UsuarioEntity, calle: string, colonia: string, codigoPostal: string, localidad: string, tarifa: TarifaEntity, id?: number) {
         this.contrato = contrato;
         this.nombre = nombre;
         this.apellidoPaterno = apellidoPaterno;

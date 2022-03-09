@@ -27,9 +27,26 @@ export class ClientesRepository {
         if (nombre != undefined) {
             return paginate(this.repository, options, {
                 relations: ["contratante", "tarifa"],
-                where: {
-                    nombre: Like(`%${nombre}%`)
-                }
+                where: [
+                    {
+                        nombre: Like(`%${nombre}%`),
+                    },
+                    {
+                        apellidoMaterno: Like(`%${nombre}%`),
+
+                    },
+                    {
+                        apellidoPaterno: Like(`%${nombre}%`),
+
+                    },
+                    {
+                        contrato: Like(`%${nombre}%`),
+
+                    },
+                    {
+                        calle: Like(`%${nombre}%`),
+                    }
+                ]
             });
         }
         return paginate(this.repository, options, {
@@ -85,26 +102,39 @@ export class ClientesRepository {
         });
     }
 
+    async hideClient(id: number) {
+        let client = await this.repository.findOne({
+            where: {
+                id
+            },
+            relations: ["contratante", "tarifa"]
+        })
+        if (client) {
+            client.mostrar = false;
+            return this.repository.update(client.id, client);
+        }
+    }
+
     async getAllPaginateAndDontHavePreviousDebit(options: IPaginationOptions, nombre?: string): Promise<any> {
         const queryBuilder = await this.repository
-        .createQueryBuilder('clients')
-        .innerJoinAndSelect("clients.contratante","usuario")
-        .innerJoinAndSelect("clients.tarifa","tarifa")
-        .innerJoin('clients.transacciones', 'transaccion')
-        .where('transaccion.estado_transaccion = 1')
-        .groupBy("clients.id")
+            .createQueryBuilder('clients')
+            .innerJoinAndSelect("clients.contratante", "usuario")
+            .innerJoinAndSelect("clients.tarifa", "tarifa")
+            .innerJoin('clients.transacciones', 'transaccion')
+            .where('transaccion.estado_transaccion = 1')
+            .groupBy("clients.id")
         const result = await paginate<ClienteEntity>(queryBuilder, options)
         return result;
     }
 
     async getAllPaginateAndHavePreviousDebit(options: IPaginationOptions, nombre?: string): Promise<any> {
         const queryBuilder = await this.repository
-        .createQueryBuilder('clients')
-        .innerJoinAndSelect("clients.contratante","usuario")
-        .innerJoinAndSelect("clients.tarifa","tarifa")
-        .innerJoin('clients.transacciones', 'transaccion')
-        .where('transaccion.estado_transaccion = 0')
-        .groupBy("clients.id")
+            .createQueryBuilder('clients')
+            .innerJoinAndSelect("clients.contratante", "usuario")
+            .innerJoinAndSelect("clients.tarifa", "tarifa")
+            .innerJoin('clients.transacciones', 'transaccion')
+            .where('transaccion.estado_transaccion = 0')
+            .groupBy("clients.id")
         const result = await paginate<ClienteEntity>(queryBuilder, options)
         return result;
     }

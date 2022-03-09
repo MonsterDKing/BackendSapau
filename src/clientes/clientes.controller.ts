@@ -97,9 +97,8 @@ export class ClientesController {
   @UseGuards(AuthGuard('jwt'))
   @Delete(':id')
   remove(@Param('id') id: number) {
-    console.log("ssss")
-    console.log(id);
-    return this.clientesService.remove(+id);
+    this.clientesService.removeClient(id);
+    // return this.clientesService.remove(+id);
   }
 
 }

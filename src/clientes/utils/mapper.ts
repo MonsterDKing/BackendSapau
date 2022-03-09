@@ -35,7 +35,6 @@ export class ClienteMapper {
     async dtoToEntityUpdate(data: UpdateClienteDto): Promise<ClienteEntity> {
         let us = await this.service.findOneEntity(data.contratante);
         let tarifa = await this.tarifaService.getById(data.tarifa);
-
         return new ClienteEntity(
             data.contrato,
             data.nombre,
@@ -61,19 +60,23 @@ export class ClienteMapper {
     // }
 
     entityToDto(data: ClienteEntity): CreateClienteDto {
-        return new CreateClienteDto(
-            data.contrato,
-            data.nombre,
-            data.apellidoPaterno,
-            data.apellidoMaterno,
-            data.contratante.id,
-            data.calle,
-            data.colonia,
-            data.codigoPostal,
-            data.localidad,
-            data.tarifa.id,
-            data?.id != null ? data.id : undefined
-        );
+        try {
+            return new CreateClienteDto(
+                data.contrato,
+                data.nombre,
+                data.apellidoPaterno,
+                data.apellidoMaterno,
+                data.contratante.id,
+                data.calle,
+                data.colonia,
+                data.codigoPostal,
+                data.localidad,
+                data.tarifa.id,
+                data?.id != null ? data.id : undefined
+            );
+        } catch (ex) {
+            console.log(data);
+        }
     }
 
 }
