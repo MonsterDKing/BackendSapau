@@ -116,7 +116,7 @@ export class ClientesController {
       const filepath = join(__dirname, '../../assets/generated/ticket.pdf');
       valor.toStream(function (err, stream) {
         stream.pipe(fs.createWriteStream(filepath));
-        res.send(filepath)
+        stream.pipe(res);
       });
     })
   }
