@@ -7,6 +7,7 @@ import { UpdateClienteDto } from '../dto/update-cliente.dto';
 import { ClienteEntity } from '../entities/cliente.entity';
 import { ClienteMapper } from './mapper';
 import { Like } from 'typeorm';
+import BusquedaInterface from '../dto/busqueda.dto';
 
 
 @Injectable()
@@ -23,32 +24,61 @@ export class ClientesRepository {
         });
     }
 
-    getAllPaginate(options: IPaginationOptions, nombre?: string): Promise<Pagination<ClienteEntity>> {
-        if (nombre != undefined) {
-            return paginate(this.repository, options, {
-                relations: ["contratante", "tarifa"],
-                where: [
-                    {
-                        nombre: Like(`%${nombre}%`),
-                    },
-                    {
-                        apellidoMaterno: Like(`%${nombre}%`),
-
-                    },
-                    {
-                        apellidoPaterno: Like(`%${nombre}%`),
-
-                    },
-                    {
-                        contrato: Like(`%${nombre}%`),
-
-                    },
-                    {
-                        calle: Like(`%${nombre}%`),
+    async getAllPaginate(options: IPaginationOptions, busqueda?: BusquedaInterface): Promise<Pagination<ClienteEntity>> {
+        let count = 0;
+        if (busqueda.nombre || busqueda.apellidoPaterno || busqueda.apellidoMaterno || busqueda.calle || busqueda.contrato) {
+            const queryBuilder = this.repository
+                .createQueryBuilder('clients')
+                .innerJoinAndSelect("clients.contratante", "usuario")
+                .innerJoinAndSelect("clients.tarifa", "tarifa")
+                .innerJoin('clients.transacciones', 'transaccion')
+            if (busqueda) {
+                if (busqueda.nombre) {
+                    if (count == 0) {
+                        count++;
+                        queryBuilder.where(`clients.nombre like "%${busqueda.nombre}%" `);
+                    } else {
+                        queryBuilder.andWhere(`clients.nombre like "%${busqueda.nombre}%" `);
                     }
-                ]
-            });
+                }
+                if (busqueda.apellidoPaterno) {
+                    if (count == 0) {
+                        count++;
+                        queryBuilder.where(`clients.apellidoPaterno like "%${busqueda.apellidoPaterno}%" `);
+                    } else {
+                        queryBuilder.andWhere(`clients.apellidoPaterno like "%${busqueda.apellidoPaterno}%" `);
+                    }
+                }
+                if (busqueda.apellidoMaterno) {
+                    if (count == 0) {
+                        count++;
+                        queryBuilder.where(`clients.apellidoMaterno like "%${busqueda.apellidoMaterno}%" `);
+                    } else {
+                        queryBuilder.andWhere(`clients.apellidoMaterno like "%${busqueda.apellidoMaterno}%" `);
+                    }
+                }
+                if (busqueda.calle) {
+                    if (count == 0) {
+                        count++;
+                        queryBuilder.where(`clients.calle like "%${busqueda.calle}%" `);
+                    } else {
+                        queryBuilder.andWhere(`clients.calle like "%${busqueda.calle}%" `);
+                    }
+                }
+                if (busqueda.contrato) {
+                    if (count == 0) {
+                        count++;
+                        queryBuilder.where(`clients.contrato like "%${busqueda.contrato}%" `);
+                    } else {
+                        queryBuilder.andWhere(`clients.contrato like "%${busqueda.contrato}%" `);
+                    }
+                }
+            }
+            const result = await paginate<ClienteEntity>(queryBuilder, options)
+            return result;
         }
+
+
         return paginate(this.repository, options, {
             relations: ["contratante", "tarifa"]
         });
@@ -61,6 +91,18 @@ export class ClientesRepository {
             },
             relations: ["contratante", "tarifa"]
         });
+    }
+
+    getByIdWithTransactions(id: number): Promise<ClienteEntity> {
+        return this.repository
+            .createQueryBuilder('client')
+            .innerJoinAndSelect("client.contratante", "usuario")
+            .innerJoinAndSelect("client.tarifa", "tarifa")
+            .innerJoinAndSelect('client.transacciones', 'transaccion')
+            .where('client.id = :id', { id })
+            .orderBy('transaccion.fecha_creacion', 'ASC')
+            .getOne();
+
     }
 
     async create(data: CreateClienteDto): Promise<ClienteEntity> {
@@ -115,7 +157,7 @@ export class ClientesRepository {
         }
     }
 
-    async getAllPaginateAndDontHavePreviousDebit(options: IPaginationOptions, nombre?: string): Promise<any> {
+    async getAllPaginateAndDontHavePreviousDebit(options: IPaginationOptions, param?: string): Promise<any> {
         const queryBuilder = await this.repository
             .createQueryBuilder('clients')
             .innerJoinAndSelect("clients.contratante", "usuario")
@@ -127,14 +169,38 @@ export class ClientesRepository {
         return result;
     }
 
-    async getAllPaginateAndHavePreviousDebit(options: IPaginationOptions, nombre?: string): Promise<any> {
+    async getAllPaginateAndHavePreviousDebit(options: IPaginationOptions, busqueda?: BusquedaInterface): Promise<any> {
         const queryBuilder = await this.repository
             .createQueryBuilder('clients')
             .innerJoinAndSelect("clients.contratante", "usuario")
             .innerJoinAndSelect("clients.tarifa", "tarifa")
             .innerJoin('clients.transacciones', 'transaccion')
             .where('transaccion.estado_transaccion = 0')
-            .groupBy("clients.id")
+
+        if (busqueda) {
+            if (busqueda.nombre) {
+                queryBuilder.andWhere(`clients.nombre like "%${busqueda.nombre}%" `);
+            }
+            if (busqueda.apellidoPaterno) {
+                queryBuilder.andWhere(`clients.apellidoPaterno like "%${busqueda.apellidoPaterno}%" `);
+            }
+            if (busqueda.apellidoMaterno) {
+                queryBuilder.andWhere(`clients.apellidoMaterno like "%${busqueda.apellidoMaterno}%" `);
+            }
+            if (busqueda.calle) {
+                queryBuilder.andWhere(`clients.calle like "%${busqueda.calle}%" `);
+            }
+            if (busqueda.contrato) {
+                queryBuilder.andWhere(`clients.contrato like "%${busqueda.contrato}%" `);
+            }
+            if (busqueda.contrato) {
+                queryBuilder.andWhere(`clients.contrato like "%${busqueda.contrato}%" `);
+            }
+            if (busqueda.colonia) {
+                queryBuilder.andWhere(`clients.colonia like "%${busqueda.colonia}%" `);
+            }
+        }
+        queryBuilder.groupBy("clients.id")
         const result = await paginate<ClienteEntity>(queryBuilder, options)
         return result;
     }

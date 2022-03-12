@@ -18,12 +18,12 @@ export class TarifaEntity {
     costo: number;
 
     @Column({
-        nullable:false
+        nullable:true
     })
     costoAnual:number;
 
     @Column({
-        nullable:false
+        nullable:true
     })
     costoPagoAnticipado:number;
 

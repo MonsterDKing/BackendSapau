@@ -50,12 +50,12 @@ export class ClienteEntity {
 
 
     @Column({
-        nullable: false
+        nullable: true
     })
     codigoPostal: string;
 
     @Column({
-        nullable: false
+        nullable: true
     })
     localidad: string;
 

@@ -11,6 +11,9 @@ import * as moment from 'moment';
 import * as pug from 'pug';
 import * as pdf from 'html-pdf'
 import { IPaginationOptions, Pagination } from 'nestjs-typeorm-paginate';
+import BusquedaInterface from './dto/busqueda.dto';
+
+
 const fs = require('fs').promises;
 @Injectable()
 export class ClientesService {
@@ -30,7 +33,7 @@ export class ClientesService {
     return this.mapper.entityToDto(newElement);
   }
 
-  async findAll(options: IPaginationOptions, nombre?: string) {
+  async findAll(options: IPaginationOptions, nombre?: BusquedaInterface) {
     const paginationObject = await this.repository.getAllPaginate(options, nombre);
     return new Pagination<CreateClienteDto>(
       paginationObject.items.map((clientes) => this.mapper.entityToDto(clientes)),
@@ -64,18 +67,67 @@ export class ClientesService {
     }
   }
 
+  async generarNotificacionesMassivas(ids: number[]) {
+    let compile = "";
+    for (let i of ids) {
+      const root = join(__dirname, '../../assets/pdf/ticket.pug');
+      let cliente = await this.repository.getByIdWithTransactions(i);
+      let total = 0;
+      cliente.transacciones.forEach((el) => {
+        total += el.monto;
+      })
+      let fecha = new Date();
+      let fechaParse = moment(fecha).locale('es-mx').format("L")
+      const logoBase64 = await fs.readFile(join(__dirname, '../../assets/pdf/logo.png'), { encoding: 'base64' });
+      const compiledFunction = pug.compileFile(root);
+      const compiledContent = compiledFunction({
+        logo: logoBase64,
+        fecha: fechaParse,
+        nombre: `${cliente.nombre} ${cliente.apellidoPaterno} ${cliente.apellidoMaterno}`,
+        calle: cliente.calle,
+        colonia: cliente.colonia,
+        fechauno: moment(cliente.transacciones[0].fecha_creacion).locale('es-mx').format("L"),
+        fechados: fechaParse,
+        cantidad: total
+      });
+      compile = compile + compiledContent;
+    }
+    return pdf.create(compile);
+  }
 
 
-  async generateTicket(id: number) {
+  async generarNotificacionByIdClient(id: number) {
+    const root = join(__dirname, '../../assets/pdf/ticket.pug');
+    let cliente = await this.repository.getByIdWithTransactions(id);
+    let total = 0;
+    cliente.transacciones.forEach((el) => {
+      total += el.monto;
+    })
+    let fecha = new Date();
+    let fechaParse = moment(fecha).locale('es-mx').format("L")
+    const logoBase64 = await fs.readFile(join(__dirname, '../../assets/pdf/logo.png'), { encoding: 'base64' });
+    const compiledFunction = pug.compileFile(root);
+    const compiledContent = compiledFunction({
+      logo: logoBase64,
+      fecha: fechaParse,
+      nombre: `${cliente.nombre} ${cliente.apellidoPaterno} ${cliente.apellidoMaterno}`,
+      calle: cliente.calle,
+      colonia: cliente.colonia,
+      fechauno: moment(cliente.transacciones[0].fecha_creacion).locale('es-mx').format("L"),
+      fechados: fechaParse,
+      cantidad: total
+    });
+    return pdf.create(compiledContent)
+  }
+
+  async generarNotificacion(id: number) {
     const root = join(__dirname, '../../assets/pdf/ticket.pug');
     let trans = await this._transaccionesService.getTransaccionById(id);
     let fecha = new Date();
     let fechaParse = moment(fecha).locale('es-mx').format("L")
     const logoBase64 = await fs.readFile(join(__dirname, '../../assets/pdf/logo.png'), { encoding: 'base64' });
-
     const compiledFunction = pug.compileFile(root);
     const compiledContent = compiledFunction({
-
       logo: logoBase64,
       fecha: fechaParse,
       nombre: `${trans.cliente.nombre} ${trans.cliente.apellidoPaterno} ${trans.cliente.apellidoMaterno}`,
@@ -100,6 +152,7 @@ export class ClientesService {
       colonia: `${us.colonia}`,
       fecha: `${d.getDate() + '/' + (d.getMonth() + 1) + '/' + d.getFullYear()}`
     });
+
     return pdf.create(compiledContent)
   }
 
@@ -114,8 +167,8 @@ export class ClientesService {
 
 
 
-  async clientesPreviousDebit(options: IPaginationOptions, nombre?: string) {
-    const paginationObject = await this.repository.getAllPaginateAndHavePreviousDebit(options, nombre);
+  async clientesPreviousDebit(options: IPaginationOptions, busqueda?: BusquedaInterface,) {
+    const paginationObject = await this.repository.getAllPaginateAndHavePreviousDebit(options, busqueda);
     return new Pagination<CreateClienteDto>(
       paginationObject.items.map((clientes) => this.mapper.entityToDto(clientes)),
       paginationObject.meta

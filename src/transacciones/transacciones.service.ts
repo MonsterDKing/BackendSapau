@@ -133,6 +133,73 @@ export class TransaccionesService {
     }
 
 
+    async pagoPorAdelantadoService(idCliente:number,tipoDePago:number,us:UsuarioEntity){
+        try{
+
+        let client = await this.clienteRepository.getByIdWithTransactions(idCliente);
+        let trans = client.transacciones;
+        trans.forEach((el)=>{
+            if(el.estado_transaccion == EstadoTransaccionEnum.NO_PAGADO){
+                return false;
+            }
+        });
+        let ultimaTransaccion = trans[trans.length - 1];
+        let ultimaFecha = ultimaTransaccion.fecha_creacion
+        //PAGO ANTICIPADO
+        if(tipoDePago == 1){
+            ultimaFecha.setMonth(ultimaFecha.getDate()+1)
+            let newTransaction = new TransaccionEntity();
+            newTransaction.cliente = client;
+            newTransaction.monto = client.tarifa.costoPagoAnticipado;
+            newTransaction.cobrador = us;
+            newTransaction.fecha_creacion = ultimaFecha;
+            newTransaction.estado_transaccion = EstadoTransaccionEnum.PAGADO;
+            newTransaction.tipo_transaccion = TransaccionesEnum.PAGO_DE_MENSUALIDAD;
+
+            let t = await this.repository.create(newTransaction);
+
+            let cobro = new CobroEntity();
+            cobro.cliente= client;
+            cobro.cobrador = us;
+            cobro.fecha_creacion = new Date();
+            cobro.folio = Math.floor(100000 + Math.random() * 900000).toString();
+            cobro.transacciones = [t]
+            let d = await this.cobroRepository.create(cobro);
+            return true;
+        }
+        //PAGO ANUAL
+        else{
+            let numDeMeses = 11;
+            let arreglo:TransaccionEntity[] = [];
+            for (var i = 0; i < numDeMeses; i++) {
+                ultimaFecha.setMonth(ultimaFecha.getMonth() + 1);
+                let newTransaction = new TransaccionEntity();
+                newTransaction.cliente = client;
+                newTransaction.monto = client.tarifa.costoPagoAnticipado;
+                newTransaction.cobrador = null;
+                newTransaction.fecha_creacion = ultimaFecha;
+                newTransaction.estado_transaccion = EstadoTransaccionEnum.NO_PAGADO;
+                newTransaction.tipo_transaccion = TransaccionesEnum.PAGO_DE_MENSUALIDAD;
+                let nt = await this.repository.create(newTransaction);
+                arreglo.push(nt);
+            }
+            let cobro = new CobroEntity();
+            cobro.cliente= client;
+            cobro.cobrador = us;
+            cobro.fecha_creacion = new Date();
+            cobro.folio = Math.floor(100000 + Math.random() * 900000).toString();
+            cobro.transacciones = arreglo
+            let d = await this.cobroRepository.create(cobro);
+            return true;
+        }
+        }catch(ex){
+            return false;
+        }
+    }
+
+    //Servicios de carga
+
+
     async newGenerateTicket(id: number) {
 
         let pago = 0;
@@ -258,6 +325,109 @@ export class TransaccionesService {
                                 console.log(numDeMeses)
                             });
                         }
+                    }
+                }
+                console.log("terminooooo de actualizar")
+            } catch (ex) {
+                console.log("Errrrooor")
+                console.log(ex);
+            }
+        } catch (error) {
+            this.logger.error('Erro en Excel');
+            throw error;
+        }
+    }
+
+
+    //Pagados y fecha para delante
+    async importToDatabaseAdelantado() {
+        console.log("si entro aca");
+        const file = join(__dirname, '../../assets/xls/adelantado.xlsx');
+        var readStream = createReadStream(join(__dirname, '../../assets/xls/adelantado.xlsx'));
+
+        try {
+            const wb: WorkBook = await new Promise((resolve, reject) => {
+                const stream: ReadStream = readStream;
+
+                const buffers = [];
+
+                stream.on('data', (data) => buffers.push(data));
+
+                stream.on('end', () => {
+                    const buffer = Buffer.concat(buffers);
+                    resolve(xlsx.read(buffer, { type: 'buffer' }));
+                });
+
+                stream.on('error', (error) => reject(error));
+            });
+
+            const sheet: WorkSheet = wb.Sheets[wb.SheetNames[0]];
+            const range = xlsx.utils.decode_range(sheet['!ref']);
+
+            let usImportador = new UsuarioEntity(
+                "Pedro Manuel Salas Galindo",
+                "pedromanuelsalas@outlook.com",
+                "123456",
+                true,
+            )
+
+            let posicion = 0;
+            try {
+                let us = await this.usuarioRepository.create(usImportador);
+                for (let R = range.s.r; R <= range.e.r; ++R) {
+                    // if (R === 0 || !sheet[xlsx.utils.encode_cell({ c: 0, r: R })]) {
+                    //     continue;
+                    // }
+                    console.log(posicion++);
+
+
+                    let col = 0;
+                    let id = sheet[xlsx.utils.encode_cell({ c: col++, r: R })]?.v;
+                    let contrato = sheet[xlsx.utils.encode_cell({ c: col++, r: R })]?.v;
+                    let tarifa = sheet[xlsx.utils.encode_cell({ c: col++, r: R })]?.v;
+                    let nombre = sheet[xlsx.utils.encode_cell({ c: col++, r: R })]?.v;
+                    let apellidoPaterno = sheet[xlsx.utils.encode_cell({ c: col++, r: R })]?.v;
+                    let apellidoMaterno = sheet[xlsx.utils.encode_cell({ c: col++, r: R })]?.v;
+                    let calle = null;
+                    let colonia = null;
+                    let deuda = 0;
+                    const cp = "61940";
+                    const localidad = "HUETAMO DE NUÑEZ";
+
+                    console.log(contrato);
+                    console.log(tarifa);
+                    console.log(nombre);
+
+                    let tarifaEntity = await this.tarifaRepository.getById(tarifa);
+                    let cliente = new ClienteEntity(
+                        contrato,
+                        nombre,
+                        apellidoMaterno,
+                        apellidoPaterno,
+                        us,
+                        calle,
+                        colonia,
+                        cp,
+                        localidad,
+                        tarifaEntity
+                    );
+                    await this.clienteRepository.createclean(cliente);
+                    var date = new Date("Tuesday, 25 January 2022 1:00:00");
+                    let numDeMeses = 11;
+                    for (var i = 0; i < numDeMeses; i++) {
+                        date.setMonth(date.getMonth() + 1);
+                        let newTransaction = new TransaccionEntity();
+                        newTransaction.cliente = cliente;
+                        newTransaction.monto = cliente.tarifa.costo;
+                        newTransaction.cobrador = null;
+                        newTransaction.fecha_creacion = date;
+                        newTransaction.estado_transaccion = EstadoTransaccionEnum.PAGADO;
+                        newTransaction.tipo_transaccion = TransaccionesEnum.PAGO_DE_MENSUALIDAD;
+                        await this.repositoryDB.save(newTransaction).catch((ex) => {
+                            console.log(ex);
+                            console.log(date);
+                            console.log(numDeMeses)
+                        });
                     }
                 }
                 console.log("terminooooo de actualizar")

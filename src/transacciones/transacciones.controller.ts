@@ -6,7 +6,7 @@ import { Auth } from 'src/auth/decorators/decorators-auth';
 import { UsuarioEntity } from 'src/usuarios/entities/usuario.entity';
 import { AjustarDeudaDto } from './dto/ajustarDeudaDto';
 import NewPagarDto from './dto/newPagarDto';
-import PagarDto from './dto/Pagardtoo';
+import PagoAnticipadoDto from './dto/pagoAnticipado.dto';
 import { TransaccionesService } from './transacciones.service';
 const fs = require('fs');
 
@@ -20,6 +20,12 @@ export class TransaccionesController {
   @UseGuards(AuthGuard('jwt'))
   findAllTransNoPayments() {
     return this.transaccionesService.getAllBystatus()
+  }
+
+  @Post("/pagar-anticipado")
+  @UseGuards(AuthGuard('jwt'))
+  pagoAnticipado(@Body() data: PagoAnticipadoDto, @Auth() us: UsuarioEntity) {
+    return this.transaccionesService.pagoPorAdelantadoService(data.idCliente,data.tipoDePago,us);
   }
 
   @Post("/pagar")
@@ -36,7 +42,7 @@ export class TransaccionesController {
 
   @Get("/importar")
   importDatabase() {
-    return this.transaccionesService.importToDatabase()
+    return this.transaccionesService.importToDatabaseAdelantado()
   }
 
   @Get('/ticket-venta/:id')

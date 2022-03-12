@@ -5,7 +5,9 @@ import { join } from 'path';
 import { Auth } from 'src/auth/decorators/decorators-auth';
 import { UsuarioEntity } from 'src/usuarios/entities/usuario.entity';
 import { ClientesService } from './clientes.service';
+import BusquedaInterface from './dto/busqueda.dto';
 import { CreateClienteDto } from './dto/create-cliente.dto';
+import { GenerateMassivePdf } from './dto/generate-massive.dto';
 import { UpdateClienteDto } from './dto/update-cliente.dto';
 const fs = require('fs');
 
@@ -29,13 +31,26 @@ export class ClientesController {
   findAllWithHavePreviousDebit(
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number = 1,
     @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number = 10,
-    @Query("nombre") nombre?: string
+    @Query("nombre") nombre?: string,
+    @Query("apellidoP") apellidoPaterno?: string,
+    @Query("apellidoM") apellidoMaterno?: string,
+    @Query("calle") calle?: string,
+    @Query("contrato") contrato?: string,
+    @Query("colonia") colonia?: string
   ) {
     limit = limit > 100 ? 100 : limit;
+    let busqueda: BusquedaInterface = {
+      nombre: nombre,
+      apellidoPaterno: apellidoPaterno,
+      apellidoMaterno,
+      calle,
+      contrato,
+      colonia
+    }
     return this.clientesService.clientesPreviousDebit({
       page,
       limit,
-    }, nombre);
+    }, busqueda);
   }
 
 
@@ -45,13 +60,25 @@ export class ClientesController {
   findAll(
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number = 1,
     @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number = 10,
-    @Query("nombre") nombre?: string
+    @Query("nombre") nombre?: string,
+    @Query("apellidoP") apellidoPaterno?: string,
+    @Query("apellidoM") apellidoMaterno?: string,
+    @Query("calle") calle?: string,
+    @Query("contrato") contrato?: string
   ) {
     limit = limit > 100 ? 100 : limit;
+    let busqueda: BusquedaInterface = {
+      nombre: nombre,
+      apellidoPaterno: apellidoPaterno,
+      apellidoMaterno,
+      calle,
+      contrato
+    }
+
     return this.clientesService.findAll({
       page,
       limit,
-    }, nombre);
+    }, busqueda);
   }
 
   @ApiBearerAuth()
@@ -69,10 +96,35 @@ export class ClientesController {
   }
 
 
+  @Post('/generate-massive')
+  generateMassive(@Body() data: GenerateMassivePdf, @Res() res) {
+    return this.clientesService.generarNotificacionesMassivas(data.ids).then((valor)=>{
+      const filepath = join(__dirname, '../../assets/generated/notificacion-masiva.pdf');
+      valor.toStream(function (err, stream) {
+        stream.pipe(fs.createWriteStream(filepath));
+        stream.pipe(res);
+      });
 
-  @Get('/ticket/:id')
+    });
+  }
+
+
+
+  @Get('/notificacion-client/:id')
+  async generateNotificationByClient(@Param('id') id: number, @Res() res) {
+    this.clientesService.generarNotificacionByIdClient(id).then((valor) => {
+      const filepath = join(__dirname, '../../assets/generated/ticket.pdf');
+      valor.toStream(function (err, stream) {
+        stream.pipe(fs.createWriteStream(filepath));
+        res.send(filepath)
+      });
+    })
+  }
+
+
+  @Get('/notificacion/:id')
   async generateTicketPdf(@Param('id') id: number, @Res() res) {
-    this.clientesService.generateTicket(id).then((valor) => {
+    this.clientesService.generarNotificacion(id).then((valor) => {
       const filepath = join(__dirname, '../../assets/generated/ticket.pdf');
       valor.toStream(function (err, stream) {
         stream.pipe(fs.createWriteStream(filepath));
@@ -80,6 +132,8 @@ export class ClientesController {
       });
     })
   }
+
+
 
 
   @Get('/contrato/:id')
