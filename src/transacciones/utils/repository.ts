@@ -1,8 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { IPaginationOptions, paginate, paginateRaw } from 'nestjs-typeorm-paginate';
+import BusquedaInterface from 'src/clientes/dto/busqueda.dto';
 import { ClienteEntity } from 'src/clientes/entities/cliente.entity';
 import { DeleteResult, Repository, UpdateResult } from 'typeorm';
 import { TransaccionEntity } from '../entities/transaccion.entity';
+import { TransaccionWithMonth } from '../model/TransactionsWithMoth';
 
 
 @Injectable()
@@ -10,7 +13,9 @@ export class TransaccionRepository {
 
     constructor(
         @InjectRepository(TransaccionEntity)
-        private repository: Repository<TransaccionEntity>) { }
+        private repository: Repository<TransaccionEntity>
+        
+        ) { }
 
     getAll(): Promise<TransaccionEntity[]> {
         return this.repository.find();
@@ -80,28 +85,18 @@ export class TransaccionRepository {
             .getMany()
     }
 
-    getallTransactionsWithMonthQueryRaw(): Promise<any> {
-        let d = this.repository.query(`SELECT 
-        CONCAT(cl.nombre,
-                ' ',
-                cl.apellidoPaterno,
-                ' ',
-                cl.apellidoMaterno) AS nombre,
-                    ts.clienteId,
-                    COUNT(*) AS meses,
-                    SUM(t.costo) deuda,
-                    cl.calle as calle,
-                    cl.colonia as colonia
-                FROM
-                    transaccion ts
-                        INNER JOIN
-                    cliente cl ON cl.id = ts.clienteId
-                        INNER JOIN
-                    tarifa t ON t.id = cl.tarifaId
-                WHERE
-                    ts.estado_transaccion = 0
-                GROUP BY ts.clienteId;`)
-        return d;
+    async getallTransactionsWithMonthQueryRaw(options: IPaginationOptions, busqueda?: BusquedaInterface): Promise<any> {
+        let queryBuilder = await this.repository
+            .createQueryBuilder("trans")
+            .select("CONCAT(c.nombre,' ',c.apellidoPaterno,' ',c.apellidoMaterno) as nombre,COUNT(*) as meses,c.calle as calle,c.colonia as colonia, SUM(t.costo) deuda,t.costo costoTarifa, t.descripcion descripcionTarifa, c.id as clienteId")
+            .innerJoin('trans.cliente', 'c')
+            .innerJoin('c.tarifa', 't')
+            .where(" trans.estado_transaccion = 0")
+            .groupBy("trans.clienteId")
+
+            
+            const result = await paginateRaw<any>(queryBuilder, options)
+            return result;
     }
 
 

@@ -24,6 +24,8 @@ import { UsuarioRepository } from 'src/usuarios/utils/repository';
 import * as xlsx from 'xlsx';
 import { WorkBook, WorkSheet } from 'xlsx';
 import { getConnection, } from 'typeorm';
+import { IPaginationOptions, paginate } from 'nestjs-typeorm-paginate';
+import BusquedaInterface from 'src/clientes/dto/busqueda.dto';
 
 
 @Injectable()
@@ -122,9 +124,10 @@ export class TransaccionesService {
         await this.repository.create(trans);
     }
 
-    async getAllBystatus() {
-        let d = await this.repository.getallTransactionsWithMonthQueryRaw();
+    async getAllBystatus(options: IPaginationOptions, busqueda?: BusquedaInterface) {
+        let d = await this.repository.getallTransactionsWithMonthQueryRaw(options,busqueda);
         return d;
+
     }
 
     async getTransaccionById(id: number): Promise<TransaccionEntity> {

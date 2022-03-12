@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Res, UseGuards } from '@nestjs/common';
+import { Body, Controller, DefaultValuePipe, Get, Param, ParseIntPipe, Post, Query, Res, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiTags } from '@nestjs/swagger';
 import { join } from 'path';
@@ -18,8 +18,12 @@ export class TransaccionesController {
 
   @Get("/no-pagados")
   @UseGuards(AuthGuard('jwt'))
-  findAllTransNoPayments() {
-    return this.transaccionesService.getAllBystatus()
+  findAllTransNoPayments(
+    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number = 1,
+    @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number = 10,
+    @Query("nombre") nombre?: string,
+  ) {
+    return this.transaccionesService.getAllBystatus({page,limit})
   }
 
   @Post("/pagar-anticipado")
