@@ -138,7 +138,6 @@ export class TransaccionesService {
 
     async pagoPorAdelantadoService(idCliente:number,tipoDePago:number,us:UsuarioEntity){
         try{
-
         let client = await this.clienteRepository.getByIdWithTransactions(idCliente);
         let trans = client.transacciones;
         trans.forEach((el)=>{
@@ -200,7 +199,6 @@ export class TransaccionesService {
         }
     }
 
-    //Servicios de carga
 
 
     async newGenerateTicket(id: number) {
@@ -238,6 +236,9 @@ export class TransaccionesService {
         });
         return pdf.create(compiledContent)
     }
+
+
+        //Servicios de carga
 
     async importToDatabase() {
         const file = join(__dirname, '../../assets/xls/file.xlsx');
@@ -424,6 +425,7 @@ export class TransaccionesService {
                         newTransaction.monto = cliente.tarifa.costo;
                         newTransaction.cobrador = null;
                         newTransaction.fecha_creacion = date;
+                        newTransaction.fecha_pago = date;
                         newTransaction.estado_transaccion = EstadoTransaccionEnum.PAGADO;
                         newTransaction.tipo_transaccion = TransaccionesEnum.PAGO_DE_MENSUALIDAD;
                         await this.repositoryDB.save(newTransaction).catch((ex) => {

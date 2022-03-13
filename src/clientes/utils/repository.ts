@@ -31,7 +31,7 @@ export class ClientesRepository {
                 .createQueryBuilder('clients')
                 .innerJoinAndSelect("clients.contratante", "usuario")
                 .innerJoinAndSelect("clients.tarifa", "tarifa")
-                .innerJoin('clients.transacciones', 'transaccion')
+                .innerJoinAndSelect('clients.transacciones', 'transaccion')
             if (busqueda) {
                 if (busqueda.nombre) {
                     if (count == 0) {
@@ -74,13 +74,13 @@ export class ClientesRepository {
                     }
                 }
             }
+            queryBuilder.orderBy('transaccion.fecha_creacion', 'ASC');
             const result = await paginate<ClienteEntity>(queryBuilder, options)
             return result;
         }
 
-
         return paginate(this.repository, options, {
-            relations: ["contratante", "tarifa"]
+            relations: ["contratante", "tarifa","transacciones"]
         });
     }
 
@@ -157,14 +157,39 @@ export class ClientesRepository {
         }
     }
 
-    async getAllPaginateAndDontHavePreviousDebit(options: IPaginationOptions, param?: string): Promise<any> {
+    async getAllPaginateAndDontHavePreviousDebit(options: IPaginationOptions, busqueda?: BusquedaInterface): Promise<any> {
         const queryBuilder = await this.repository
             .createQueryBuilder('clients')
             .innerJoinAndSelect("clients.contratante", "usuario")
             .innerJoinAndSelect("clients.tarifa", "tarifa")
             .innerJoin('clients.transacciones', 'transaccion')
             .where('transaccion.estado_transaccion = 1')
-            .groupBy("clients.id")
+
+            if (busqueda) {
+                if (busqueda.nombre) {
+                    queryBuilder.andWhere(`clients.nombre like "%${busqueda.nombre}%" `);
+                }
+                if (busqueda.apellidoPaterno) {
+                    queryBuilder.andWhere(`clients.apellidoPaterno like "%${busqueda.apellidoPaterno}%" `);
+                }
+                if (busqueda.apellidoMaterno) {
+                    queryBuilder.andWhere(`clients.apellidoMaterno like "%${busqueda.apellidoMaterno}%" `);
+                }
+                if (busqueda.calle) {
+                    queryBuilder.andWhere(`clients.calle like "%${busqueda.calle}%" `);
+                }
+                if (busqueda.contrato) {
+                    queryBuilder.andWhere(`clients.contrato like "%${busqueda.contrato}%" `);
+                }
+                if (busqueda.contrato) {
+                    queryBuilder.andWhere(`clients.contrato like "%${busqueda.contrato}%" `);
+                }
+                if (busqueda.colonia) {
+                    queryBuilder.andWhere(`clients.colonia like "%${busqueda.colonia}%" `);
+                }
+            }
+
+            queryBuilder.groupBy("clients.id")
         const result = await paginate<ClienteEntity>(queryBuilder, options)
         return result;
     }

@@ -12,6 +12,7 @@ import * as pug from 'pug';
 import * as pdf from 'html-pdf'
 import { IPaginationOptions, Pagination } from 'nestjs-typeorm-paginate';
 import BusquedaInterface from './dto/busqueda.dto';
+import { SendClientDto } from './dto/SendClientDto';
 
 
 const fs = require('fs').promises;
@@ -35,8 +36,8 @@ export class ClientesService {
 
   async findAll(options: IPaginationOptions, nombre?: BusquedaInterface) {
     const paginationObject = await this.repository.getAllPaginate(options, nombre);
-    return new Pagination<CreateClienteDto>(
-      paginationObject.items.map((clientes) => this.mapper.entityToDto(clientes)),
+    return new Pagination<SendClientDto>(
+      paginationObject.items.map((clientes) => this.mapper.entityToSendClientDto(clientes)),
       paginationObject.meta
     )
   }
@@ -157,8 +158,8 @@ export class ClientesService {
   }
 
   //PagoAnticipado
-  async findAllClientsPagoAnticipado(options: IPaginationOptions, nombre?: string) {
-    const paginationObject = await this.repository.getAllPaginateAndDontHavePreviousDebit(options, nombre);
+  async findAllClientsPagoAnticipado(options: IPaginationOptions, busqueda?: BusquedaInterface) {
+    const paginationObject = await this.repository.getAllPaginateAndDontHavePreviousDebit(options, busqueda);
     return new Pagination<CreateClienteDto>(
       paginationObject.items.map((clientes) => this.mapper.entityToDto(clientes)),
       paginationObject.meta

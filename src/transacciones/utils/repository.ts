@@ -14,8 +14,8 @@ export class TransaccionRepository {
     constructor(
         @InjectRepository(TransaccionEntity)
         private repository: Repository<TransaccionEntity>
-        
-        ) { }
+
+    ) { }
 
     getAll(): Promise<TransaccionEntity[]> {
         return this.repository.find();
@@ -93,10 +93,26 @@ export class TransaccionRepository {
             .innerJoin('c.tarifa', 't')
             .where(" trans.estado_transaccion = 0")
             .groupBy("trans.clienteId")
+        if (busqueda) {
+            if (busqueda.nombre) {
+                queryBuilder.andWhere(`c.nombre like "%${busqueda.nombre}%" `);
+            }
+            if (busqueda.apellidoPaterno) {
+                queryBuilder.andWhere(`c.apellidoPaterno like "%${busqueda.apellidoPaterno}%" `);
+            }
+            if (busqueda.apellidoMaterno) {
+                queryBuilder.andWhere(`c.apellidoMaterno like "%${busqueda.apellidoMaterno}%" `);
+            }
+            if (busqueda.calle) {
+                queryBuilder.andWhere(`c.calle like "%${busqueda.calle}%" `);
+            }
+            if (busqueda.contrato) {
+                queryBuilder.andWhere(`c.contrato like "%${busqueda.contrato}%" `);
+            }
+        }
 
-            
-            const result = await paginateRaw<any>(queryBuilder, options)
-            return result;
+        const result = await paginateRaw<any>(queryBuilder, options)
+        return result;
     }
 
 

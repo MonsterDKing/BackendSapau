@@ -8,4 +8,7 @@ export default class PagoAnticipadoDto{
     @ApiProperty()
     tipoDePago:number;
 
+    @ApiProperty()
+    numeroDeMeses:number;
+
 }

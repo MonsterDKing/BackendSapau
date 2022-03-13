@@ -3,6 +3,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { ApiTags } from '@nestjs/swagger';
 import { join } from 'path';
 import { Auth } from 'src/auth/decorators/decorators-auth';
+import BusquedaInterface from 'src/clientes/dto/busqueda.dto';
 import { UsuarioEntity } from 'src/usuarios/entities/usuario.entity';
 import { AjustarDeudaDto } from './dto/ajustarDeudaDto';
 import NewPagarDto from './dto/newPagarDto';
@@ -22,8 +23,21 @@ export class TransaccionesController {
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number = 1,
     @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number = 10,
     @Query("nombre") nombre?: string,
+    @Query("apellidoP") apellidoPaterno?: string,
+    @Query("apellidoM") apellidoMaterno?: string,
+    @Query("calle") calle?: string,
+    @Query("contrato") contrato?: string,
+    @Query("colonia") colonia?: string
   ) {
-    return this.transaccionesService.getAllBystatus({page,limit})
+    let busqueda: BusquedaInterface = {
+      nombre: nombre,
+      apellidoPaterno: apellidoPaterno,
+      apellidoMaterno,
+      calle,
+      contrato,
+      colonia
+    }
+    return this.transaccionesService.getAllBystatus({page,limit}, busqueda)
   }
 
   @Post("/pagar-anticipado")

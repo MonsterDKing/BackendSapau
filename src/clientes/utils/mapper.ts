@@ -4,6 +4,8 @@ import { UsuarioService } from "src/usuarios/usuarios.service";
 import { CreateClienteDto } from "../dto/create-cliente.dto";
 import { UpdateClienteDto } from "../dto/update-cliente.dto";
 import { ClienteEntity } from "../entities/cliente.entity";
+import { SendClientDto } from '../dto/SendClientDto';
+import { EstadoTransaccionEnum } from '../../transacciones/enums/Estado.Transaccion.enum';
 
 
 
@@ -78,5 +80,38 @@ export class ClienteMapper {
             console.log(data);
         }
     }
+    
+    entityToSendClientDto(data:ClienteEntity):SendClientDto{
+        try {
+            let ultimaFecha:Date|undefined;
+
+            if(data.transacciones){
+                data.transacciones.forEach((el)=>{
+                    if(el.estado_transaccion == EstadoTransaccionEnum.PAGADO){
+                        ultimaFecha = el.fecha_pago;
+                    }
+                })
+            }
+
+            return new SendClientDto(
+                data.id,
+                data.contrato,
+                data.nombre,
+                data.apellidoMaterno,
+                data.apellidoPaterno,
+                data.contratante.id,
+                data.calle,
+                data.colonia,
+                data.codigoPostal,
+                data.localidad,
+                data.tarifa.costo,
+                ultimaFecha 
+            );
+        } catch (ex) {
+            console.log(data);
+        }
+    }
+
+    
 
 }
