@@ -19,6 +19,11 @@ export class CobroEntity {
     @OneToMany(() => TransaccionEntity, trans => trans.cobro)
     transacciones: TransaccionEntity[];
 
+    @Column({
+        default:0
+    })
+    descuento: number;
+
     @Column({})
     folio: string;
 

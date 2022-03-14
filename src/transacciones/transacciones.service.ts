@@ -91,12 +91,26 @@ export class TransaccionesService {
         return true;
     }
 
-    async newPayment(numMeses: number, idCliente: number, cobrador: UsuarioEntity) {
+    async newPayment(numMeses: number, idCliente: number, porcentaje:number,cobrador: UsuarioEntity) {
+
+
         let cliente = await this.clienteRepository.getById(idCliente);
         let trans = await this.repository.getAllMonthByIdClientLimit(cliente);
+        
         let transaccionesPagadas: TransaccionEntity[] = [];
+        let total = 0;
+        let valorDeDescuento = 0;
+        let porcentajePorcentaje = 0;
+        if(porcentaje != 0){
+            porcentajePorcentaje = porcentaje/100;
+        }
+
         for (let i = 0; i < numMeses; i++) {
             let tran = trans[i];
+            valorDeDescuento = tran.monto * porcentajePorcentaje;
+            total = tran.monto - valorDeDescuento;
+            tran.monto = total;
+            tran.descuento = porcentaje;
             tran.cobrador = cobrador;
             tran.estado_transaccion = EstadoTransaccionEnum.PAGADO;
             tran.fecha_pago = new Date();
@@ -104,12 +118,14 @@ export class TransaccionesService {
             transaccionesPagadas.push(tran);
         }
 
+
         let cobroEntity = new CobroEntity();
         cobroEntity.cliente = cliente;
         cobroEntity.cobrador = cobrador;
         cobroEntity.fecha_creacion = new Date();
         cobroEntity.transacciones = transaccionesPagadas;
         cobroEntity.folio = Math.floor(100000 + Math.random() * 900000).toString();
+        cobroEntity.descuento = porcentaje;
         let cobro = await this.cobroRepository.create(cobroEntity);
         return cobro;
     }
@@ -207,16 +223,19 @@ export class TransaccionesService {
         let adeudo = 0;
         const root = join(__dirname, '../../assets/pdf/comprobante/comprobante.pug');
         const logoBase64 = await readFileSync(join(__dirname, '../../assets/pdf/logo.png'), { encoding: 'base64' });
-
         let cobro = await this.cobroRepository.getById(id);
         let transNoPagadas = await this.repository.getAllByClient(cobro.cliente, EstadoTransaccionEnum.NO_PAGADO);
         cobro.transacciones.forEach((el) => {
-            pago += el.cliente.tarifa.costo;
+            pago += el.monto;
         })
 
         transNoPagadas.forEach((el) => {
             adeudo += el.cliente.tarifa.costo;
         })
+
+        let total = (pago*100)/cobro.descuento;
+        console.log(pago);
+        console.log(total);
 
         let fecha = new Date();
         let fechaParse = moment(fecha).locale('es-mx').format("L")
@@ -226,6 +245,8 @@ export class TransaccionesService {
             folio: cobro.folio,
             fecha: fechaParse,
             contrato: cobro.cliente.contrato,
+            descuento:cobro.descuento,
+            total:total,
             nombre: `${cobro.cliente.nombre} ${cobro.cliente.apellidoPaterno} ${cobro.cliente.apellidoMaterno}`,
             calle: cobro.cliente.calle,
             colonia: cobro.cliente.colonia,
@@ -234,7 +255,10 @@ export class TransaccionesService {
             pago: pago,
             pendiente: adeudo
         });
-        return pdf.create(compiledContent)
+        return pdf.create(compiledContent,{
+            "height": "9.8in",    
+            "width": "4.5in",            
+        })
     }
 
 

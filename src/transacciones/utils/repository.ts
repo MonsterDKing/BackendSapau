@@ -6,6 +6,7 @@ import { ClienteEntity } from 'src/clientes/entities/cliente.entity';
 import { DeleteResult, Repository, UpdateResult } from 'typeorm';
 import { TransaccionEntity } from '../entities/transaccion.entity';
 import { TransaccionWithMonth } from '../model/TransactionsWithMoth';
+import { EstadoTransaccionEnum } from '../enums/Estado.Transaccion.enum';
 
 
 @Injectable()
@@ -52,7 +53,9 @@ export class TransaccionRepository {
     getAllMonthByIdClientLimit(cliente: ClienteEntity): Promise<TransaccionEntity[]> {
         return this.repository.find({
             where: {
-                cliente
+                cliente:cliente,
+                estado_transaccion:EstadoTransaccionEnum.NO_PAGADO
+                
             },
             order: {
                 fecha_creacion: "DESC"

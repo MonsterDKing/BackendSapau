@@ -39,6 +39,11 @@ export class TransaccionEntity {
     })
     monto: number;
 
+    @Column({
+        default:0
+    })
+    descuento: number;
+
 
 
     @ManyToOne(() => UsuarioEntity, us => us.transacciones,{cascade:true})
