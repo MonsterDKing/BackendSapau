@@ -23,6 +23,7 @@ export class ClientesRepository {
             relations: ["contratante", "tarifa"]
         });
     }
+    
 
     async getAllPaginate(options: IPaginationOptions, busqueda?: BusquedaInterface): Promise<Pagination<ClienteEntity>> {
         let count = 0;

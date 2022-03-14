@@ -118,6 +118,11 @@ export class TransaccionRepository {
         return result;
     }
 
+    async getAllDeuda():Promise<any>{
+        let queryBuilder = await this.repository.createQueryBuilder("trans").select("SUM(trans.monto) as deuda").where("trans.estado_transaccion = 0").getRawOne();
+        return queryBuilder;
+    }
+
 
 
 }

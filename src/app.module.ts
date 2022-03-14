@@ -10,6 +10,7 @@ import { TransaccionesModule } from './transacciones/transacciones.module';
 import { CobrosModule } from './cobros/cobros.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { CronService } from './cron/cron.service';
+import { DashboardModule } from './dashboard/dashboard.module';
 
 
 @Module({
@@ -37,7 +38,8 @@ import { CronService } from './cron/cron.service';
     TarifaModule,
     TransaccionesModule,
     CobrosModule,
-    ScheduleModule.forRoot()
+    ScheduleModule.forRoot(),
+    DashboardModule
   ],
   controllers: [AppController],
   providers: [AppService, CronService],
