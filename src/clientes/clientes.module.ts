@@ -10,12 +10,14 @@ import { TarifaModule } from 'src/tarifa/tarifa.module';
 import { MomentModule } from '@ccmos/nestjs-moment';
 import { TransaccionesModule } from 'src/transacciones/transacciones.module';
 import { PagoAnticipadoController } from './pago-anticipado.controller';
+import { ColoniaModule } from '../colonia/colonia.module';
 
 @Module({
   imports: [TypeOrmModule.forFeature([ClienteEntity]),
     UsuariosModule,
     TarifaModule,
     TransaccionesModule,
+    ColoniaModule,
   MomentModule.forRoot({
     tz: 'America/Mexico_City',
   }),],

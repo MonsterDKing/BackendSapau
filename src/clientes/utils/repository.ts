@@ -33,6 +33,7 @@ export class ClientesRepository {
                 .innerJoinAndSelect("clients.contratante", "usuario")
                 .innerJoinAndSelect("clients.tarifa", "tarifa")
                 .innerJoinAndSelect('clients.transacciones', 'transaccion')
+                .innerJoinAndSelect('clients.colonia', 'colonia')
             if (busqueda) {
                 if (busqueda.nombre) {
                     if (count == 0) {
@@ -81,7 +82,7 @@ export class ClientesRepository {
         }
 
         return paginate(this.repository, options, {
-            relations: ["contratante", "tarifa","transacciones"]
+            relations: ["contratante", "tarifa","transacciones","colonia"]
         });
     }
 
@@ -200,6 +201,7 @@ export class ClientesRepository {
             .createQueryBuilder('clients')
             .innerJoinAndSelect("clients.contratante", "usuario")
             .innerJoinAndSelect("clients.tarifa", "tarifa")
+            .innerJoinAndSelect("clients.colonia", "co")
             .innerJoin('clients.transacciones', 'transaccion')
             .where('transaccion.estado_transaccion = 0')
 
@@ -223,7 +225,7 @@ export class ClientesRepository {
                 queryBuilder.andWhere(`clients.contrato like "%${busqueda.contrato}%" `);
             }
             if (busqueda.colonia) {
-                queryBuilder.andWhere(`clients.colonia like "%${busqueda.colonia}%" `);
+                queryBuilder.andWhere(`co.nombre like "%${busqueda.colonia}%" `);
             }
         }
         queryBuilder.groupBy("clients.id")

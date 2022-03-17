@@ -6,6 +6,8 @@ import { UpdateClienteDto } from "../dto/update-cliente.dto";
 import { ClienteEntity } from "../entities/cliente.entity";
 import { SendClientDto } from '../dto/SendClientDto';
 import { EstadoTransaccionEnum } from '../../transacciones/enums/Estado.Transaccion.enum';
+import { ColoniaRepository } from '../../colonia/utils/colonia.repository';
+import { NotificacionesClienteDto } from "../dto/notificaciones-cliente.dto";
 
 
 
@@ -13,12 +15,13 @@ import { EstadoTransaccionEnum } from '../../transacciones/enums/Estado.Transacc
 @Injectable()
 export class ClienteMapper {
 
-    constructor(private service: UsuarioService, private tarifaService: TarifaRepository) { }
+    constructor(private service: UsuarioService, private tarifaService: TarifaRepository, private coloniaRepository: ColoniaRepository) { }
 
     async dtoToEntity(data: CreateClienteDto): Promise<ClienteEntity> {
 
         let us = await this.service.findOneEntity(data.contratante);
         let tarifa = await this.tarifaService.getById(data.tarifa);
+        let colonia = await this.coloniaRepository.getById(data.colonia);
 
         return new ClienteEntity(
             data.contrato,
@@ -27,7 +30,7 @@ export class ClienteMapper {
             data.apellidoPaterno,
             us,
             data.calle,
-            data.colonia,
+            colonia,
             data.codigoPostal,
             data.localidad,
             tarifa
@@ -37,6 +40,8 @@ export class ClienteMapper {
     async dtoToEntityUpdate(data: UpdateClienteDto): Promise<ClienteEntity> {
         let us = await this.service.findOneEntity(data.contratante);
         let tarifa = await this.tarifaService.getById(data.tarifa);
+        let colonia = await this.coloniaRepository.getById(data.colonia);
+
         return new ClienteEntity(
             data.contrato,
             data.nombre,
@@ -44,7 +49,7 @@ export class ClienteMapper {
             data.apellidoPaterno,
             us,
             data.calle,
-            data.colonia,
+            colonia,
             data.codigoPostal,
             data.localidad,
             tarifa,
@@ -70,7 +75,7 @@ export class ClienteMapper {
                 data.apellidoMaterno,
                 data.contratante.id,
                 data.calle,
-                data.colonia,
+                data.colonia ? data.colonia.id : 0,
                 data.codigoPostal,
                 data.localidad,
                 data.tarifa.id,
@@ -80,14 +85,32 @@ export class ClienteMapper {
             console.log(data);
         }
     }
-    
-    entityToSendClientDto(data:ClienteEntity):SendClientDto{
-        try {
-            let ultimaFecha:Date|undefined;
 
-            if(data.transacciones){
-                data.transacciones.forEach((el)=>{
-                    if(el.estado_transaccion == EstadoTransaccionEnum.PAGADO){
+    entityToNotificationDto(data: ClienteEntity): NotificacionesClienteDto {
+        try {
+            return new NotificacionesClienteDto(
+                data.id,
+                data.contrato,
+                data.nombre,
+                data.apellidoMaterno,
+                data.apellidoPaterno,
+                data.calle,
+                data.colonia ? data.nombre : "",
+                data.codigoPostal,
+                data.localidad,
+                data.tarifa.id
+            );
+        } catch (ex) {
+            console.log(data);
+        }
+    }
+
+    entityToSendClientDto(data: ClienteEntity): SendClientDto {
+        try {
+            let ultimaFecha: Date | undefined;
+            if (data.transacciones) {
+                data.transacciones.forEach((el) => {
+                    if (el.estado_transaccion == EstadoTransaccionEnum.PAGADO) {
                         ultimaFecha = el.fecha_pago;
                     }
                 })
@@ -101,17 +124,18 @@ export class ClienteMapper {
                 data.apellidoPaterno,
                 data.contratante.id,
                 data.calle,
-                data.colonia,
+                data.colonia ? data.colonia.nombre : "Sin colonia",
                 data.codigoPostal,
                 data.localidad,
                 data.tarifa.costo,
-                ultimaFecha 
+                ultimaFecha
             );
+
         } catch (ex) {
-            console.log(data);
+            console.log(ex);
         }
     }
 
-    
+
 
 }

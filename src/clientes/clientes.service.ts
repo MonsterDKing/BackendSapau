@@ -161,7 +161,7 @@ export class ClientesService {
   async findAllClientsPagoAnticipado(options: IPaginationOptions, busqueda?: BusquedaInterface) {
     const paginationObject = await this.repository.getAllPaginateAndDontHavePreviousDebit(options, busqueda);
     return new Pagination<CreateClienteDto>(
-      paginationObject.items.map((clientes) => this.mapper.entityToDto(clientes)),
+      paginationObject.items.map((clientes) => this.mapper.entityToNotificationDto(clientes)),
       paginationObject.meta
     )
   }
@@ -171,7 +171,7 @@ export class ClientesService {
   async clientesPreviousDebit(options: IPaginationOptions, busqueda?: BusquedaInterface,) {
     const paginationObject = await this.repository.getAllPaginateAndHavePreviousDebit(options, busqueda);
     return new Pagination<CreateClienteDto>(
-      paginationObject.items.map((clientes) => this.mapper.entityToDto(clientes)),
+      paginationObject.items.map((clientes) => this.mapper.entityToNotificationDto(clientes)),
       paginationObject.meta
     )
   }

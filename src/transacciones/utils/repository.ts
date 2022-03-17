@@ -84,16 +84,17 @@ export class TransaccionRepository {
 
     getAlltranssactionsTypeMensualidadVencidas(): Promise<TransaccionEntity[]> {
         return this.repository.createQueryBuilder("trans")
-            .where("TIMESTAMPDIFF(MONTH, ts.fecha_creacion, now()) = 1 and ts.tipo_transaccion = 1")
+            .where("TIMESTAMPDIFF(MONTH, trans.fecha_creacion, now()) = 1 and trans.tipo_transaccion = 1")
             .getMany()
     }
 
     async getallTransactionsWithMonthQueryRaw(options: IPaginationOptions, busqueda?: BusquedaInterface): Promise<any> {
         let queryBuilder = await this.repository
             .createQueryBuilder("trans")
-            .select("CONCAT(c.nombre,' ',c.apellidoPaterno,' ',c.apellidoMaterno) as nombre,COUNT(*) as meses,c.calle as calle,c.colonia as colonia, SUM(t.costo) deuda,t.costo costoTarifa, t.descripcion descripcionTarifa, c.id as clienteId")
+            .select("CONCAT(c.nombre,' ',c.apellidoPaterno,' ',c.apellidoMaterno) as nombre,COUNT(*) as meses,c.calle as calle,col.nombre as colonia, SUM(t.costo) deuda,t.costo costoTarifa, t.descripcion descripcionTarifa, c.id as clienteId")
             .innerJoin('trans.cliente', 'c')
             .innerJoin('c.tarifa', 't')
+            .leftJoin('c.colonia', 'col')
             .where(" trans.estado_transaccion = 0")
             .groupBy("trans.clienteId")
         if (busqueda) {

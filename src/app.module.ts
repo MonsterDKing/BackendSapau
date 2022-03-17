@@ -11,6 +11,7 @@ import { CobrosModule } from './cobros/cobros.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { CronService } from './cron/cron.service';
 import { DashboardModule } from './dashboard/dashboard.module';
+import { ColoniaModule } from './colonia/colonia.module';
 
 
 @Module({
@@ -18,18 +19,14 @@ import { DashboardModule } from './dashboard/dashboard.module';
     TypeOrmModule.forRoot({
       type: 'mysql',
       port: parseInt("3306"),
-      host: "137.184.145.251",
-      username: "root",
-      password: "PER46807971s",
-      database: "sapau",
-      // host: "127.0.0.1",
+      // host: "137.184.145.251",
       // username: "root",
-      // password: "desarrollo",
+      // password: "PER46807971s",
       // database: "sapau",
-      // host: "us-cdbr-east-04.cleardb.com",
-      // username: "bf9b789906016e",
-      // password: "8ae039f6",
-      // database: "heroku_57847ecadbd45d9",
+      host: "127.0.0.1",
+      username: "root",
+      password: "desarrollo",
+      database: "sapau",
       autoLoadEntities: true,
       synchronize: true
     }), UsuariosModule,
@@ -39,7 +36,8 @@ import { DashboardModule } from './dashboard/dashboard.module';
     TransaccionesModule,
     CobrosModule,
     ScheduleModule.forRoot(),
-    DashboardModule
+    DashboardModule,
+    ColoniaModule
   ],
   controllers: [AppController],
   providers: [AppService, CronService],

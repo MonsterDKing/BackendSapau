@@ -12,12 +12,11 @@ export class CreateClienteDto {
     apellidoMaterno: string;
     @ApiProperty()
     apellidoPaterno: string;
-    // @ApiProperty()
     contratante: number;
     @ApiProperty()
     calle: string;
     @ApiProperty()
-    colonia: string;
+    colonia: number;
     @ApiProperty()
     codigoPostal: string;
     @ApiProperty()
@@ -26,7 +25,7 @@ export class CreateClienteDto {
     tarifa: number;
 
 
-    constructor(contrato: string, nombre: string, apellidoPaterno: string, apellidoMaterno: string, contratante: number, calle: string, colonia: string, codigoPostal: string, localidad: string,tarifa:number,id?:number) {
+    constructor(contrato: string, nombre: string, apellidoPaterno: string, apellidoMaterno: string, contratante: number, calle: string, colonia: number, codigoPostal: string, localidad: string,tarifa:number,id?:number) {
         this.contrato = contrato;
         this.nombre = nombre;
         this.apellidoPaterno = apellidoPaterno;

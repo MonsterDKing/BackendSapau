@@ -15,7 +15,7 @@ export class AjustarDeudaDto {
     @ApiProperty()
     calle: string;
     @ApiProperty()
-    colonia: string;
+    colonia: number;
     @ApiProperty()
     codigoPostal: string;
     @ApiProperty()

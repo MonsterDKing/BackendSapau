@@ -26,6 +26,7 @@ import { WorkBook, WorkSheet } from 'xlsx';
 import { getConnection, } from 'typeorm';
 import { IPaginationOptions, paginate } from 'nestjs-typeorm-paginate';
 import BusquedaInterface from 'src/clientes/dto/busqueda.dto';
+import { ColoniaRepository } from '../colonia/utils/colonia.repository';
 
 
 @Injectable()
@@ -43,7 +44,8 @@ export class TransaccionesService {
         private cobroRepository: CobroRepository,
         private clienteMapper: ClienteMapper,
         private repository: TransaccionRepository,
-        private tarifaRepository: TarifaRepository
+        private tarifaRepository: TarifaRepository,
+        private coloniaRepository:ColoniaRepository
     ) { }
 
     async crearInstalacion(cliente: ClienteEntity, cobrador: UsuarioEntity) {
@@ -232,10 +234,11 @@ export class TransaccionesService {
         transNoPagadas.forEach((el) => {
             adeudo += el.cliente.tarifa.costo;
         })
+        let total = pago;
 
-        let total = (pago*100)/cobro.descuento;
-        console.log(pago);
-        console.log(total);
+        if(cobro.descuento != 0){
+         total = (pago*100)/cobro.descuento;
+        }
 
         let fecha = new Date();
         let fechaParse = moment(fecha).locale('es-mx').format("L")
@@ -317,6 +320,8 @@ export class TransaccionesService {
                     const cp = "61940";
                     const localidad = "HUETAMO DE NUÑEZ";
 
+                    let co = await this.coloniaRepository.getByNombre(colonia);
+
                     let tarifaEntity = await this.tarifaRepository.getById(tarifa);
                     let cliente = new ClienteEntity(
                         contrato,
@@ -325,7 +330,7 @@ export class TransaccionesService {
                         apellidoPaterno,
                         us,
                         calle,
-                        colonia,
+                        co,
                         cp,
                         localidad,
                         tarifaEntity

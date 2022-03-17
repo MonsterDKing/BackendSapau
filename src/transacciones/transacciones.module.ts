@@ -9,6 +9,7 @@ import { ClientesModule } from 'src/clientes/clientes.module';
 import { CobrosModule } from 'src/cobros/cobros.module';
 import { UsuariosModule } from '../usuarios/usuarios.module';
 import { TarifaModule } from '../tarifa/tarifa.module';
+import { ColoniaModule } from '../colonia/colonia.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { TarifaModule } from '../tarifa/tarifa.module';
     CobrosModule,
     UsuariosModule,
     TarifaModule,
+    ColoniaModule,
     TypeOrmModule.forFeature([TransaccionEntity],),
   ],
   controllers: [TransaccionesController],
