@@ -27,6 +27,7 @@ import { getConnection, } from 'typeorm';
 import { IPaginationOptions, paginate } from 'nestjs-typeorm-paginate';
 import BusquedaInterface from 'src/clientes/dto/busqueda.dto';
 import { ColoniaRepository } from '../colonia/utils/colonia.repository';
+import { EliminarAdeudo } from './dto/eliminarAdeudo.dto';
 
 
 @Injectable()
@@ -66,6 +67,17 @@ export class TransaccionesService {
         mensualidad.cobrador = cobrador;
         mensualidad.monto = cliente.tarifa.costo;
         await this.repository.create(mensualidad);
+    }
+
+    async eliminarAdeudos(data:EliminarAdeudo){
+       try{
+        let cliente = await this.clienteRepository.getById(data.idCliente);
+        await this.repository.deleteAllTransactionByClient(cliente);
+        return true;
+       }catch(ex){
+           console.log(ex);
+           return false;
+       }
     }
 
 

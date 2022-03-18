@@ -1,4 +1,4 @@
-import { Body, Controller, DefaultValuePipe, Get, Param, ParseIntPipe, Post, Query, Res, UseGuards } from '@nestjs/common';
+import { Body, Controller, DefaultValuePipe, Delete, Get, Param, ParseIntPipe, Post, Query, Res, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiTags } from '@nestjs/swagger';
 import { join } from 'path';
@@ -9,6 +9,7 @@ import { AjustarDeudaDto } from './dto/ajustarDeudaDto';
 import NewPagarDto from './dto/newPagarDto';
 import PagoAnticipadoDto from './dto/pagoAnticipado.dto';
 import { TransaccionesService } from './transacciones.service';
+import { EliminarAdeudo } from './dto/eliminarAdeudo.dto';
 const fs = require('fs');
 
 @ApiTags('transacciones')
@@ -62,6 +63,13 @@ export class TransaccionesController {
   importDatabase() {
     return this.transaccionesService.importToDatabaseAdelantado()
   }
+
+
+  @Delete("/eliminar-adeudo")
+  eliminarAdeudos(@Body() data: EliminarAdeudo) {
+    return this.transaccionesService.eliminarAdeudos(data)
+  }
+
 
   @Get('/ticket-venta/:id')
   async generateTicketPdf(@Param('id') id: number, @Res() res) {
