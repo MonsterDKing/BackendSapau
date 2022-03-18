@@ -100,7 +100,7 @@ export class ClientesRepository {
             .createQueryBuilder('client')
             .innerJoinAndSelect("client.contratante", "usuario")
             .innerJoinAndSelect("client.tarifa", "tarifa")
-            .innerJoinAndSelect('client.transacciones', 'transaccion')
+            .leftJoinAndSelect('client.transacciones', 'transaccion')
             .where('client.id = :id', { id })
             .orderBy('transaccion.fecha_creacion', 'ASC')
             .getOne();

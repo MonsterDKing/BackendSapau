@@ -154,65 +154,87 @@ export class TransaccionesService {
     }
 
 
-    async pagoPorAdelantadoService(idCliente:number,tipoDePago:number,us:UsuarioEntity){
+    async pagoPorAdelantadoService(idCliente:number,tipoDePago:number,numeroDeMeses:number,us:UsuarioEntity){
         try{
         let client = await this.clienteRepository.getByIdWithTransactions(idCliente);
-        let trans = client.transacciones;
-        trans.forEach((el)=>{
-            if(el.estado_transaccion == EstadoTransaccionEnum.NO_PAGADO){
-                return false;
-            }
-        });
-        let ultimaTransaccion = trans[trans.length - 1];
-        let ultimaFecha = ultimaTransaccion.fecha_creacion
+        let trans = client?.transacciones;
+        if(trans.length>0){
+            trans.forEach((el)=>{
+                if(el.estado_transaccion == EstadoTransaccionEnum.NO_PAGADO){
+                    return false;
+                }
+            });
+        }
+
+        let now = new Date();
+        let ultimaTransaccion = trans.length>0 ? trans[trans.length - 1].fecha_creacion : new Date();
+        let ultimaFecha = ultimaTransaccion
+        let clienteFinal = client;
         //PAGO ANTICIPADO
         if(tipoDePago == 1){
-            ultimaFecha.setMonth(ultimaFecha.getDate()+1)
-            let newTransaction = new TransaccionEntity();
-            newTransaction.cliente = client;
-            newTransaction.monto = client.tarifa.costoPagoAnticipado;
-            newTransaction.cobrador = us;
-            newTransaction.fecha_creacion = ultimaFecha;
-            newTransaction.estado_transaccion = EstadoTransaccionEnum.PAGADO;
-            newTransaction.tipo_transaccion = TransaccionesEnum.PAGO_DE_MENSUALIDAD;
-
-            let t = await this.repository.create(newTransaction);
-
-            let cobro = new CobroEntity();
-            cobro.cliente= client;
-            cobro.cobrador = us;
-            cobro.fecha_creacion = new Date();
-            cobro.folio = Math.floor(100000 + Math.random() * 900000).toString();
-            cobro.transacciones = [t]
-            let d = await this.cobroRepository.create(cobro);
-            return true;
-        }
-        //PAGO ANUAL
-        else{
-            let numDeMeses = 11;
+            let numDeMeses = numeroDeMeses;
             let arreglo:TransaccionEntity[] = [];
             for (var i = 0; i < numDeMeses; i++) {
                 ultimaFecha.setMonth(ultimaFecha.getMonth() + 1);
                 let newTransaction = new TransaccionEntity();
-                newTransaction.cliente = client;
                 newTransaction.monto = client.tarifa.costoPagoAnticipado;
-                newTransaction.cobrador = null;
+                newTransaction.cobrador = us;
                 newTransaction.fecha_creacion = ultimaFecha;
-                newTransaction.estado_transaccion = EstadoTransaccionEnum.NO_PAGADO;
+                newTransaction.fecha_pago = now;
+                newTransaction.estado_transaccion = EstadoTransaccionEnum.PAGADO;
                 newTransaction.tipo_transaccion = TransaccionesEnum.PAGO_DE_MENSUALIDAD;
                 let nt = await this.repository.create(newTransaction);
                 arreglo.push(nt);
             }
             let cobro = new CobroEntity();
-            cobro.cliente= client;
+            cobro.cliente= clienteFinal;
             cobro.cobrador = us;
             cobro.fecha_creacion = new Date();
             cobro.folio = Math.floor(100000 + Math.random() * 900000).toString();
             cobro.transacciones = arreglo
             let d = await this.cobroRepository.create(cobro);
+
+            for(let i of d.transacciones){
+                d.cliente = clienteFinal;
+                await this.repository.update(i);
+            }
+
+
+            return true;
+        }
+        //PAGO ANUAL
+        else{
+            let numDeMeses = 13;
+            let arreglo:TransaccionEntity[] = [];
+            for (var i = 0; i < numDeMeses; i++) {
+                ultimaFecha.setMonth(ultimaFecha.getMonth() + 1);
+                let newTransaction = new TransaccionEntity();
+                newTransaction.monto = client.tarifa.costoPagoAnticipado;
+                newTransaction.cobrador = us;
+                newTransaction.fecha_creacion = ultimaFecha;
+                newTransaction.fecha_pago = now;
+                newTransaction.estado_transaccion = EstadoTransaccionEnum.PAGADO;
+                newTransaction.tipo_transaccion = TransaccionesEnum.PAGO_DE_MENSUALIDAD;
+                let nt = await this.repository.create(newTransaction);
+                arreglo.push(nt);
+            }
+            let cobro = new CobroEntity();
+            cobro.cliente= clienteFinal;
+            cobro.cobrador = us;
+            cobro.fecha_creacion = new Date();
+            cobro.folio = Math.floor(100000 + Math.random() * 900000).toString();
+            cobro.transacciones = arreglo
+            let d = await this.cobroRepository.create(cobro);
+
+            for(let i of d.transacciones){
+                d.cliente = clienteFinal;
+                d.cobrador = us;
+                await this.repository.update(i);
+            }
             return true;
         }
         }catch(ex){
+            console.log(ex);
             return false;
         }
     }

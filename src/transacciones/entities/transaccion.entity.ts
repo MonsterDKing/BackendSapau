@@ -49,7 +49,7 @@ export class TransaccionEntity {
     @ManyToOne(() => UsuarioEntity, us => us.transacciones,{cascade:true})
     cobrador: UsuarioEntity;
 
-    @ManyToOne(() => CobroEntity, ce => ce.transacciones,{cascade:true})
+    @ManyToOne(() => CobroEntity, ce => ce.transacciones)
     cobro: CobroEntity;
 
 

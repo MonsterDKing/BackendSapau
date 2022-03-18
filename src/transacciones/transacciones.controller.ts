@@ -43,7 +43,7 @@ export class TransaccionesController {
   @Post("/pagar-anticipado")
   @UseGuards(AuthGuard('jwt'))
   pagoAnticipado(@Body() data: PagoAnticipadoDto, @Auth() us: UsuarioEntity) {
-    return this.transaccionesService.pagoPorAdelantadoService(data.idCliente,data.tipoDePago,us);
+    return this.transaccionesService.pagoPorAdelantadoService(data.idCliente,data.tipoDePago,data.numeroDeMeses,us);
   }
 
   @Post("/pagar")
