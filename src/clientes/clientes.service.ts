@@ -113,7 +113,7 @@ export class ClientesService {
       fecha: fechaParse,
       nombre: `${cliente.nombre} ${cliente.apellidoPaterno} ${cliente.apellidoMaterno}`,
       calle: cliente.calle,
-      colonia: cliente.colonia,
+      colonia: cliente.colonia.nombre,
       fechauno: moment(cliente.transacciones[0].fecha_creacion).locale('es-mx').format("L"),
       fechados: fechaParse,
       cantidad: total
@@ -150,7 +150,7 @@ export class ClientesService {
       contrato: us.contrato,
       cliente: `${us.nombre} ${us.apellidoPaterno} ${us.apellidoMaterno}`,
       calle: `${us.calle}`,
-      colonia: `${us.colonia}`,
+      colonia: `${us.colonia.nombre}`,
       fecha: `${d.getDate() + '/' + (d.getMonth() + 1) + '/' + d.getFullYear()}`
     });
 

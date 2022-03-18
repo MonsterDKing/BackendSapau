@@ -95,7 +95,7 @@ export class ClienteMapper {
                 data.apellidoMaterno,
                 data.apellidoPaterno,
                 data.calle,
-                data.colonia ? data.nombre : "",
+                data.colonia ? data.colonia.nombre : "",
                 data.codigoPostal,
                 data.localidad,
                 data.tarifa.id

@@ -91,7 +91,7 @@ export class ClientesRepository {
             where: {
                 id
             },
-            relations: ["contratante", "tarifa"]
+            relations: ["contratante", "tarifa","colonia"]
         });
     }
 
@@ -101,6 +101,7 @@ export class ClientesRepository {
             .innerJoinAndSelect("client.contratante", "usuario")
             .innerJoinAndSelect("client.tarifa", "tarifa")
             .leftJoinAndSelect('client.transacciones', 'transaccion')
+            .leftJoinAndSelect('client.colonia', 'col')
             .where('client.id = :id', { id })
             .orderBy('transaccion.fecha_creacion', 'ASC')
             .getOne();

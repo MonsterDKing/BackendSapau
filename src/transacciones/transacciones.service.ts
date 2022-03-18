@@ -266,6 +266,16 @@ export class TransaccionesService {
         const root = join(__dirname, '../../assets/pdf/comprobante/comprobante.pug');
         const logoBase64 = await readFileSync(join(__dirname, '../../assets/pdf/logo.png'), { encoding: 'base64' });
         let cobro = await this.cobroRepository.getById(id);
+        let pagoTotal = 0;
+        
+        for(let i of cobro.transacciones){
+            pagoTotal += i.monto;
+        }
+
+        console.log("xxxx");
+        console.log(cobro.transacciones);
+
+
         let transNoPagadas = await this.repository.getAllByClient(cobro.cliente, EstadoTransaccionEnum.NO_PAGADO);
         cobro.transacciones.forEach((el) => {
             pago += el.monto;
@@ -295,7 +305,7 @@ export class TransaccionesService {
             colonia: cobro.cliente.colonia,
             tarifa: cobro.cliente.tarifa.descripcion,
             adeudo: adeudo + pago,
-            pago: pago,
+            pago: pagoTotal,
             pendiente: adeudo
         });
         return pdf.create(compiledContent,{
