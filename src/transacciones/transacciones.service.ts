@@ -212,7 +212,10 @@ export class TransaccionesService {
             }
 
 
-            return true;
+            return {
+                ok:true,
+                id:cobro.id
+            };
         }
         //PAGO ANUAL
         else{
@@ -243,7 +246,10 @@ export class TransaccionesService {
                 d.cobrador = us;
                 await this.repository.update(i);
             }
-            return true;
+            return {
+                ok:true,
+                id:cobro.id
+            };
         }
         }catch(ex){
             console.log(ex);
