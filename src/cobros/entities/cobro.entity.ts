@@ -16,7 +16,9 @@ export class CobroEntity {
     @ManyToOne(() => UsuarioEntity, us => us.cobros)
     cobrador: UsuarioEntity;
 
-    @OneToMany(() => TransaccionEntity, trans => trans.cobro)
+    @OneToMany(() => TransaccionEntity, trans => trans.cobro, {
+        cascade:true
+    })
     transacciones: TransaccionEntity[];
 
     @Column({

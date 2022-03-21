@@ -193,10 +193,11 @@ export class TransaccionesService {
                 newTransaction.cobrador = us;
                 newTransaction.fecha_creacion = ultimaFecha;
                 newTransaction.fecha_pago = now;
+                newTransaction.cliente = clienteFinal;
                 newTransaction.estado_transaccion = EstadoTransaccionEnum.PAGADO;
                 newTransaction.tipo_transaccion = TransaccionesEnum.PAGO_DE_MENSUALIDAD;
-                let nt = await this.repository.create(newTransaction);
-                arreglo.push(nt);
+                // let nt = await this.repository.create(newTransaction);
+                arreglo.push(newTransaction);
             }
             let cobro = new CobroEntity();
             cobro.cliente= clienteFinal;
@@ -205,12 +206,6 @@ export class TransaccionesService {
             cobro.folio = Math.floor(100000 + Math.random() * 900000).toString();
             cobro.transacciones = arreglo
             let d = await this.cobroRepository.create(cobro);
-
-            for(let i of d.transacciones){
-                d.cliente = clienteFinal;
-                await this.repository.update(i);
-            }
-
 
             return {
                 ok:true,
@@ -228,10 +223,11 @@ export class TransaccionesService {
                 newTransaction.cobrador = us;
                 newTransaction.fecha_creacion = ultimaFecha;
                 newTransaction.fecha_pago = now;
+                newTransaction.cliente = clienteFinal;
                 newTransaction.estado_transaccion = EstadoTransaccionEnum.PAGADO;
                 newTransaction.tipo_transaccion = TransaccionesEnum.PAGO_DE_MENSUALIDAD;
-                let nt = await this.repository.create(newTransaction);
-                arreglo.push(nt);
+                // let nt = await this.repository.create(newTransaction);
+                arreglo.push(newTransaction);
             }
             let cobro = new CobroEntity();
             cobro.cliente= clienteFinal;
@@ -272,10 +268,6 @@ export class TransaccionesService {
             pagoTotal += i.monto;
         }
 
-        console.log("xxxx");
-        console.log(cobro.transacciones);
-
-
         let transNoPagadas = await this.repository.getAllByClient(cobro.cliente, EstadoTransaccionEnum.NO_PAGADO);
         cobro.transacciones.forEach((el) => {
             pago += el.monto;
@@ -302,9 +294,9 @@ export class TransaccionesService {
             total:total,
             nombre: `${cobro.cliente.nombre} ${cobro.cliente.apellidoPaterno} ${cobro.cliente.apellidoMaterno}`,
             calle: cobro.cliente.calle,
-            colonia: cobro.cliente.colonia,
+            colonia: cobro.cliente.colonia.nombre,
             tarifa: cobro.cliente.tarifa.descripcion,
-            adeudo: adeudo + pago,
+            adeudo: adeudo ,
             pago: pagoTotal,
             pendiente: adeudo
         });

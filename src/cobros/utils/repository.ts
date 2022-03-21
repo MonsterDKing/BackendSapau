@@ -22,7 +22,7 @@ export class CobroRepository {
             where: {
                 id
             },
-            relations: ["cliente", "cobrador", "transacciones", "cliente.tarifa", "cliente.contratante", "transacciones.cliente", "transacciones.cliente.tarifa",]
+            relations: ["cliente", "cobrador", "transacciones", "cliente.tarifa", "cliente.contratante", "transacciones.cliente", "transacciones.cliente.tarifa","cliente.colonia",]
         });
     }
 

@@ -2,13 +2,15 @@ import { Injectable } from '@nestjs/common';
 import { TransaccionRepository } from 'src/transacciones/utils/repository';
 import { ClientesRepository } from '../clientes/utils/repository';
 import { DashboardDto } from './dto/dashboard.dto';
+import { UsuarioRepository } from '../usuarios/utils/repository';
 
 @Injectable()
 export class DashboardService {
     
     constructor(
         private clientesRepository: ClientesRepository,
-        private transaccionRepository:TransaccionRepository
+        private transaccionRepository:TransaccionRepository,
+        private usuarioRepository:UsuarioRepository
 
     ){}
     
@@ -22,5 +24,11 @@ export class DashboardService {
         dashboard.clientesTotales = c.length;
         return dashboard;
     }
+
+    async getUsers(){
+        return this.usuarioRepository.getAll();
+    }
+
+
 
 }
