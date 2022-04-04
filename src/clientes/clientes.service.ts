@@ -105,7 +105,8 @@ export class ClientesService {
       total += el.monto;
     })
     let fecha = new Date();
-    let fechaParse = moment(fecha).locale('es-mx').format("L")
+    let fechauno = moment(cliente.transacciones[0].fecha_creacion).locale('es-mx').format("MMM YYYY");
+    let fechaParse = moment(fecha).locale('es-mx').format("MMM YYYY")
     const logoBase64 = await fs.readFile(join(__dirname, '../../assets/pdf/logo.png'), { encoding: 'base64' });
     const compiledFunction = pug.compileFile(root);
     const compiledContent = compiledFunction({
@@ -114,7 +115,7 @@ export class ClientesService {
       nombre: `${cliente.nombre} ${cliente.apellidoPaterno} ${cliente.apellidoMaterno}`,
       calle: cliente.calle,
       colonia: cliente.colonia.nombre,
-      fechauno: moment(cliente.transacciones[0].fecha_creacion).locale('es-mx').format("L"),
+      fechauno: fechauno,
       fechados: fechaParse,
       cantidad: total
     });

@@ -113,6 +113,9 @@ export class TransaccionRepository {
             if (busqueda.contrato) {
                 queryBuilder.andWhere(`c.contrato like "%${busqueda.contrato}%" `);
             }
+            if (busqueda.colonia) {
+                queryBuilder.andWhere(`col.nombre like "%${busqueda.colonia}%" `);
+            }
         }
 
         const result = await paginateRaw<any>(queryBuilder, options)

@@ -363,8 +363,10 @@ export class TransaccionesService {
                     const localidad = "HUETAMO DE NUÑEZ";
 
                     let co = await this.coloniaRepository.getByNombre(colonia);
-
+                    console.log(tarifa);
                     let tarifaEntity = await this.tarifaRepository.getById(tarifa);
+                    console.log(tarifaEntity);
+
                     let cliente = new ClienteEntity(
                         contrato,
                         nombre,
@@ -417,8 +419,8 @@ export class TransaccionesService {
     //Pagados y fecha para delante
     async importToDatabaseAdelantado() {
         console.log("si entro aca");
-        const file = join(__dirname, '../../assets/xls/adelantado.xlsx');
-        var readStream = createReadStream(join(__dirname, '../../assets/xls/adelantado.xlsx'));
+        // const file = join(__dirname, '../../assets/xls/adelantado.xlsx');
+        var readStream = createReadStream(join(__dirname, '../../assets/xls/mayo.xlsx'));
 
         try {
             const wb: WorkBook = await new Promise((resolve, reject) => {
@@ -450,9 +452,9 @@ export class TransaccionesService {
             try {
                 let us = await this.usuarioRepository.create(usImportador);
                 for (let R = range.s.r; R <= range.e.r; ++R) {
-                    // if (R === 0 || !sheet[xlsx.utils.encode_cell({ c: 0, r: R })]) {
-                    //     continue;
-                    // }
+                    if (R === 0 || !sheet[xlsx.utils.encode_cell({ c: 0, r: R })]) {
+                        continue;
+                    }
                     console.log(posicion++);
 
 
@@ -474,6 +476,10 @@ export class TransaccionesService {
                     console.log(nombre);
 
                     let tarifaEntity = await this.tarifaRepository.getById(tarifa);
+
+                        console.log("XXXXXX")
+                        console.log(tarifaEntity)
+                        console.log(tarifa)
                     let cliente = new ClienteEntity(
                         contrato,
                         nombre,
@@ -488,22 +494,23 @@ export class TransaccionesService {
                     );
                     await this.clienteRepository.createclean(cliente);
                     var date = new Date("Tuesday, 25 January 2022 1:00:00");
-                    let numDeMeses = 11;
+                    let numDeMeses = 4;
                     for (var i = 0; i < numDeMeses; i++) {
-                        date.setMonth(date.getMonth() + 1);
                         let newTransaction = new TransaccionEntity();
                         newTransaction.cliente = cliente;
-                        newTransaction.monto = cliente.tarifa.costo;
+                        newTransaction.monto = tarifaEntity.costo;
                         newTransaction.cobrador = null;
                         newTransaction.fecha_creacion = date;
                         newTransaction.fecha_pago = date;
                         newTransaction.estado_transaccion = EstadoTransaccionEnum.PAGADO;
                         newTransaction.tipo_transaccion = TransaccionesEnum.PAGO_DE_MENSUALIDAD;
                         await this.repositoryDB.save(newTransaction).catch((ex) => {
+                            console.log(cliente);
                             console.log(ex);
                             console.log(date);
                             console.log(numDeMeses)
                         });
+                        date.setMonth(date.getMonth() + 1);
                     }
                 }
                 console.log("terminooooo de actualizar")
