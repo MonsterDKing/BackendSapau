@@ -127,6 +127,18 @@ export class TransaccionRepository {
         return queryBuilder;
     }
 
+    async getAllMonthDashboard(fechaUno:string,fechaDos:string){
+        let query = await this.repository.createQueryBuilder('t')
+            .select("sum(t.monto) valor")
+            .where("t.estado_transaccion = 1")
+            .andWhere('t.fecha_pago BETWEEN :dateone AND :datetwo' )
+            .setParameter('dateone',fechaUno)
+            .setParameter('datetwo',fechaDos)
+            .getRawMany();
+
+            return query;
+
+    }
 
 
 }

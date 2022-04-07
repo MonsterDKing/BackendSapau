@@ -86,7 +86,7 @@ export class ClientesService {
         fecha: fechaParse,
         nombre: `${cliente.nombre} ${cliente.apellidoPaterno} ${cliente.apellidoMaterno}`,
         calle: cliente.calle,
-        colonia: cliente.colonia,
+        colonia: cliente.colonia.nombre,
         fechauno: moment(cliente.transacciones[0].fecha_creacion).locale('es-mx').format("L"),
         fechados: fechaParse,
         cantidad: total

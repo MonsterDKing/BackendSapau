@@ -53,9 +53,17 @@ export class UsuarioRepository {
         });
     }
 
-    getAllPayments(){
-        
+
+    getCobradoresConMonto(){
+        return this.repository.createQueryBuilder("u")
+        .select("u.nombre,SUM(t.monto) valor")
+        .innerJoin("u.clientes",'c')
+        .innerJoin("c.transacciones",'t')
+        .where("t.estado_transaccion = 1")
+        .groupBy("u.id")
+        .getRawMany();
     }
+
 
 
 }
