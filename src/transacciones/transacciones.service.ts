@@ -196,7 +196,6 @@ export class TransaccionesService {
                 newTransaction.cliente = clienteFinal;
                 newTransaction.estado_transaccion = EstadoTransaccionEnum.PAGADO;
                 newTransaction.tipo_transaccion = TransaccionesEnum.PAGO_DE_MENSUALIDAD;
-                // let nt = await this.repository.create(newTransaction);
                 arreglo.push(newTransaction);
             }
             let cobro = new CobroEntity();

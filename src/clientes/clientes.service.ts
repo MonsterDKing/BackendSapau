@@ -13,6 +13,7 @@ import * as pdf from 'html-pdf'
 import { IPaginationOptions, Pagination } from 'nestjs-typeorm-paginate';
 import BusquedaInterface from './dto/busqueda.dto';
 import { SendClientDto } from './dto/SendClientDto';
+import { CambiarTomaDeAguaDto } from './dto/cambiar-toma-de-agua';
 
 
 const fs = require('fs').promises;
@@ -25,6 +26,17 @@ export class ClientesService {
     private mapper: ClienteMapper,
     private _transaccionesService: TransaccionesService
   ) { }
+
+  async cambiarEstadoTomaAgua(data: CambiarTomaDeAguaDto) {
+    try {
+      let ce = await this.repository.getById(data.id);
+      ce.toma_cancelada = data.estado;
+      await this.repository.updateClean(ce.id, ce);
+      return true;
+    } catch (ex) {
+      return false;
+    }
+  }
 
   async create(data: CreateClienteDto) {
     const newElement: ClienteEntity = await this.repository.create(data);

@@ -6,6 +6,7 @@ import { Auth } from 'src/auth/decorators/decorators-auth';
 import { UsuarioEntity } from 'src/usuarios/entities/usuario.entity';
 import { ClientesService } from './clientes.service';
 import BusquedaInterface from './dto/busqueda.dto';
+import { CambiarTomaDeAguaDto } from './dto/cambiar-toma-de-agua';
 import { CreateClienteDto } from './dto/create-cliente.dto';
 import { GenerateMassivePdf } from './dto/generate-massive.dto';
 import { UpdateClienteDto } from './dto/update-cliente.dto';
@@ -107,6 +108,15 @@ export class ClientesController {
 
     });
   }
+
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard('jwt'))
+  @Post('/cambiar-toma-agua')
+  cambiarTomaDeGua(@Body() data: CambiarTomaDeAguaDto) {
+    return this.clientesService.cambiarEstadoTomaAgua(data);
+  }
+
+
 
 
 

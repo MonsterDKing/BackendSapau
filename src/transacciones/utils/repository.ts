@@ -127,6 +127,10 @@ export class TransaccionRepository {
         return queryBuilder;
     }
 
+    async getTransaccionWithDate(){
+        let querybuilder = await this.repository.createQueryBuilder("trans")
+    }
+
     async getAllMonthDashboard(fechaUno:string,fechaDos:string){
         let query = await this.repository.createQueryBuilder('t')
             .select("sum(t.monto) valor")

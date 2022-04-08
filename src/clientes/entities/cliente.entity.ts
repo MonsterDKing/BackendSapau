@@ -76,10 +76,15 @@ export class ClienteEntity {
     })
     mostrar: boolean;
 
+    
+
     @CreateDateColumn({ type: "timestamp", default: () => "CURRENT_TIMESTAMP(6)" })
     public fechaDeCreacion: Date;
 
-
+    @Column({
+        default:false
+      })
+      toma_cancelada: boolean;
 
     constructor(contrato: string, nombre: string, apellidoMaterno: string, apellidoPaterno: string, contratante: UsuarioEntity, calle: string, colonia: ColoniaEntity, codigoPostal: string, localidad: string, tarifa: TarifaEntity, id?: number) {
         this.contrato = contrato;

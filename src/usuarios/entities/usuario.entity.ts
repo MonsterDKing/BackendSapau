@@ -41,7 +41,6 @@ export class UsuarioEntity {
       transacciones:TransaccionEntity[];
 
 
-
     @BeforeInsert()
     async hashPassword() {
         const salt = await bcrypt.genSalt();

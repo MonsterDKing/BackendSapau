@@ -128,7 +128,8 @@ export class ClienteMapper {
                 data.codigoPostal,
                 data.localidad,
                 data.tarifa.costo,
-                ultimaFecha
+                ultimaFecha,
+                data.toma_cancelada
             );
 
         } catch (ex) {

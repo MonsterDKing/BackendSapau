@@ -13,6 +13,7 @@ export class SendClientDto {
     localidad: string;
     tarifa: number;
     ultimaFechaDePago:Date;
+    toma_cancelada:boolean;
 
 
 
@@ -28,7 +29,8 @@ export class SendClientDto {
     codigoPostal: string, 
     localidad: string, 
     tarifa: number, 
-    ultimaFechaDePago: Date
+    ultimaFechaDePago: Date,
+    toma_cancelada:boolean
 ) {
     this.id = id
     this.contrato = contrato
@@ -42,6 +44,7 @@ export class SendClientDto {
     this.localidad = localidad
     this.tarifa = tarifa
     this.ultimaFechaDePago = ultimaFechaDePago
+    this.toma_cancelada = toma_cancelada
   }
 
 
