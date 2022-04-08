@@ -4,5 +4,6 @@ export class DashboardDto{
     deudaTotal:number;
     cobradoresConTotal:any;
     meses:any;
+    coloniasMonto:any;
 
 }

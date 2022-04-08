@@ -49,6 +49,18 @@ export class ColoniaRepository {
 
     }
 
+
+    async getMontoByColnias(coloniaId:number){
+        return await this.repository.createQueryBuilder("co")
+            .select("sum(t.monto) valor")
+            .innerJoin("co.clientes","c")
+            .innerJoin("c.transacciones","t")
+            .where("t.estado_transaccion = 1")
+            .andWhere("co.id = :coloniaId")
+            .setParameter("coloniaId",coloniaId)
+            .getRawOne()
+    }
+
     delete(id: number): Promise<DeleteResult> {
         return this.repository.delete(id);
     }
