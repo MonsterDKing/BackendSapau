@@ -23,6 +23,23 @@ export class TransaccionRepository {
         return this.repository.find();
     }
 
+    getUltimasTransacciones(filtro:FiltradoDashboardDto): Promise<TransaccionEntity[]> {
+        let queryBuilder = this.repository.createQueryBuilder("t")
+        .innerJoinAndSelect("t.cliente","c")
+        .innerJoinAndSelect("t.cobrador","cobrador")
+        if(filtro.fechaInicio != " " && filtro.fechaInicio){
+            if(filtro.fechaFin != " " && filtro.fechaFin){
+                queryBuilder.andWhere('trans.fecha_creacion BETWEEN :dateone AND :datetwo' )
+                queryBuilder.setParameter('dateone',filtro.fechaInicio)
+                queryBuilder.setParameter('datetwo',filtro.fechaFin)
+            }
+        } else{
+            queryBuilder.limit(100);
+        }
+        let data = queryBuilder.getMany();
+        return data;
+        }
+
     getAllByStatus(estado: number) {
         return this.repository.find({
             where: {
@@ -124,10 +141,13 @@ export class TransaccionRepository {
     }
 
     async getAllDeuda(filtro:FiltradoDashboardDto):Promise<any>{
-        let d = await this.repository.createQueryBuilder("trans").select("SUM(trans.monto) as deuda").where("trans.estado_transaccion = 0");
+        let d = await this.repository.createQueryBuilder("trans")
+        .select("SUM(trans.monto) as deuda")
+        .where("trans.estado_transaccion = 0");
+        
         if(filtro.fechaInicio != " " && filtro.fechaInicio){
             if(filtro.fechaFin != " " && filtro.fechaFin){
-                d.andWhere('t.fecha_creacion BETWEEN :dateone AND :datetwo' )
+                d.andWhere('trans.fecha_creacion BETWEEN :dateone AND :datetwo' )
                 d.setParameter('dateone',filtro.fechaInicio)
                 d.setParameter('datetwo',filtro.fechaFin)
             }

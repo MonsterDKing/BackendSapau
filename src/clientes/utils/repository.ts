@@ -8,6 +8,7 @@ import { ClienteEntity } from '../entities/cliente.entity';
 import { ClienteMapper } from './mapper';
 import { Like } from 'typeorm';
 import BusquedaInterface from '../dto/busqueda.dto';
+import FiltradoDashboardDto from 'src/dashboard/dto/filtrado.dto';
 
 
 @Injectable()
@@ -22,6 +23,20 @@ export class ClientesRepository {
         return this.repository.find({
             relations: ["contratante", "tarifa"]
         });
+    }
+
+    getAllDashboard(filtro:FiltradoDashboardDto): Promise<ClienteEntity[]> {
+        let queryBuilder  = this.repository.createQueryBuilder("c")
+
+        if(filtro.fechaInicio != " " && filtro.fechaInicio){
+            if(filtro.fechaFin != " " && filtro.fechaFin){
+                queryBuilder.andWhere('c.fechaDeCreacion BETWEEN :dateone AND :datetwo' )
+                queryBuilder.setParameter('dateone',filtro.fechaInicio)
+                queryBuilder.setParameter('datetwo',filtro.fechaFin)
+            }
+        } 
+        
+        return queryBuilder.getMany();
     }
     
 

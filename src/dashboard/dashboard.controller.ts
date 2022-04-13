@@ -57,9 +57,29 @@ export class DashboardController {
 
   
 
-  @Get("/users")
-  users(){
-    return this.dashboardService.getUsers();
+  @Get("/usuarios-total")
+  getUsuariosTotales(
+    @Query("fechaInicio") fechaInicio?: string,
+    @Query("fechaFin") fechaFin?: string,
+  ) {
+    let busqueda: FiltradoDashboardDto = {
+      fechaInicio: fechaInicio,
+      fechaFin: fechaFin,
+    }
+    return this.dashboardService.getUsuariosTotales(busqueda);
+  }
+
+
+  @Get("/ultimas-transacciones")
+  getUltimasTransacciones(
+    @Query("fechaInicio") fechaInicio?: string,
+    @Query("fechaFin") fechaFin?: string,
+  ) {
+    let busqueda: FiltradoDashboardDto = {
+      fechaInicio: fechaInicio,
+      fechaFin: fechaFin,
+    }
+    return this.dashboardService.getUltimasTransacciones(busqueda);
   }
 
 

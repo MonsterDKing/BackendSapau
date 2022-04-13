@@ -6,6 +6,8 @@ import { UsuarioRepository } from '../usuarios/utils/repository';
 import { mesesUtils } from './utils/meses';
 import { ColoniaRepository } from '../colonia/utils/colonia.repository';
 import FiltradoDashboardDto from './dto/filtrado.dto';
+import { TransaccionesEnum } from 'src/transacciones/enums/Transacciones.enum';
+import { EstadoTransaccionEnum } from 'src/transacciones/enums/Estado.Transaccion.enum';
 
 @Injectable()
 export class DashboardService {
@@ -20,7 +22,6 @@ export class DashboardService {
     
     async getDashboard(){
         let dashboard = new DashboardDto();
-        let c = await this.clientesRepository.getAll();
         let m = mesesUtils;
         let data:any[] = [];
         for(let i of m){
@@ -30,9 +31,29 @@ export class DashboardService {
                 valor:valor[0].valor
             })
         }
-        dashboard.clientesTotales = c.length;
         dashboard.meses = data;
         return dashboard;
+    }
+
+    async getUsuariosTotales(filtro:FiltradoDashboardDto){
+        let c = await this.clientesRepository.getAllDashboard(filtro);
+        return  c.length;
+    }
+
+    async getUltimasTransacciones(filtro:FiltradoDashboardDto){
+        let trans =  await this.transaccionRepository.getUltimasTransacciones(filtro);
+        let data:any[] = [];
+        for(let i of trans){
+            data.push({
+                nombre:`${i.cliente.nombre} ${i.cliente.apellidoPaterno} ${i.cliente.apellidoMaterno}`,
+                estado:EstadoTransaccionEnum[i.estado_transaccion],
+                tipo:TransaccionesEnum[i.tipo_transaccion],
+                fechaDeCreacion:i.fecha_creacion,
+                fechaDePago:i.fecha_pago,
+                cobrador:`${i.cobrador.nombre}`,
+            })
+        }
+        return data;
     }
 
     async ingresosPorCobradores(filtro:FiltradoDashboardDto){
@@ -64,10 +85,6 @@ export class DashboardService {
         return coloniasMonto;
     }
 
-    async getUsers(){
-        return this.usuarioRepository.getAll();
-    }
-    
 
     
 
