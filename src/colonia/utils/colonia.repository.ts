@@ -5,6 +5,7 @@ import { CreateColoniaDto } from '../dto/create-colonia.dto';
 import { ColoniaEntity } from '../entities/colonia.entity';
 import { ColoniaMapper } from './colonia.mapper';
 import { UpdateColoniaDto } from '../dto/update-colonia.dto';
+import FiltradoDashboardDto from 'src/dashboard/dto/filtrado.dto';
 
 
 @Injectable()
@@ -50,15 +51,23 @@ export class ColoniaRepository {
     }
 
 
-    async getMontoByColnias(coloniaId:number){
-        return await this.repository.createQueryBuilder("co")
+    async getMontoByColnias(coloniaId:number,filtro:FiltradoDashboardDto){
+        let d =  await this.repository.createQueryBuilder("co")
             .select("sum(t.monto) valor")
             .innerJoin("co.clientes","c")
             .innerJoin("c.transacciones","t")
             .where("t.estado_transaccion = 1")
             .andWhere("co.id = :coloniaId")
             .setParameter("coloniaId",coloniaId)
-            .getRawOne()
+        if(filtro.fechaInicio != " " && filtro.fechaInicio){
+            if(filtro.fechaFin != " " && filtro.fechaFin){
+                d.andWhere('t.fecha_pago BETWEEN :dateone AND :datetwo' )
+                d.setParameter('dateone',filtro.fechaInicio)
+                d.setParameter('datetwo',filtro.fechaFin)
+            }
+        } 
+        let data = d.getRawOne();
+        return data;
     }
 
     delete(id: number): Promise<DeleteResult> {

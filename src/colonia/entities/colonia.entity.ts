@@ -15,7 +15,7 @@ export class ColoniaEntity {
 
 
 
-    @OneToMany(() => ClienteEntity, cli => cli.contratante)
+    @OneToMany(() => ClienteEntity, cli => cli.colonia)
     clientes: ClienteEntity[];
 
 

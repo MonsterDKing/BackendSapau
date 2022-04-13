@@ -2,6 +2,7 @@ import { Controller, DefaultValuePipe, Get, ParseIntPipe, Query, UseGuards } fro
 import { DashboardService } from './dashboard.service';
 import { ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
+import FiltradoDashboardDto from './dto/filtrado.dto';
 
 @ApiTags("dashboard")
 @Controller('dashboard')
@@ -13,6 +14,34 @@ export class DashboardController {
   getAll() {
     return this.dashboardService.getDashboard();
   }
+
+  @Get("/ingresos-cobradores")
+  getDeuda(
+    @Query("fechaInicio") fechaInicio?: string,
+    @Query("fechaFin") fechaFin?: string,
+  ) {
+    let busqueda: FiltradoDashboardDto = {
+      fechaInicio: fechaInicio,
+      fechaFin: fechaFin,
+    }
+    return this.dashboardService.ingresosPorCobradores(busqueda);
+  }
+
+  @Get("/colonia-deuda")
+  getColoniaDeuda(
+    @Query("fechaInicio") fechaInicio?: string,
+    @Query("fechaFin") fechaFin?: string,
+  ) {
+    let busqueda: FiltradoDashboardDto = {
+      fechaInicio: fechaInicio,
+      fechaFin: fechaFin,
+    }
+    return this.dashboardService.getMontosPorColonia(busqueda);
+  }
+
+
+
+
   
 
   @Get("/users")
