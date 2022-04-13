@@ -7,6 +7,7 @@ import { DeleteResult, Repository, UpdateResult } from 'typeorm';
 import { TransaccionEntity } from '../entities/transaccion.entity';
 import { TransaccionWithMonth } from '../model/TransactionsWithMoth';
 import { EstadoTransaccionEnum } from '../enums/Estado.Transaccion.enum';
+import FiltradoDashboardDto from 'src/dashboard/dto/filtrado.dto';
 
 
 @Injectable()
@@ -122,8 +123,17 @@ export class TransaccionRepository {
         return result;
     }
 
-    async getAllDeuda():Promise<any>{
-        let queryBuilder = await this.repository.createQueryBuilder("trans").select("SUM(trans.monto) as deuda").where("trans.estado_transaccion = 0").getRawOne();
+    async getAllDeuda(filtro:FiltradoDashboardDto):Promise<any>{
+        let d = await this.repository.createQueryBuilder("trans").select("SUM(trans.monto) as deuda").where("trans.estado_transaccion = 0");
+        if(filtro.fechaInicio != " " && filtro.fechaInicio){
+            if(filtro.fechaFin != " " && filtro.fechaFin){
+                d.andWhere('t.fecha_creacion BETWEEN :dateone AND :datetwo' )
+                d.setParameter('dateone',filtro.fechaInicio)
+                d.setParameter('datetwo',filtro.fechaFin)
+            }
+        } 
+
+        let queryBuilder = d.getRawOne()
         return queryBuilder;
     }
 

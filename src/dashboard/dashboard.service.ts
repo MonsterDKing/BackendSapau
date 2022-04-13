@@ -21,7 +21,6 @@ export class DashboardService {
     async getDashboard(){
         let dashboard = new DashboardDto();
         let c = await this.clientesRepository.getAll();
-        let deudaRaw = await this.transaccionRepository.getAllDeuda();
         let m = mesesUtils;
         let data:any[] = [];
         for(let i of m){
@@ -31,7 +30,6 @@ export class DashboardService {
                 valor:valor[0].valor
             })
         }
-        dashboard.deudaTotal = Number(deudaRaw.deuda);
         dashboard.clientesTotales = c.length;
         dashboard.meses = data;
         return dashboard;
@@ -45,6 +43,11 @@ export class DashboardService {
     async getTransacciones(filtro:FiltradoDashboardDto){
         let cobradoresConTotal = await this.usuarioRepository.getCobradoresConMonto(filtro);
         return cobradoresConTotal;
+    }
+
+    async getDeudaTotal(filtro:FiltradoDashboardDto){
+        let deudaRaw = await this.transaccionRepository.getAllDeuda(filtro);
+        return Number(deudaRaw.deuda);
     }
 
     async getMontosPorColonia(filtro:FiltradoDashboardDto){

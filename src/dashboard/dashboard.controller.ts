@@ -40,6 +40,19 @@ export class DashboardController {
   }
 
 
+  @Get("/deuda-total")
+  getDeudaTotal(
+    @Query("fechaInicio") fechaInicio?: string,
+    @Query("fechaFin") fechaFin?: string,
+  ) {
+    let busqueda: FiltradoDashboardDto = {
+      fechaInicio: fechaInicio,
+      fechaFin: fechaFin,
+    }
+    return this.dashboardService.getDeudaTotal(busqueda);
+  }
+
+
 
 
   
