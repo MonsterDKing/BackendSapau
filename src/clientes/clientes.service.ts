@@ -109,8 +109,37 @@ export class ClientesService {
   }
 
 
+  // async generarNotificacionByIdClient(id: number) {
+  //   const root = join(__dirname, '../../assets/pdf/ticket.pug');
+  //   let cliente = await this.repository.getByIdWithTransactions(id);
+  //   let total = 0;
+  //   cliente.transacciones.forEach((el) => {
+  //     total += el.monto;
+  //   })
+  //   let fecha = new Date();
+  //   let fechauno = moment(cliente.transacciones[0].fecha_creacion).locale('es-mx').format("MMM YYYY");
+  //   let fechaParse = moment(fecha).locale('es-mx').format("MMM YYYY")
+  //   const logoBase64 = await fs.readFile(join(__dirname, '../../assets/pdf/logo.png'), { encoding: 'base64' });
+  //   const compiledFunction = pug.compileFile(root);
+  //   const compiledContent = compiledFunction({
+  //     logo: logoBase64,
+  //     fecha: fechaParse,
+  //     nombre: `${cliente.nombre} ${cliente.apellidoPaterno} ${cliente.apellidoMaterno}`,
+  //     calle: cliente.calle,
+  //     colonia: cliente.colonia.nombre,
+  //     fechauno: fechauno,
+  //     fechados: fechaParse,
+  //     cantidad: total
+  //   });
+  //   return pdf.create(compiledContent)
+  // }
+
   async generarNotificacionByIdClient(id: number) {
-    const root = join(__dirname, '../../assets/pdf/ticket.pug');
+
+    var template =  join(__dirname, '../../assets/pdf/ticket-update-html/index.html');
+    var templateHtml = await fs.readFile(template, 'utf8')
+
+    let trans = await this._transaccionesService.getTransaccionById(id);
     let cliente = await this.repository.getByIdWithTransactions(id);
     let total = 0;
     cliente.transacciones.forEach((el) => {
@@ -119,20 +148,17 @@ export class ClientesService {
     let fecha = new Date();
     let fechauno = moment(cliente.transacciones[0].fecha_creacion).locale('es-mx').format("MMM YYYY");
     let fechaParse = moment(fecha).locale('es-mx').format("MMM YYYY")
-    const logoBase64 = await fs.readFile(join(__dirname, '../../assets/pdf/logo.png'), { encoding: 'base64' });
-    const compiledFunction = pug.compileFile(root);
-    const compiledContent = compiledFunction({
-      logo: logoBase64,
-      fecha: fechaParse,
-      nombre: `${cliente.nombre} ${cliente.apellidoPaterno} ${cliente.apellidoMaterno}`,
-      calle: cliente.calle,
-      colonia: cliente.colonia.nombre,
-      fechauno: fechauno,
-      fechados: fechaParse,
-      cantidad: total
-    });
-    return pdf.create(compiledContent)
+
+    templateHtml = templateHtml.replace('{{nombre}}', `${cliente.nombre} ${cliente.apellidoPaterno} ${cliente.apellidoMaterno}`)
+    templateHtml = templateHtml.replace('{{calle}}', trans.cliente.calle)
+    templateHtml = templateHtml.replace('{{colonia}}', trans.cliente.colonia.nombre)
+    templateHtml = templateHtml.replace('{{fechauno}}', fechauno)
+    templateHtml = templateHtml.replace('{{cantidad}}', trans.cliente.tarifa.costo)
+
+    return pdf
+    .create(templateHtml);
   }
+
 
   async generarNotificacion(id: number) {
     const root = join(__dirname, '../../assets/pdf/ticket.pug');

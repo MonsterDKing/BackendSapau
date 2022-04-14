@@ -54,7 +54,7 @@ export class TransaccionRepository {
             where: {
                 id
             },
-            relations: ["cliente", "cobrador", "cliente.tarifa", "cliente.contratante",]
+            relations: ["cliente", "cobrador", "cliente.tarifa", "cliente.contratante","cliente.colonia"]
         });
     }
 
