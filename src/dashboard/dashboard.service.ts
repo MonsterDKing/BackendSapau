@@ -112,7 +112,7 @@ export class DashboardService {
         /* generate worksheet and workbook */
         const worksheet = utils.json_to_sheet(data);
         const workbook = utils.book_new();
-        utils.book_append_sheet(workbook, worksheet, "Dates");
+        utils.book_append_sheet(workbook, worksheet, "Transsaciones");
         utils.sheet_add_aoa(worksheet,
             [["Cobrador",
                 "Nombre",
