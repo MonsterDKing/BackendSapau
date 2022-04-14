@@ -1,13 +1,15 @@
-import { Controller, DefaultValuePipe, Get, ParseIntPipe, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, DefaultValuePipe, Get, ParseIntPipe, Post, Query, Res, UseGuards } from '@nestjs/common';
 import { DashboardService } from './dashboard.service';
 import { ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import FiltradoDashboardDto from './dto/filtrado.dto';
+import { FiltradoXlsDashboardDto } from './dto/dashboard.xls.dto';
+import { createReadStream } from 'fs';
 
 @ApiTags("dashboard")
 @Controller('dashboard')
 export class DashboardController {
-  constructor(private readonly dashboardService: DashboardService) {  }
+  constructor(private readonly dashboardService: DashboardService) { }
 
 
   @Get()
@@ -55,7 +57,7 @@ export class DashboardController {
 
 
 
-  
+
 
   @Get("/usuarios-total")
   getUsuariosTotales(
@@ -83,14 +85,16 @@ export class DashboardController {
   }
 
 
-
-  @Get("/no-pagados")
-  @UseGuards(AuthGuard('jwt'))
-  findAllTransNoPayments(
-    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number = 1,
-  ) {
-
-    // return this.transaccionesService.getAllBystatus({page,limit}, busqueda)
+  @Post("/download-transacciones")
+  postXlsTransacciones(@Body() data: FiltradoXlsDashboardDto, @Res() res) {
+    return this.dashboardService.generarXlsTranssaciones(data).then((val) => {
+      var readStream = createReadStream(val);
+      return readStream.pipe(res);
+    });
   }
+
+
+
+
 
 }

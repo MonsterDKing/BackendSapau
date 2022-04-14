@@ -51,6 +51,7 @@
     "rxjs": "^6.6.6",
     "swagger-ui-express": "^4.1.6",
     "typeorm": "^0.2.32",
+    "uuid": "^8.3.2",
     "xlsx": "^0.18.0"
   },
   "devDependencies": {
