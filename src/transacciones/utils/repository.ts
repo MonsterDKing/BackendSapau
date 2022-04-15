@@ -178,6 +178,7 @@ export class TransaccionRepository {
         let query = await this.repository.createQueryBuilder('t')
             .innerJoinAndSelect("t.cliente", "c")
             .innerJoinAndSelect("t.cobrador", "co")
+            .innerJoinAndSelect("c.colonia", "col")
 
         if (filtro.tipo == 99) {
             query.where("t.fecha_creacion BETWEEN :dateone and :datetwo ")
