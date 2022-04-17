@@ -61,7 +61,7 @@ export class ColoniaRepository {
             .setParameter("coloniaId",coloniaId)
         if(filtro.fechaInicio != " " && filtro.fechaInicio){
             if(filtro.fechaFin != " " && filtro.fechaFin){
-                d.andWhere('t.fecha_pago BETWEEN :dateone AND :datetwo' )
+                d.andWhere('Date(t.fecha_pago) BETWEEN :dateone AND :datetwo' )
                 d.setParameter('dateone',filtro.fechaInicio)
                 d.setParameter('datetwo',filtro.fechaFin)
             }

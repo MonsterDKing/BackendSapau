@@ -30,7 +30,7 @@ export class TransaccionRepository {
             .innerJoinAndSelect("t.cobrador", "cobrador")
         if (filtro.fechaInicio != " " && filtro.fechaInicio) {
             if (filtro.fechaFin != " " && filtro.fechaFin) {
-                queryBuilder.andWhere('trans.fecha_creacion BETWEEN :dateone AND :datetwo')
+                queryBuilder.andWhere('Date(trans.fecha_creacion) BETWEEN :dateone AND :datetwo')
                 queryBuilder.setParameter('dateone', filtro.fechaInicio)
                 queryBuilder.setParameter('datetwo', filtro.fechaFin)
             }
@@ -148,7 +148,7 @@ export class TransaccionRepository {
 
         if (filtro.fechaInicio != " " && filtro.fechaInicio) {
             if (filtro.fechaFin != " " && filtro.fechaFin) {
-                d.andWhere('trans.fecha_creacion BETWEEN :dateone AND :datetwo')
+                d.andWhere('Date(trans.fecha_creacion) BETWEEN :dateone AND :datetwo')
                 d.setParameter('dateone', filtro.fechaInicio)
                 d.setParameter('datetwo', filtro.fechaFin)
             }
@@ -181,11 +181,11 @@ export class TransaccionRepository {
             .innerJoinAndSelect("c.colonia", "col")
 
         if (filtro.tipo == 99) {
-            query.where("t.fecha_creacion BETWEEN :dateone and :datetwo ")
+            query.where("Date(t.fecha_creacion) BETWEEN :dateone and :datetwo ")
                 .setParameter('dateone', filtro.fechaInicio)
                 .setParameter('datetwo', filtro.fechaFin)
         } else {
-            query.where("t.estado_transaccion = :tipo and t.fecha_pago BETWEEN :dateone and :datetwo ")
+            query.where("t.estado_transaccion = :tipo and Date(t.fecha_pago) BETWEEN :dateone and :datetwo ")
                 .setParameter('tipo', filtro.tipo)
                 .setParameter('dateone', filtro.fechaInicio)
                 .setParameter('datetwo', filtro.fechaFin)

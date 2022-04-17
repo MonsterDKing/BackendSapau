@@ -30,7 +30,7 @@ export class ClientesRepository {
 
         if(filtro.fechaInicio != " " && filtro.fechaInicio){
             if(filtro.fechaFin != " " && filtro.fechaFin){
-                queryBuilder.andWhere('c.fechaDeCreacion BETWEEN :dateone AND :datetwo' )
+                queryBuilder.andWhere('Date(c.fechaDeCreacion) BETWEEN :dateone AND :datetwo' )
                 queryBuilder.setParameter('dateone',filtro.fechaInicio)
                 queryBuilder.setParameter('datetwo',filtro.fechaFin)
             }

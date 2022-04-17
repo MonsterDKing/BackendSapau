@@ -56,6 +56,8 @@ export class UsuarioRepository {
 
 
     async getCobradoresConMonto(filtro:FiltradoDashboardDto){
+        console.log(filtro)
+
         let d = this.repository.createQueryBuilder("u")
         .select("u.nombre,SUM(t.monto) valor")
         .innerJoin("u.transacciones",'t')
@@ -64,7 +66,7 @@ export class UsuarioRepository {
 
         if(filtro.fechaInicio != " " && filtro.fechaInicio){
             if(filtro.fechaFin != " " && filtro.fechaFin){
-                d.andWhere('t.fecha_pago BETWEEN :dateone AND :datetwo' )
+                d.andWhere('DATE(t.fecha_pago) BETWEEN :dateone AND :datetwo' )
                 d.setParameter('dateone',filtro.fechaInicio)
                 d.setParameter('datetwo',filtro.fechaFin)
             }
