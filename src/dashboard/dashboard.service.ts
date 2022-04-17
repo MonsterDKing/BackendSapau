@@ -102,7 +102,7 @@ export class DashboardService {
                 apellidoPaterno: i.cliente.apellidoPaterno,
                 apellidoMaterno: i.cliente.apellidoMaterno,
                 calleYnumero: i.cliente.calle ? `${i.cliente.calle}` : "",
-                colonia: i.cliente.colonia ? i.cliente.colonia : "",
+                colonia: i.cliente.colonia ? i.cliente.colonia.nombre : "",
                 pago: `$ ${i.monto}`,
                 fechaDeCreacion: i.fecha_creacion,
                 fechaDePago: i.fecha_pago
