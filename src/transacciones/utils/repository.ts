@@ -175,6 +175,8 @@ export class TransaccionRepository {
     }
 
     async getAllTransaccionesDashboardXls(filtro: FiltradoXlsDashboardDto) {
+        console.log(filtro)
+
         let query = await this.repository.createQueryBuilder('t')
             .innerJoinAndSelect("t.cliente", "c")
             .innerJoinAndSelect("t.cobrador", "co")
