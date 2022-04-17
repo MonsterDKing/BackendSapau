@@ -28,15 +28,9 @@ export class TransaccionRepository {
         let queryBuilder = this.repository.createQueryBuilder("t")
             .innerJoinAndSelect("t.cliente", "c")
             .innerJoinAndSelect("t.cobrador", "cobrador")
-        if (filtro.fechaInicio != " " && filtro.fechaInicio) {
-            if (filtro.fechaFin != " " && filtro.fechaFin) {
-                queryBuilder.andWhere('Date(trans.fecha_creacion) BETWEEN :dateone AND :datetwo')
-                queryBuilder.setParameter('dateone', filtro.fechaInicio)
-                queryBuilder.setParameter('datetwo', filtro.fechaFin)
-            }
-        } else {
-            queryBuilder.limit(100);
-        }
+
+        queryBuilder.limit(100);
+        queryBuilder.orderBy("t.fecha_creacion","DESC")
         let data = queryBuilder.getMany();
         return data;
     }

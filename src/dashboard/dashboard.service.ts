@@ -52,6 +52,7 @@ export class DashboardService {
                 nombre: `${i.cliente.nombre} ${i.cliente.apellidoPaterno} ${i.cliente.apellidoMaterno}`,
                 estado: EstadoTransaccionEnum[i.estado_transaccion],
                 tipo: TransaccionesEnum[i.tipo_transaccion],
+                monto:i.monto,
                 fechaDeCreacion: i.fecha_creacion,
                 fechaDePago: i.fecha_pago,
                 cobrador: `${i.cobrador.nombre}`,

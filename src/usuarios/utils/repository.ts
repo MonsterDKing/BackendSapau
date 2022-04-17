@@ -56,7 +56,6 @@ export class UsuarioRepository {
 
 
     async getCobradoresConMonto(filtro:FiltradoDashboardDto){
-        console.log(filtro)
 
         let d = this.repository.createQueryBuilder("u")
         .select("u.nombre,SUM(t.monto) valor")
