@@ -120,6 +120,7 @@ export class DashboardService {
                 "Apellido Materno",
                 "Calle y Numero",
                 "Colonia",
+                "Monto",
                 "Fecha de Creacion",
                 "Fecha de pago"]], { origin: "A1" });
 
