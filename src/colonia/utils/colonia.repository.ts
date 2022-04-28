@@ -70,6 +70,24 @@ export class ColoniaRepository {
         return data;
     }
 
+    async getDeudaByColonias(coloniaId:number,filtro:FiltradoDashboardDto){
+        let d =  await this.repository.createQueryBuilder("co")
+            .select("sum(t.monto) valor")
+            .innerJoin("co.clientes","c")
+            .innerJoin("c.transacciones","t")
+            .where("t.estado_transaccion = 0 and co.id = :coloniaId")
+            .setParameter("coloniaId",coloniaId)
+        if(filtro.fechaInicio != " " && filtro.fechaInicio){
+            if(filtro.fechaFin != " " && filtro.fechaFin){
+                d.andWhere('Date(t.fecha_pago) BETWEEN :dateone AND :datetwo' )
+                d.setParameter('dateone',filtro.fechaInicio)
+                d.setParameter('datetwo',filtro.fechaFin)
+            }
+        } 
+        let data = d.getRawOne();
+        return data;
+    }
+
     delete(id: number): Promise<DeleteResult> {
         return this.repository.delete(id);
     }

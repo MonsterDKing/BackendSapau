@@ -29,8 +29,8 @@ export class DashboardController {
     return this.dashboardService.ingresosPorCobradores(busqueda);
   }
 
-  @Get("/colonia-deuda")
-  getColoniaDeuda(
+  @Get("/colonia-ingresos")
+  getColoniaIngresos(
     @Query("fechaInicio") fechaInicio?: string,
     @Query("fechaFin") fechaFin?: string,
   ) {
@@ -40,6 +40,19 @@ export class DashboardController {
     }
     return this.dashboardService.getMontosPorColonia(busqueda);
   }
+
+  @Get("/colonia-deuda")
+  getColoniaDeuda(
+    @Query("fechaInicio") fechaInicio?: string,
+    @Query("fechaFin") fechaFin?: string,
+  ) {
+    let busqueda: FiltradoDashboardDto = {
+      fechaInicio: fechaInicio,
+      fechaFin: fechaFin,
+    }
+    return this.dashboardService.getDeudaPorColonia(busqueda);
+  }
+
 
 
   @Get("/deuda-total")

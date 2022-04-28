@@ -90,6 +90,21 @@ export class DashboardService {
         return coloniasMonto;
     }
 
+    async getDeudaPorColonia(filtro: FiltradoDashboardDto) {
+        let colonias = await this.coloniaRepository.getAll();
+        let coloniasMonto: any[] = [];
+        for (let i of colonias) {
+            let valor = await this.coloniaRepository.getDeudaByColonias(i.id, filtro);
+            let monto = valor.valor ? Number(valor.valor) : 0
+            coloniasMonto.push({
+                nombre: i.nombre,
+                valor: monto
+            })
+        }
+        return coloniasMonto;
+    }
+
+
 
     async generarXlsTranssaciones(filtro: FiltradoXlsDashboardDto) {
         const root = join(__dirname, '../../assets/report/');
