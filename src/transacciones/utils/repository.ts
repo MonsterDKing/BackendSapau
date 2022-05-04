@@ -193,6 +193,7 @@ export class TransaccionRepository {
         let query = await this.repository.createQueryBuilder("t")
             .innerJoinAndSelect("t.cliente","c")
             .where("c.id = :id")
+            .orderBy("t.fecha_creacion","ASC")
             .setParameter("id",clienteId);
         return query.getMany();
     }
