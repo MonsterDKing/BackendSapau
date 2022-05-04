@@ -10,6 +10,7 @@ import NewPagarDto from './dto/newPagarDto';
 import PagoAnticipadoDto from './dto/pagoAnticipado.dto';
 import { TransaccionesService } from './transacciones.service';
 import { EliminarAdeudo } from './dto/eliminarAdeudo.dto';
+import HistorialPagoDto from './dto/historialPagoDto';
 const fs = require('fs');
 
 @ApiTags('transacciones')
@@ -45,6 +46,12 @@ export class TransaccionesController {
   @UseGuards(AuthGuard('jwt'))
   pagoAnticipado(@Body() data: PagoAnticipadoDto, @Auth() us: UsuarioEntity) {
     return this.transaccionesService.pagoPorAdelantadoService(data.idCliente,data.tipoDePago,data.numeroDeMeses,us);
+  }
+
+
+  @Post("/historial-pago")
+  historialPago(@Body() data: HistorialPagoDto) {
+    return this.transaccionesService.historialPago(data);
   }
 
   @Post("/pagar")
