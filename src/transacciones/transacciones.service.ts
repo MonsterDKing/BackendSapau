@@ -28,6 +28,7 @@ import { IPaginationOptions, paginate } from 'nestjs-typeorm-paginate';
 import BusquedaInterface from 'src/clientes/dto/busqueda.dto';
 import { ColoniaRepository } from '../colonia/utils/colonia.repository';
 import { EliminarAdeudo } from './dto/eliminarAdeudo.dto';
+import HistorialPagoDto from './dto/historialPagoDto';
 
 
 @Injectable()
@@ -524,6 +525,10 @@ export class TransaccionesService {
     }
 
 
+    async historialPago(data:HistorialPagoDto){
+        let cliente = await this.repository.getHistorialDePago(data.idCliente);
+        return cliente;
+    }
 }
 
 

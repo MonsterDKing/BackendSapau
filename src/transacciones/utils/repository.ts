@@ -189,5 +189,13 @@ export class TransaccionRepository {
         return data;
     }
 
+    async getHistorialDePago(clienteId:number){
+        let query = await this.repository.createQueryBuilder("t")
+            .innerJoinAndSelect("t.cliente","c")
+            .where("c.id = :id")
+            .setParameter("id",clienteId);
+        return query.getMany();
+    }
+
 
 }
