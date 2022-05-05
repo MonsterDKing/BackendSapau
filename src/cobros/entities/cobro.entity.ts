@@ -17,12 +17,12 @@ export class CobroEntity {
     cobrador: UsuarioEntity;
 
     @OneToMany(() => TransaccionEntity, trans => trans.cobro, {
-        cascade:true
+        cascade: true
     })
     transacciones: TransaccionEntity[];
 
     @Column({
-        default:0
+        default: 0
     })
     descuento: number;
 
@@ -32,6 +32,11 @@ export class CobroEntity {
     @CreateDateColumn()
     fecha_creacion: Date;
 
+    @Column({
+        nullable: true,
+        type: 'text'
+    })
+    comentarios: string;
 
 
 

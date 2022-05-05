@@ -66,7 +66,7 @@ export class TransaccionesController {
   @Post("/pagar")
   @UseGuards(AuthGuard('jwt'))
   pagar(@Body() data: NewPagarDto, @Auth() us: UsuarioEntity) {
-    return this.transaccionesService.newPayment(data.meses, data.cliente, data.porcentaje, us);
+    return this.transaccionesService.newPayment(data.meses, data.cliente, data.porcentaje, us, data.comentarios);
   }
 
   @Post("/reajustar")

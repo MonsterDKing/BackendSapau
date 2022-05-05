@@ -109,7 +109,7 @@ export class TransaccionesService {
         return true;
     }
 
-    async newPayment(numMeses: number, idCliente: number, porcentaje: number, cobrador: UsuarioEntity) {
+    async newPayment(numMeses: number, idCliente: number, porcentaje: number, cobrador: UsuarioEntity, comentarios?: string) {
 
 
         let cliente = await this.clienteRepository.getById(idCliente);
@@ -144,6 +144,9 @@ export class TransaccionesService {
         cobroEntity.transacciones = transaccionesPagadas;
         cobroEntity.folio = Math.floor(100000 + Math.random() * 900000).toString();
         cobroEntity.descuento = porcentaje;
+        if (comentarios) {
+            cobroEntity.comentarios = comentarios;
+        }
         let cobro = await this.cobroRepository.create(cobroEntity);
         return cobro;
     }
@@ -301,7 +304,8 @@ export class TransaccionesService {
             tarifa: cobro.cliente.tarifa.descripcion,
             adeudo: adeudo,
             pago: pagoTotal,
-            pendiente: adeudo
+            pendiente: adeudo,
+            comentarios: cobro.comentarios
         });
         return pdf.create(compiledContent, {
             "height": "9.8in",
