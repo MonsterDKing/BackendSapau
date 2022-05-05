@@ -11,6 +11,7 @@ import PagoAnticipadoDto from './dto/pagoAnticipado.dto';
 import { TransaccionesService } from './transacciones.service';
 import { EliminarAdeudo } from './dto/eliminarAdeudo.dto';
 import HistorialPagoDto from './dto/historialPagoDto';
+import { generarPagoPersonalizadoDto } from './dto/generarPagoPersonalizadoDto';
 const fs = require('fs');
 
 @ApiTags('transacciones')
@@ -39,13 +40,13 @@ export class TransaccionesController {
       contrato,
       colonia
     }
-    return this.transaccionesService.getAllBystatus({page,limit}, busqueda)
+    return this.transaccionesService.getAllBystatus({ page, limit }, busqueda)
   }
 
   @Post("/pagar-anticipado")
   @UseGuards(AuthGuard('jwt'))
   pagoAnticipado(@Body() data: PagoAnticipadoDto, @Auth() us: UsuarioEntity) {
-    return this.transaccionesService.pagoPorAdelantadoService(data.idCliente,data.tipoDePago,data.numeroDeMeses,us);
+    return this.transaccionesService.pagoPorAdelantadoService(data.idCliente, data.tipoDePago, data.numeroDeMeses, us);
   }
 
 
@@ -54,10 +55,16 @@ export class TransaccionesController {
     return this.transaccionesService.historialPago(data);
   }
 
+
+  @Post("/pago-personalizado")
+  generarPagoPersonalizado(@Body() data: generarPagoPersonalizadoDto, @Auth() us: UsuarioEntity) {
+    return this.transaccionesService.generarPagoPersonalizado(data, us);
+  }
+
   @Post("/pagar")
   @UseGuards(AuthGuard('jwt'))
   pagar(@Body() data: NewPagarDto, @Auth() us: UsuarioEntity) {
-    return this.transaccionesService.newPayment(data.meses, data.cliente, data.porcentaje,us);
+    return this.transaccionesService.newPayment(data.meses, data.cliente, data.porcentaje, us);
   }
 
   @Post("/reajustar")
