@@ -533,23 +533,79 @@ export class TransaccionesService {
         return cliente;
     }
 
+    // <option value="1" selected>Reconexion $(350)</option>
+    //     <option value="2" selected>Cambio de tubo $(680)</option>
+    //     <option value="3" selected>Conexion al drenaje $(1000)</option>
+    //     <option value="4" selected>Cambio de propietario $(350)</option>
+    //     <option value="5" selected>Otros</option>
     async generarPagoPersonalizado(data: generarPagoPersonalizadoDto, us: UsuarioEntity) {
         let ce = await this.clienteRepository.getById(data.idCliente)
         let trans = new TransaccionEntity();
-        if (data.accion == 5) {
+        let cobroEntity = new CobroEntity();
+        let transpagadas: TransaccionEntity[] = [];
 
+        if (data.accion == 1) {
+            trans.cliente = ce;
+            trans.cobrador = us;
+            trans.descuento = 0;
+            trans.estado_transaccion = EstadoTransaccionEnum.PAGADO;
+            trans.fecha_creacion = new Date();
+            trans.fecha_pago = new Date();
+            trans.monto = 350;
+            trans.tipo_transaccion = Transaccionestipo.PAGO_PERSONALIZADO
+            trans.razon = "Reconexion";
+        } else if (data.accion == 2) {
+            trans.cliente = ce;
+            trans.cobrador = us;
+            trans.descuento = 0;
+            trans.estado_transaccion = EstadoTransaccionEnum.PAGADO;
+            trans.fecha_creacion = new Date();
+            trans.fecha_pago = new Date();
+            trans.monto = 680;
+            trans.tipo_transaccion = Transaccionestipo.PAGO_PERSONALIZADO
+            trans.razon = "Cambio de tubo";
+        } else if (data.accion == 3) {
+            trans.cliente = ce;
+            trans.cobrador = us;
+            trans.descuento = 0;
+            trans.estado_transaccion = EstadoTransaccionEnum.PAGADO;
+            trans.fecha_creacion = new Date();
+            trans.fecha_pago = new Date();
+            trans.monto = 350;
+            trans.tipo_transaccion = Transaccionestipo.PAGO_PERSONALIZADO
+            trans.razon = "Cambio del propietario";
+        } else if (data.accion == 4) {
+            trans.cliente = ce;
+            trans.cobrador = us;
+            trans.descuento = 0;
+            trans.estado_transaccion = EstadoTransaccionEnum.PAGADO;
+            trans.fecha_creacion = new Date();
+            trans.fecha_pago = new Date();
+            trans.monto = 680;
+            trans.tipo_transaccion = Transaccionestipo.PAGO_PERSONALIZADO
+            trans.razon = "Cambio de tubo";
+
+        } else if (data.accion == 5) {
+            trans.cliente = ce;
+            trans.cobrador = us;
+            trans.descuento = 0;
+            trans.estado_transaccion = EstadoTransaccionEnum.PAGADO;
+            trans.fecha_creacion = new Date();
+            trans.fecha_pago = new Date();
+            trans.monto = data.monto;
+            trans.tipo_transaccion = Transaccionestipo.PAGO_PERSONALIZADO
+            trans.razon = data.razon;
         }
-
-        trans.cliente = ce;
-        trans.cobrador = us;
-        trans.descuento = 0;
-        trans.estado_transaccion = EstadoTransaccionEnum.PAGADO;
-        trans.fecha_creacion = new Date();
-        trans.fecha_pago = new Date();
-        trans.monto = data.monto;
-        trans.tipo_transaccion = Transaccionestipo.PAGO_PERSONALIZADO
-
-
+        transpagadas.push(trans);
+        //se crea el cobro despues de todo 
+        cobroEntity.cliente = ce;
+        cobroEntity.cobrador = us;
+        cobroEntity.fecha_creacion = new Date();
+        cobroEntity.transacciones = transpagadas;
+        cobroEntity.folio = Math.floor(100000 + Math.random() * 900000).toString();
+        cobroEntity.descuento = 0;
+        let cobro = await this.cobroRepository.create(cobroEntity)
+        return cobro;
     }
 
 }

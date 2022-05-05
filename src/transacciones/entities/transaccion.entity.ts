@@ -21,7 +21,7 @@ export class TransaccionEntity {
     fecha_creacion: Date;
 
     @Column({
-        nullable:true
+        nullable: true
     })
     fecha_pago: Date;
 
@@ -30,23 +30,27 @@ export class TransaccionEntity {
     })
     estado_transaccion: number;
 
-    @ManyToOne(() => ClienteEntity, cliente => cliente.transacciones,{cascade:true})
+    @ManyToOne(() => ClienteEntity, cliente => cliente.transacciones, { cascade: true })
     cliente: ClienteEntity;
 
     @Column({
-        type:"int",
-        default:0
+        type: "int",
+        default: 0
     })
     monto: number;
 
     @Column({
-        default:0
+        default: 0
     })
     descuento: number;
 
+    @Column({
+        nullable: true
+    })
+    razon: string;
 
 
-    @ManyToOne(() => UsuarioEntity, us => us.transacciones,{cascade:true})
+    @ManyToOne(() => UsuarioEntity, us => us.transacciones, { cascade: true })
     cobrador: UsuarioEntity;
 
     @ManyToOne(() => CobroEntity, ce => ce.transacciones)
