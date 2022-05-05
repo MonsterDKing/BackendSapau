@@ -11,7 +11,10 @@ import PagoAnticipadoDto from './dto/pagoAnticipado.dto';
 import { TransaccionesService } from './transacciones.service';
 import { EliminarAdeudo } from './dto/eliminarAdeudo.dto';
 import HistorialPagoDto from './dto/historialPagoDto';
+<<<<<<< HEAD
 import { generarPagoPersonalizadoDto } from './dto/generarPagoPersonalizadoDto';
+=======
+>>>>>>> 7290e34b605e1ef151731a353f38585831f6fd6c
 const fs = require('fs');
 
 @ApiTags('transacciones')
@@ -60,6 +63,8 @@ export class TransaccionesController {
   generarPagoPersonalizado(@Body() data: generarPagoPersonalizadoDto, @Auth() us: UsuarioEntity) {
     return this.transaccionesService.generarPagoPersonalizado(data, us);
   }
+
+
 
   @Post("/pagar")
   @UseGuards(AuthGuard('jwt'))
