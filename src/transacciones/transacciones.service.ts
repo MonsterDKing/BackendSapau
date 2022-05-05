@@ -308,7 +308,7 @@ export class TransaccionesService {
             comentarios: cobro.comentarios
         });
         return pdf.create(compiledContent, {
-            "height": "9.8in",
+            "height": "10.0in",
             "width": "4.5in",
         })
     }
