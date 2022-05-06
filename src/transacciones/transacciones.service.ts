@@ -269,7 +269,9 @@ export class TransaccionesService {
         const logoBase64 = await readFileSync(join(__dirname, '../../assets/pdf/logo.png'), { encoding: 'base64' });
         let cobro = await this.cobroRepository.getById(id);
         let pagoTotal = 0;
-
+        let ticketModificado = false;
+        let razon = '';
+        let monto = 0;
         for (let i of cobro.transacciones) {
             pagoTotal += i.monto;
         }
@@ -286,6 +288,14 @@ export class TransaccionesService {
 
         if (cobro.descuento != 0) {
             total = (pago * 100) / cobro.descuento;
+        }
+
+        if (cobro.transacciones.length == 1) {
+            if (cobro.transacciones[0].tipo_transaccion == Transaccionestipo.PAGO_PERSONALIZADO) {
+                ticketModificado = true;
+                razon = cobro.transacciones[0].razon;
+                monto = cobro.transacciones[0].monto;
+            }
         }
 
         let fecha = new Date();
@@ -305,7 +315,10 @@ export class TransaccionesService {
             adeudo: adeudo,
             pago: pagoTotal,
             pendiente: adeudo,
-            comentarios: cobro.comentarios
+            comentarios: cobro.comentarios,
+            ticketModificado: ticketModificado,
+            razon: razon,
+            monto: monto
         });
         let altura = "10.4in";
         // 50 palabras por reglon
