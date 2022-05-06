@@ -56,7 +56,9 @@ export class TransaccionesController {
   }
 
 
+
   @Post("/pago-personalizado")
+  @UseGuards(AuthGuard('jwt'))
   generarPagoPersonalizado(@Body() data: generarPagoPersonalizadoDto, @Auth() us: UsuarioEntity) {
     return this.transaccionesService.generarPagoPersonalizado(data, us);
   }

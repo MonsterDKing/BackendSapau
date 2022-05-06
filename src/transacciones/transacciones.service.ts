@@ -571,6 +571,7 @@ export class TransaccionesService {
     //     <option value="4" selected>Cambio de propietario $(350)</option>
     //     <option value="5" selected>Otros</option>
     async generarPagoPersonalizado(data: generarPagoPersonalizadoDto, us: UsuarioEntity) {
+        console.log(us);
         let ce = await this.clienteRepository.getById(data.idCliente)
         let trans = new TransaccionEntity();
         let cobroEntity = new CobroEntity();
