@@ -83,7 +83,7 @@ html(lang='es')
       span.fin-wlbl Calle: #{calle}
       span.fin-wlbl Colonia: #{colonia}
       span.fin-wlbl Tarifa: #{tarifa}
-      if(ticketModificado)
+      if(!ticketModificado)
         span.fin-wlbl(align='right') Adeuda: $ #{adeudo}
         span.fin-wlbl(align='right') Total: $ #{total}
         span.fin-wlbl(align='right') Descuento :  #{descuento} %
