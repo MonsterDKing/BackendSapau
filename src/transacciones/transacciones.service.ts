@@ -309,16 +309,18 @@ export class TransaccionesService {
         });
         let altura = "10.4in";
         // 50 palabras por reglon
-        if (cobro.comentarios.length > 50) {
-            altura = "10.8in"
-        }
-        if (cobro.comentarios.length > 100) {
-            altura = "11.0in"
-        }
-        if (cobro.comentarios.length > 150) {
-            altura = "11.4in"
-        }
+        if (cobro.comentarios) {
+            if (cobro.comentarios.length > 50) {
+                altura = "10.8in"
+            }
+            if (cobro.comentarios.length > 100) {
+                altura = "11.0in"
+            }
+            if (cobro.comentarios.length > 150) {
+                altura = "11.4in"
+            }
 
+        }
 
         return pdf.create(compiledContent, {
             "height": altura,
