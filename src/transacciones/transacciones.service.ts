@@ -124,7 +124,7 @@ export class TransaccionesService {
         }
 
         for (let i = 0; i < numMeses; i++) {
-            let tran = trans[i];
+            let tran = trans[trans.length - i];
             valorDeDescuento = tran.monto * porcentajePorcentaje;
             total = tran.monto - valorDeDescuento;
             tran.monto = total;
