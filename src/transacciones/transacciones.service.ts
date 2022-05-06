@@ -113,7 +113,7 @@ export class TransaccionesService {
 
 
         let cliente = await this.clienteRepository.getById(idCliente);
-        let trans = await this.repository.getAllMonthByIdClientLimit(cliente);
+        let trans = await this.repository.getAllMonthByIdClientLimitInvert(cliente);
 
         let transaccionesPagadas: TransaccionEntity[] = [];
         let total = 0;
@@ -124,7 +124,7 @@ export class TransaccionesService {
         }
 
         for (let i = 0; i < numMeses; i++) {
-            let tran = trans[trans.length - i];
+            let tran = trans[i];
             valorDeDescuento = tran.monto * porcentajePorcentaje;
             total = tran.monto - valorDeDescuento;
             tran.monto = total;

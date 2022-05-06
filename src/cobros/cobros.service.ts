@@ -1,15 +1,27 @@
 import { Injectable } from '@nestjs/common';
 import { CreateCobroDto } from './dto/create-cobro.dto';
 import { UpdateCobroDto } from './dto/update-cobro.dto';
+import { CobroMapper } from './utils/mapper';
+import { CobroRepository } from './utils/repository';
 
 @Injectable()
 export class CobrosService {
+
+
+  constructor(
+    private cobroRepository: CobroRepository,
+    private mapper: CobroMapper
+  ) { }
+
+
   create(createCobroDto: CreateCobroDto) {
     return 'This action adds a new cobro';
   }
 
-  findAll() {
-    return `This action returns all cobros`;
+  async findAll() {
+    let data = await this.cobroRepository.getAll();
+    return data.map((el) => this.mapper.entityToDto(el));
+
   }
 
   findOne(id: number) {

@@ -30,7 +30,7 @@ export class TransaccionRepository {
             .innerJoinAndSelect("t.cobrador", "cobrador")
 
         queryBuilder.limit(100);
-        queryBuilder.orderBy("t.fecha_creacion","DESC")
+        queryBuilder.orderBy("t.fecha_creacion", "DESC")
         let data = queryBuilder.getMany();
         return data;
     }
@@ -72,6 +72,20 @@ export class TransaccionRepository {
             },
             order: {
                 fecha_creacion: "DESC"
+            },
+            relations: ["cliente", "cobrador", "cliente.tarifa", "cliente.contratante",],
+        });
+    }
+
+    getAllMonthByIdClientLimitInvert(cliente: ClienteEntity): Promise<TransaccionEntity[]> {
+        return this.repository.find({
+            where: {
+                cliente: cliente,
+                estado_transaccion: EstadoTransaccionEnum.NO_PAGADO
+
+            },
+            order: {
+                fecha_creacion: "ASC"
             },
             relations: ["cliente", "cobrador", "cliente.tarifa", "cliente.contratante",],
         });
@@ -189,12 +203,12 @@ export class TransaccionRepository {
         return data;
     }
 
-    async getHistorialDePago(clienteId:number){
+    async getHistorialDePago(clienteId: number) {
         let query = await this.repository.createQueryBuilder("t")
-            .innerJoinAndSelect("t.cliente","c")
+            .innerJoinAndSelect("t.cliente", "c")
             .where("c.id = :id")
-            .orderBy("t.fecha_creacion","ASC")
-            .setParameter("id",clienteId);
+            .orderBy("t.fecha_creacion", "ASC")
+            .setParameter("id", clienteId);
         return query.getMany();
     }
 
