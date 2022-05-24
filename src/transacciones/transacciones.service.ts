@@ -554,7 +554,7 @@ export class TransaccionesService {
                 console.log(ex);
             }
         } catch (error) {
-            this.logger.error('Erro en Excel');
+            this.logger.error('Erro en Excel no se porque');
             throw error;
         }
     }
