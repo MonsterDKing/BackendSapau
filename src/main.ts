@@ -9,7 +9,6 @@ async function bootstrap() {
   app.useGlobalFilters(new TypeORMExceptionFilter());
   app.enableCors();
   const PORT = process.env.PORT || 80;
-  // console.log("changeportkc")
   const options = new DocumentBuilder()
     .setTitle(' Api Rest')
     .setDescription(' Api Rest')

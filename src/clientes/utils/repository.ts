@@ -25,20 +25,20 @@ export class ClientesRepository {
         });
     }
 
-    getAllDashboard(filtro:FiltradoDashboardDto): Promise<ClienteEntity[]> {
-        let queryBuilder  = this.repository.createQueryBuilder("c")
+    getAllDashboard(filtro: FiltradoDashboardDto): Promise<ClienteEntity[]> {
+        let queryBuilder = this.repository.createQueryBuilder("c")
 
-        if(filtro.fechaInicio != " " && filtro.fechaInicio){
-            if(filtro.fechaFin != " " && filtro.fechaFin){
-                queryBuilder.andWhere('Date(c.fechaDeCreacion) BETWEEN :dateone AND :datetwo' )
-                queryBuilder.setParameter('dateone',filtro.fechaInicio)
-                queryBuilder.setParameter('datetwo',filtro.fechaFin)
+        if (filtro.fechaInicio != " " && filtro.fechaInicio) {
+            if (filtro.fechaFin != " " && filtro.fechaFin) {
+                queryBuilder.andWhere('Date(c.fechaDeCreacion) BETWEEN :dateone AND :datetwo')
+                queryBuilder.setParameter('dateone', filtro.fechaInicio)
+                queryBuilder.setParameter('datetwo', filtro.fechaFin)
             }
-        } 
-        
+        }
+
         return queryBuilder.getMany();
     }
-    
+
 
     async getAllPaginate(options: IPaginationOptions, busqueda?: BusquedaInterface): Promise<Pagination<ClienteEntity>> {
         let count = 0;
@@ -97,7 +97,7 @@ export class ClientesRepository {
         }
 
         return paginate(this.repository, options, {
-            relations: ["contratante", "tarifa","transacciones","colonia"]
+            relations: ["contratante", "tarifa", "transacciones", "colonia"]
         });
     }
 
@@ -106,7 +106,7 @@ export class ClientesRepository {
             where: {
                 id
             },
-            relations: ["contratante", "tarifa","colonia"]
+            relations: ["contratante", "tarifa", "colonia"]
         });
     }
 
@@ -183,31 +183,31 @@ export class ClientesRepository {
             .innerJoin('clients.transacciones', 'transaccion')
             .where('transaccion.estado_transaccion = 1')
 
-            if (busqueda) {
-                if (busqueda.nombre) {
-                    queryBuilder.andWhere(`clients.nombre like "%${busqueda.nombre}%" `);
-                }
-                if (busqueda.apellidoPaterno) {
-                    queryBuilder.andWhere(`clients.apellidoPaterno like "%${busqueda.apellidoPaterno}%" `);
-                }
-                if (busqueda.apellidoMaterno) {
-                    queryBuilder.andWhere(`clients.apellidoMaterno like "%${busqueda.apellidoMaterno}%" `);
-                }
-                if (busqueda.calle) {
-                    queryBuilder.andWhere(`clients.calle like "%${busqueda.calle}%" `);
-                }
-                if (busqueda.contrato) {
-                    queryBuilder.andWhere(`clients.contrato like "%${busqueda.contrato}%" `);
-                }
-                if (busqueda.contrato) {
-                    queryBuilder.andWhere(`clients.contrato like "%${busqueda.contrato}%" `);
-                }
-                if (busqueda.colonia) {
-                    queryBuilder.andWhere(`clients.colonia like "%${busqueda.colonia}%" `);
-                }
+        if (busqueda) {
+            if (busqueda.nombre) {
+                queryBuilder.andWhere(`clients.nombre like "%${busqueda.nombre}%" `);
             }
+            if (busqueda.apellidoPaterno) {
+                queryBuilder.andWhere(`clients.apellidoPaterno like "%${busqueda.apellidoPaterno}%" `);
+            }
+            if (busqueda.apellidoMaterno) {
+                queryBuilder.andWhere(`clients.apellidoMaterno like "%${busqueda.apellidoMaterno}%" `);
+            }
+            if (busqueda.calle) {
+                queryBuilder.andWhere(`clients.calle like "%${busqueda.calle}%" `);
+            }
+            if (busqueda.contrato) {
+                queryBuilder.andWhere(`clients.contrato like "%${busqueda.contrato}%" `);
+            }
+            if (busqueda.contrato) {
+                queryBuilder.andWhere(`clients.contrato like "%${busqueda.contrato}%" `);
+            }
+            if (busqueda.colonia) {
+                queryBuilder.andWhere(`clients.colonia like "%${busqueda.colonia}%" `);
+            }
+        }
 
-            queryBuilder.groupBy("clients.id")
+        queryBuilder.groupBy("clients.id")
         const result = await paginate<ClienteEntity>(queryBuilder, options)
         return result;
     }

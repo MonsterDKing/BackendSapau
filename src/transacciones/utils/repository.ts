@@ -14,6 +14,7 @@ import { FiltradoXlsDashboardDto } from 'src/dashboard/dto/dashboard.xls.dto';
 @Injectable()
 export class TransaccionRepository {
 
+
     constructor(
         @InjectRepository(TransaccionEntity)
         private repository: Repository<TransaccionEntity>
@@ -212,5 +213,25 @@ export class TransaccionRepository {
         return query.getMany();
     }
 
+
+    async getUltimaTransaccionPorUsuario(id: number) {
+        let query = await this.repository.createQueryBuilder("t")
+            .innerJoinAndSelect("t.cliente", "c")
+            .where('c.id = :id and t.estado_transaccion = 1')
+            .setParameter('id', id)
+            .orderBy('t.fecha_creacion', 'DESC')
+            .limit(1)
+        return query.getOne();
+    }
+
+    async getUltimaTransaccionRegistradaSinPagar(id: number) {
+        let query = await this.repository.createQueryBuilder("t")
+            .innerJoinAndSelect("t.cliente", "c")
+            .where('c.id = :id and t.estado_transaccion = 0')
+            .setParameter('id', id)
+            .orderBy('t.fecha_creacion', 'DESC')
+            .limit(1)
+        return query.getOne();
+    }
 
 }
