@@ -8,7 +8,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.useGlobalFilters(new TypeORMExceptionFilter());
   app.enableCors();
-  const PORT = process.env.PORT || 80;
+  const PORT = process.env.PORT || 8080;
   const options = new DocumentBuilder()
     .setTitle(' Api Rest')
     .setDescription(' Api Rest')
