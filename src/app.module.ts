@@ -12,10 +12,16 @@ import { ScheduleModule } from '@nestjs/schedule';
 import { CronService } from './cron/cron.service';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { ColoniaModule } from './colonia/colonia.module';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 
 
 @Module({
   imports: [
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'website'),
+
+    }),
     TypeOrmModule.forRoot({
       type: 'mysql',
       port: parseInt("3306"),
@@ -23,10 +29,6 @@ import { ColoniaModule } from './colonia/colonia.module';
       username: "sapau",
       password: "NMVqtudf4gSJKv1EuxoI.",
       database: "sapau",
-      // host: "127.0.0.1",
-      // username: "root",
-      // password: "desarrollo",
-      // database: "sapau",
       autoLoadEntities: true,
       synchronize: true
     }), UsuariosModule,
