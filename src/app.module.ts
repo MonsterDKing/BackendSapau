@@ -19,9 +19,9 @@ import { ColoniaModule } from './colonia/colonia.module';
     TypeOrmModule.forRoot({
       type: 'mysql',
       port: parseInt("3306"),
-      host: "137.184.145.251",
-      username: "root",
-      password: "PER46807971s",
+      host: "167.71.248.181",
+      username: "sapau",
+      password: "NMVqtudf4gSJKv1EuxoI.",
       database: "sapau",
       // host: "127.0.0.1",
       // username: "root",
