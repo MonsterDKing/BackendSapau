@@ -1,4 +1,5 @@
 import { Injectable } from "@nestjs/common";
+import { y } from "pdfkit";
 import { CreateUsuarioDto } from "../dto/create-usuario.dto";
 import { UpdateUsuarioDto } from "../dto/update-usuario.dto";
 import { UsuarioTransferDto } from "../dto/usuario-transfer.dto";
@@ -35,6 +36,7 @@ export class UsuarioMapper {
         u.activo = data.activo;
         u.email = data.email;
         u.nombre = data.nombre;
+        u.rol = data.rol;
         return u;
     }
 
