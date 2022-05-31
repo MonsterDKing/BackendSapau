@@ -5,8 +5,9 @@ import { AppModule } from './app.module';
 import { TypeORMExceptionFilter } from './filters/typeorm-exceptions.filter';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, { cors: true });
+  const app = await NestFactory.create(AppModule);
   app.useGlobalFilters(new TypeORMExceptionFilter());
+  app.enableCors();
   const PORT = process.env.PORT || 80;
   // console.log("changeportkc")
   const options = new DocumentBuilder()
