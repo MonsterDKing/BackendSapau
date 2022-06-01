@@ -12,9 +12,15 @@ export class CobroRepository {
     ) { }
 
     getAll(): Promise<CobroEntity[]> {
-        return this.repository.find({
-            relations: ["cliente", "cobrador", "transacciones", "cliente.tarifa", "cliente.contratante", "transacciones.cliente", "transacciones.cliente.tarifa", "cliente.colonia",]
-        });
+        return this.repository.find(
+            {
+            relations: ["cliente", "cobrador", "transacciones", "cliente.tarifa", "cliente.contratante", "transacciones.cliente", "transacciones.cliente.tarifa", "cliente.colonia",],
+            order:{
+                fecha_creacion:'DESC'
+            }
+            },
+        
+        );
     }
 
     getById(id: number): Promise<CobroEntity> {
