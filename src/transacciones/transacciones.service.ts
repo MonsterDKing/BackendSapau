@@ -564,12 +564,6 @@ export class TransaccionesService {
         let cliente = await this.repository.getHistorialDePago(data.idCliente);
         return cliente;
     }
-
-    // <option value="1" selected>Reconexion $(350)</option>
-    //     <option value="2" selected>Cambio de tubo $(680)</option>
-    //     <option value="3" selected>Conexion al drenaje $(1000)</option>
-    //     <option value="4" selected>Cambio de propietario $(350)</option>
-    //     <option value="5" selected>Otros</option>
     async generarPagoPersonalizado(data: generarPagoPersonalizadoDto, us: UsuarioEntity) {
         console.log(us);
         let ce = await this.clienteRepository.getById(data.idCliente)
@@ -640,6 +634,7 @@ export class TransaccionesService {
         let cobro = await this.cobroRepository.create(cobroEntity)
         return cobro;
     }
+
 
 }
 

@@ -77,10 +77,11 @@ export class TransaccionesController {
   }
 
 
-  @Get("/importar")
-  importDatabase() {
-    return this.transaccionesService.importToDatabaseAdelantado()
-  }
+  // @Get("/importar")
+  // importDatabase() {
+  //   return this.transaccionesService.importToDatabaseAdelantado()
+  // }
+
 
 
   @Delete("/eliminar-adeudo")

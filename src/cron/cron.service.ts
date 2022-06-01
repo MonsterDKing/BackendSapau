@@ -1,10 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
+import { ClienteEntity } from 'src/clientes/entities/cliente.entity';
 import { ClientesRepository } from 'src/clientes/utils/repository';
 import { TransaccionEntity } from 'src/transacciones/entities/transaccion.entity';
 import { EstadoTransaccionEnum } from 'src/transacciones/enums/Estado.Transaccion.enum';
 import { TransaccionesEnum } from 'src/transacciones/enums/Transacciones.enum';
 import { TransaccionRepository } from 'src/transacciones/utils/repository';
+import * as moment from 'moment';
 
 @Injectable()
 export class CronService {
@@ -14,78 +16,43 @@ export class CronService {
         private transaccion: TransaccionRepository
     ) { }
 
+    @Cron(CronExpression.EVERY_1ST_DAY_OF_MONTH_AT_MIDNIGHT)
+    async scriptPersonalizado() {
+        try {
+            let firstday = new Date();
+            let lastDay = new Date(firstday.getFullYear(), firstday.getMonth() + 1, 0);
 
-    // @Cron(CronExpression.EVERY_10_SECONDS)
-    async runEveryMinute() {
-        let now = new Date();
-        //obtengo a todo los usuarios
-        let clients = await this.clientes.getAll();
-        let id = clients[0];
-        //despues obtengo cuando fue la ultima fecha de pago del usuario
-        let ultimaTransaccion = await this.transaccion.getUltimaTransaccionPorUsuario(2365)
-        // existen dos casos posibles que si haya realizado un pago al menos y otro que nunca lo haya hecho 
-        //en caso de que si 
-        if (ultimaTransaccion) {
-            //pregunto si la fecha de la ultima transaccion es menor a la fecha de ahora
-            if (ultimaTransaccion.fecha_creacion < now) {
-                let difMonth: number = this.monthDiff(now, ultimaTransaccion.fecha_creacion);
-                //si la diferencia es 0 significa que ya esta todo al corriente en caso contrario 
-                if (difMonth > 0) {
-                    let nowRestart = new Date();
-                    for (let i = 0; i < difMonth; i++) {
-                        let d = i + 1;
-                        console.log(" antes ")
-                        console.log(nowRestart);
-                        nowRestart.setMonth(nowRestart.getMonth() - d);
-                        console.log(" despues ")
-                        console.log(nowRestart)
-                        this.generateNewTransactions(ultimaTransaccion, nowRestart);
-                    }
-                }
-            }
-        }
-        // en caso de que no 
-        else {
-            let ultimaTransaccionRegistrada = await this.transaccion.getUltimaTransaccionRegistradaSinPagar(id.id);
-            let difMonth: number = this.monthDiff(now, ultimaTransaccionRegistrada.fecha_creacion);
-            //si la diferencia es 0 significa que ya esta todo al corriente en caso contrario 
-            if (difMonth > 0) {
-                let nowRestart = new Date();
-                for (let i = 0; i < difMonth; i++) {
-                    let d = i + 1;
-                    console.log(" antes ")
-                    console.log(nowRestart);
-                    nowRestart.setMonth(nowRestart.getMonth() - d);
-                    console.log(" despues ")
-                    console.log(nowRestart)
-                    this.generateNewTransactions(ultimaTransaccionRegistrada, nowRestart);
-                }
-            }
-        }
+            let formattedDate = (moment(firstday)).format('YYYY-MM-DD')
+            let formattedDatetwo = (moment(lastDay)).format('YYYY-MM-DD')
 
+            console.log(formattedDate)
+            console.log(formattedDatetwo)
+
+            let todoLosClientes = await this.clientes.getAll();
+            let clientesConTransaccionesDeEseMes = await this.clientes.getClientesConTransaccionesDelMes(formattedDate, formattedDatetwo);
+            let listaLimpia = todoLosClientes.filter((el) => !clientesConTransaccionesDeEseMes.some(o2 => el.id === o2.id))
+            for (let c of listaLimpia) {
+                await this.generarTransaccionDecobro(c);
+            }
+            return "termino";
+        } catch (ex) {
+            return ex;
+        }
     }
 
-    generateNewTransactions(tran: TransaccionEntity, date: Date) {
+
+
+    //metodo exclusivo para generar deuda
+    async generarTransaccionDecobro(client: ClienteEntity) {
         let newTransaction = new TransaccionEntity();
-        newTransaction.cliente = tran.cliente;
-        newTransaction.cobro = tran.cobro;
-        newTransaction.estado_transaccion = EstadoTransaccionEnum.NO_PAGADO;
-        newTransaction.monto = tran.monto;
+        newTransaction.cliente = client;
+        newTransaction.monto = client.tarifa.costo;
         newTransaction.cobrador = null;
-        newTransaction.fecha_creacion = date;
+        newTransaction.fecha_creacion = new Date(2022, 2, 1);
+        newTransaction.estado_transaccion = EstadoTransaccionEnum.NO_PAGADO;
         newTransaction.tipo_transaccion = TransaccionesEnum.PAGO_DE_MENSUALIDAD;
-        console.log(newTransaction)
-        // this.transaccion.create(newTransaction);
+        this.transaccion.create(newTransaction);
     }
-
-    monthDiff(d1: Date, d2: Date) {
-        var months;
-        months = (d2.getFullYear() - d1.getFullYear()) * 12;
-        months -= d1.getMonth();
-        months += d2.getMonth();
-        return months <= 0 ? 0 : months;
-    }
-
 
 
 }

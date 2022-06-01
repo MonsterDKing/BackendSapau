@@ -252,6 +252,14 @@ export class ClientesRepository {
 
 
 
+    getClientesConTransaccionesDelMes(f1: string, f2: string) {
+        let query = this.repository.createQueryBuilder("c")
+            .innerJoinAndSelect("c.transacciones", "t")
+            .where(`t.fecha_creacion BETWEEN Date('${f1}') and Date('${f2}')`)
+            .groupBy('c.id')
+            .getMany();
+        return query;
+    }
 
 
 }
