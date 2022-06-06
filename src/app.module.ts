@@ -41,6 +41,9 @@ import { join } from 'path';
     DashboardModule,
     ColoniaModule
   ],
+  exports: [
+    CronService
+  ],
   controllers: [AppController],
   providers: [AppService, CronService],
 })

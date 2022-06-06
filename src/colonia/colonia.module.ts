@@ -9,7 +9,7 @@ import { ColoniaEntity } from './entities/colonia.entity';
 @Module({
   imports: [TypeOrmModule.forFeature([ColoniaEntity])],
   controllers: [ColoniaController],
-  providers: [ColoniaService,ColoniaRepository,ColoniaMapper],
-  exports:[ColoniaRepository]
+  providers: [ColoniaService, ColoniaRepository, ColoniaMapper],
+  exports: [ColoniaRepository]
 })
-export class ColoniaModule {}
+export class ColoniaModule { }

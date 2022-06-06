@@ -8,10 +8,10 @@ import { ColoniaEntity } from './entities/colonia.entity';
 @Injectable()
 export class ColoniaService {
 
-  constructor(private readonly coloniaRepository: ColoniaRepository, private readonly mapper:ColoniaMapper) {}
+  constructor(private readonly coloniaRepository: ColoniaRepository, private readonly mapper: ColoniaMapper) { }
 
   async create(createColoniaDto: CreateColoniaDto) {
-    let data =  this.mapper.dtoToEntity(createColoniaDto);
+    let data = this.mapper.dtoToEntity(createColoniaDto);
     this.coloniaRepository.create(data);
     return true;
   }
@@ -27,8 +27,8 @@ export class ColoniaService {
   }
 
   async update(id: number, updateColoniaDto: UpdateColoniaDto) {
-    let data =  this.mapper.dtoToEntityUpdate(updateColoniaDto);
-    this.coloniaRepository.update(id,data);
+    let data = this.mapper.dtoToEntityUpdate(updateColoniaDto);
+    this.coloniaRepository.update(id, data);
     return true;
   }
 
