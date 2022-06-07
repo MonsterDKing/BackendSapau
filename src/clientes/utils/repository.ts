@@ -48,7 +48,7 @@ export class ClientesRepository {
                 .innerJoinAndSelect("clients.contratante", "usuario")
                 .innerJoinAndSelect("clients.tarifa", "tarifa")
                 .innerJoinAndSelect('clients.transacciones', 'transaccion')
-                .innerJoinAndSelect('clients.colonia', 'colonia')
+                .leftJoinAndSelect('clients.colonia', 'colonia')
             if (busqueda) {
                 if (busqueda.nombre) {
                     if (count == 0) {
