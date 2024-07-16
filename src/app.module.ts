@@ -15,23 +15,27 @@ import { ColoniaModule } from './colonia/colonia.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 
-
 @Module({
   imports: [
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'website'),
-
     }),
     TypeOrmModule.forRoot({
-      type: 'mysql',
-      port: parseInt("3306"),
-      host: "167.71.248.181",
-      username: "sapau",
-      password: "NMVqtudf4gSJKv1EuxoI.",
-      database: "sapau",
+      type: 'postgres',
+      port: parseInt('5432'),
+      host: 'dpg-cqav6og8fa8c73atqot0-a.oregon-postgres.render.com',
+      username: 'sapaubackend_l1kc_user',
+      password: 'aiPcvqrs00W4C0Ecm2osA7poDhmBeAQn',
+      database: 'sapaubackend_l1kc',
       autoLoadEntities: true,
-      synchronize: true
-    }), UsuariosModule,
+      synchronize: true,
+      extra: {
+        ssl: {
+          rejectUnauthorized: false,
+        },
+      },
+    }),
+    UsuariosModule,
     ClientesModule,
     AuthModule,
     TarifaModule,
@@ -39,12 +43,12 @@ import { join } from 'path';
     CobrosModule,
     ScheduleModule.forRoot(),
     DashboardModule,
-    ColoniaModule
+    ColoniaModule,
   ],
-  exports: [
-    CronService
-  ],
+  exports: [CronService],
   controllers: [AppController],
   providers: [AppService, CronService],
 })
-export class AppModule { }
+export class AppModule {}
+
+// postgresql://sapaubackend_l1kc_user:aiPcvqrs00W4C0Ecm2osA7poDhmBeAQn@dpg-cqav6og8fa8c73atqot0-a.oregon-postgres.render.com/sapaubackend_l1kc
